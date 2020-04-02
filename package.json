@@ -1,0 +1,34 @@
+{
+  "name": "docutheques",
+  "version": "1.0.0",
+  "description": "Document libraries for your WordPress.",
+  "engines": {
+    "node": "10.13.0",
+    "npm": "6.14.2"
+  },
+  "scripts": {
+    "start": "parcel watch src/*/index.js --out-dir js --no-source-maps",
+    "dev": "parcel build src/*/index.js --out-dir js --no-source-maps --no-minify",
+    "build": "parcel build src/*/index.js --out-dir js --no-source-maps",
+    "wpcs": "./vendor/bin/phpcs class-docutheques.php inc/*.php --standard=WordPress"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imath/docutheques.git"
+  },
+  "keywords": [
+    "documents",
+    "library"
+  ],
+  "author": "imath",
+  "license": "GPL-2.0+",
+  "bugs": {
+    "url": "https://github.com/imath/docutheques/issues"
+  },
+  "homepage": "https://github.com/imath/docutheques#readme",
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@wordpress/babel-preset-default": "^4.11.0",
+    "parcel-bundler": "^1.12.4"
+  }
+}
