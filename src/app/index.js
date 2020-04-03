@@ -4,6 +4,11 @@
 const { Component, render, createElement } = wp.element;
 const { __ } = wp.i18n;
 
+/**
+ * Internal dependencies
+ */
+import DocuthequesHeader from './components/header';
+
 class Docutheques extends Component {
 	constructor() {
 		super( ...arguments );
@@ -13,7 +18,7 @@ class Docutheques extends Component {
 
 	render() {
 		return (
-		<p>{ __( 'DocuThèques', 'docutheques' ) }</p>
+			<DocuthequesHeader/>
 		);
 	}
 };
