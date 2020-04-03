@@ -34,7 +34,11 @@ function docutheques_init() {
 		trailingslashit( $docutheques->url ) . 'js/app/index.js',
 		array(
 			'wp-element',
+			'wp-compose',
 			'wp-i18n',
+			'wp-data',
+			'wp-api-fetch',
+			'lodash',
 		),
 		$docutheques->version,
 		true

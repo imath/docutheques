@@ -19,6 +19,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 function docutheques_admin() {
 	wp_enqueue_script( 'docutheques-app' );
 
+	// Preloads Plugin's data.
+	$preload_data = array_reduce(
+		array( '/wp/v2/users/me?context=edit' ),
+		'rest_preload_api_request',
+		array()
+	);
+
+	// Create the Fetch API Preloading middleware.
+	wp_add_inline_script(
+		'wp-api-fetch',
+		sprintf( 'wp.apiFetch.use( wp.apiFetch.createPreloadingMiddleware( %s ) );', wp_json_encode( $preload_data ) ),
+		'after'
+	);
+
 	printf( '<div class="wrap" id="docutheques"></div>' );
 }
 

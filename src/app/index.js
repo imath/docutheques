@@ -1,12 +1,15 @@
 /**
- * WordPress dependencies
+ * WordPress dependencies.
  */
 const { Component, render, createElement } = wp.element;
 const { __ } = wp.i18n;
+const { withSelect } = wp.data;
+const { compose } = wp.compose;
 
 /**
- * Internal dependencies
+ * Internal dependencies.
  */
+import './store';
 import DocuthequesHeader from './components/header';
 
 class Docutheques extends Component {
@@ -17,10 +20,22 @@ class Docutheques extends Component {
 	}
 
 	render() {
+		const { user } = this.props;
+
 		return (
-			<DocuthequesHeader/>
+			<DocuthequesHeader
+				user={ user }
+			/>
 		);
 	}
 };
 
-render( <Docutheques />, document.querySelector( '#docutheques' ) );
+const DocuthequesAdministration = compose( [
+	withSelect( ( select ) => {
+		return {
+			user: select( 'docutheques' ).getCurrentUser(),
+		};
+	} ),
+] )( Docutheques );
+
+render( <DocuthequesAdministration />, document.querySelector( '#docutheques' ) );
