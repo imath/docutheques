@@ -71,7 +71,7 @@ class DocuthequesDossiers extends Component {
 				<li key={ dossier.id } className="choix-dossiers">
 					<a href="#" onClick={ ( e ) => this.setDossier( dossier.id, dossier.parent, e ) }>
 						<Dashicon icon="portfolio" />
-						<span className="dossier-name">{ unescape( dossier.name ) + ' ' + dossier.id }</span>
+						<span className="dossier-name">{ unescape( dossier.name ) }</span>
 					</a>
 					{ !! dossier.children.length && (
 						<ul className={ join( dossier.classes, ' ' ) }>
