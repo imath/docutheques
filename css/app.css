@@ -1,0 +1,36 @@
+/* DocuThèques App styles */
+
+#docutheques .arbre-des-dossiers {
+	overflow: auto;
+	margin: 16px 0;
+	padding: 10px 10px 0;
+	border: 1px solid #ccd0d4;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	background: #fff;
+	max-width: 20%;
+}
+
+#docutheques .liste-dossiers,
+#docutheques .sous-choix-dossiers {
+	padding-top: 0.5em;
+	padding-left: 1em;
+}
+
+#docutheques .sous-choix-dossiers {
+	display: none;
+}
+
+#docutheques .dashicons-admin-home,
+#docutheques .liste-dossiers .dashicon {
+	vertical-align: top;
+	margin-right: 0.5em;
+}
+
+#docutheques .dashicons-admin-home {
+	vertical-align: bottom;
+}
+
+#docutheques .sous-choix-dossiers.has-parent-selected,
+#docutheques .sous-choix-dossiers.is-parent-selected {
+	display: block;
+}

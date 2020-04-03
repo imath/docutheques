@@ -23,6 +23,13 @@ const actions = {
 		};
 	},
 
+	getDossiers( dossiers ) {
+		return {
+			type: 'GET_DOSSIERS',
+			dossiers,
+		};
+	},
+
 	fetchFromAPI( path, parse ) {
 		return {
 			type: 'FETCH_FROM_API',
@@ -40,6 +47,12 @@ const store = registerStore( 'docutheques', {
 					...state,
 					user: action.user,
 				};
+
+			case 'GET_DOSSIERS':
+				return {
+					...state,
+					dossiers: action.dossiers,
+				};
 		}
 
 		return state;
@@ -51,6 +64,11 @@ const store = registerStore( 'docutheques', {
 		getCurrentUser( state ) {
 			const { user } = state;
 			return user;
+		},
+
+		getDossiers( state ) {
+			const { dossiers } = state;
+			return dossiers;
 		},
 	},
 
@@ -65,6 +83,12 @@ const store = registerStore( 'docutheques', {
 			const path = '/wp/v2/users/me?context=edit';
 			const user = yield actions.fetchFromAPI( path, true );
 			yield actions.getCurrentUser( user );
+		},
+
+		* getDossiers() {
+			const path = '/wp/v2/dossiers?context=edit';
+			const dossiers = yield actions.fetchFromAPI( path, true );
+			return actions.getDossiers( dossiers, '' );
 		},
 	},
 } );

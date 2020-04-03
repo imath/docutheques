@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies.
  */
-const { Component, render, createElement } = wp.element;
+const { Component, render, createElement, Fragment } = wp.element;
 const { __ } = wp.i18n;
 const { withSelect } = wp.data;
 const { compose } = wp.compose;
@@ -11,6 +11,7 @@ const { compose } = wp.compose;
  */
 import './store';
 import DocuthequesHeader from './components/header';
+import DocuthequesDossiers from './components/terms-tree'
 
 class Docutheques extends Component {
 	constructor() {
@@ -23,9 +24,12 @@ class Docutheques extends Component {
 		const { user } = this.props;
 
 		return (
-			<DocuthequesHeader
-				user={ user }
-			/>
+			<Fragment>
+				<DocuthequesHeader
+					user={ user }
+				/>
+				<DocuthequesDossiers />
+			</Fragment>
 		);
 	}
 };

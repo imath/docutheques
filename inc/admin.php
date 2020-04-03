@@ -18,10 +18,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function docutheques_admin() {
 	wp_enqueue_script( 'docutheques-app' );
+	wp_enqueue_style( 'docutheques-app' );
 
 	// Preloads Plugin's data.
 	$preload_data = array_reduce(
-		array( '/wp/v2/users/me?context=edit' ),
+		array(
+			'/wp/v2/users/me?context=edit',
+			'/wp/v2/dossiers?context=edit',
+		),
 		'rest_preload_api_request',
 		array()
 	);

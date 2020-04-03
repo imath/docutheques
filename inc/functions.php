@@ -34,6 +34,7 @@ function docutheques_init() {
 		trailingslashit( $docutheques->url ) . 'js/app/index.js',
 		array(
 			'wp-element',
+			'wp-components',
 			'wp-compose',
 			'wp-i18n',
 			'wp-data',
@@ -42,6 +43,16 @@ function docutheques_init() {
 		),
 		$docutheques->version,
 		true
+	);
+
+	// Registers the App's style.
+	wp_register_style(
+		'docutheques-app',
+		trailingslashit( $docutheques->url ) . 'css/app.css',
+		array(
+			'wp-components',
+		),
+		$docutheques->version
 	);
 
 	// Registers the Browser Block's JavaScript file.
@@ -111,3 +122,21 @@ function docutheques_init() {
 	);
 }
 add_action( 'init', 'docutheques_init', 20 );
+
+/**
+ * Forces the REST GET requests to return all dossiers.
+ *
+ * @since 1.0.0
+ *
+ * @param array $args Array of arguments to be passed to get_terms().
+ */
+function docutheques_dossiers_rest_get_args( $args = array() ) {
+	return array_merge(
+		$args,
+		array(
+			'number' => wp_count_terms( 'dossiers' ),
+			'offset' => 0,
+		)
+	);
+}
+add_filter( 'rest_dossiers_query', 'docutheques_dossiers_rest_get_args' );
