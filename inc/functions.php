@@ -131,6 +131,12 @@ add_action( 'init', 'docutheques_init', 20 );
  * @param array $args Array of arguments to be passed to get_terms().
  */
 function docutheques_dossiers_rest_get_args( $args = array() ) {
+	$number = (int) wp_count_terms( 'dossiers' );
+
+	if ( ! $number ) {
+		return $args;
+	}
+
 	return array_merge(
 		$args,
 		array(
