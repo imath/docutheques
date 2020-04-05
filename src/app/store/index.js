@@ -13,6 +13,7 @@ const DEFAULT_STATE = {
 	uploading: false,
 	ended: false,
 	isSelectable: false,
+	currentState: 'browser',
 };
 
 const actions = {
@@ -27,6 +28,13 @@ const actions = {
 		return {
 			type: 'GET_DOSSIERS',
 			dossiers,
+		};
+	},
+
+	setCurrentState( currentState ) {
+		return {
+			type: 'SET_CURRENT_STATE',
+			currentState,
 		};
 	},
 
@@ -53,6 +61,12 @@ const store = registerStore( 'docutheques', {
 					...state,
 					dossiers: action.dossiers,
 				};
+
+			case 'SET_CURRENT_STATE':
+				return {
+					...state,
+					currentState: action.currentState,
+				};
 		}
 
 		return state;
@@ -69,6 +83,11 @@ const store = registerStore( 'docutheques', {
 		getDossiers( state ) {
 			const { dossiers } = state;
 			return dossiers;
+		},
+
+		getCurrentState( state ) {
+			const { currentState } = state;
+			return currentState;
 		},
 	},
 

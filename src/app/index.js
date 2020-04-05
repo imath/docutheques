@@ -21,7 +21,7 @@ class Docutheques extends Component {
 	}
 
 	render() {
-		const { user } = this.props;
+		const { user, currentState } = this.props;
 
 		return (
 			<Fragment>
@@ -29,6 +29,14 @@ class Docutheques extends Component {
 					user={ user }
 				/>
 				<DocuthequesDossiers />
+
+				{ 'documentForm' === currentState && (
+					<div>{ __( 'Formulaire d’envoi de fichiers.', 'docutheques' ) }</div>
+				) }
+
+				{ 'dossierForm' === currentState && (
+					<div>{ __( 'Formulaire d’envoi de dossiers.', 'docutheques' ) }</div>
+				) }
 			</Fragment>
 		);
 	}
@@ -36,8 +44,11 @@ class Docutheques extends Component {
 
 const DocuthequesAdministration = compose( [
 	withSelect( ( select ) => {
+		const docuThequesStore = select( 'docutheques' );
+
 		return {
-			user: select( 'docutheques' ).getCurrentUser(),
+			user: docuThequesStore.getCurrentUser(),
+			currentState: docuThequesStore.getCurrentState(),
 		};
 	} ),
 ] )( Docutheques );

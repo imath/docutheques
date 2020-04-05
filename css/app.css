@@ -34,3 +34,19 @@
 #docutheques .sous-choix-dossiers.is-parent-selected {
 	display: block;
 }
+
+#docutheques .components-dropdown-menu .components-dropdown-menu__toggle.has-icon {
+	color: #0073aa;
+	display: inline-block;
+}
+
+#docutheques .components-dropdown-menu .components-dropdown-menu__toggle.has-icon svg {
+	vertical-align: sub;
+}
+
+#docutheques .components-dropdown-menu .components-button:not(:disabled):not([aria-disabled="true"]):not(.is-secondary):not(.is-primary):not(.is-tertiary):not(.is-link):hover,
+#docutheques .components-dropdown-menu .components-button:not(:disabled):not([aria-disabled="true"]):not(.is-secondary):not(.is-primary):not(.is-tertiary):not(.is-link):focus {
+	background: none;
+	border: none;
+	box-shadow: none;
+}
