@@ -10,7 +10,7 @@
 #docutheques .formulaire-document {
 	overflow: auto;
 	margin: 16px 0;
-	padding: 10px 10px 0;
+	padding: 10px;
 	border: 1px solid #ccd0d4;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	background: #fff;
@@ -24,8 +24,25 @@
 #docutheques .corps-docutheques .liste-documents,
 #docutheques .corps-docutheques .formulaire-dossier,
 #docutheques .corps-docutheques .formulaire-document {
+	position: relative;
 	width: 70%;
 	max-width: 73%;
+}
+
+#docutheques .corps-docutheques .formulaire-dossier .close,
+#docutheques .corps-docutheques .formulaire-document .close {
+	background-color: transparent;
+	border: 0;
+	cursor: pointer;
+	height: 48px;
+	outline: none;
+	padding: 0;
+	position: absolute;
+	right: 2px;
+	text-align: center;
+	top: 2px;
+	width: 48px;
+	z-index: 1;
 }
 
 #docutheques .liste-dossiers,
