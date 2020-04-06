@@ -4,7 +4,7 @@
 const { Component, createElement } = wp.element;
 const { Dashicon } = wp.components;
 const { __ } = wp.i18n;
-const { withSelect } = wp.data;
+const { withSelect, dispatch } = wp.data;
 const { compose } = wp.compose;
 
 /**
@@ -36,6 +36,9 @@ class DocuthequesDossiers extends Component {
 			dossierID: id,
 			dossierAncestors: dossierAncestors,
 		} );
+
+		dispatch( 'docutheques' ).setCurrentDossier( id );
+		dispatch( 'docutheques' ).setCurrentState( 'documentsBrowser' );
 	}
 
 	buildTermsTree( flatTerms ) {

@@ -25,6 +25,7 @@ function docutheques_admin() {
 		array(
 			'/wp/v2/users/me?context=edit',
 			'/wp/v2/dossiers?context=edit',
+			'/wp/v2/media?dossiers[]=0&context=edit',
 		),
 		'rest_preload_api_request',
 		array()

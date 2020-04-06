@@ -13,7 +13,8 @@ const DEFAULT_STATE = {
 	uploading: false,
 	ended: false,
 	isSelectable: false,
-	currentState: 'browser',
+	currentState: 'documentsBrowser',
+	currentDossierId: 0,
 };
 
 const actions = {
@@ -31,10 +32,24 @@ const actions = {
 		};
 	},
 
+	getDocuments( documents ) {
+		return {
+			type: 'GET_DOCUMENTS',
+			documents,
+		};
+	},
+
 	setCurrentState( currentState ) {
 		return {
 			type: 'SET_CURRENT_STATE',
 			currentState,
+		};
+	},
+
+	setCurrentDossier( currentDossierId ) {
+		return {
+			type: 'SET_CURRENT_DOSSIER',
+			currentDossierId,
 		};
 	},
 
@@ -62,10 +77,22 @@ const store = registerStore( 'docutheques', {
 					dossiers: action.dossiers,
 				};
 
+			case 'GET_DOCUMENTS':
+				return {
+					...state,
+					documents: action.documents,
+				};
+
 			case 'SET_CURRENT_STATE':
 				return {
 					...state,
 					currentState: action.currentState,
+				};
+
+			case 'SET_CURRENT_DOSSIER':
+				return {
+					...state,
+					currentDossierId: action.currentDossierId,
 				};
 		}
 
@@ -85,9 +112,19 @@ const store = registerStore( 'docutheques', {
 			return dossiers;
 		},
 
+		getDocuments( state ) {
+			const { documents } = state;
+			return documents;
+		},
+
 		getCurrentState( state ) {
 			const { currentState } = state;
 			return currentState;
+		},
+
+		getCurrentDossierId( state ) {
+			const { currentDossierId } = state;
+			return currentDossierId;
 		},
 	},
 
@@ -107,7 +144,15 @@ const store = registerStore( 'docutheques', {
 		* getDossiers() {
 			const path = '/wp/v2/dossiers?context=edit';
 			const dossiers = yield actions.fetchFromAPI( path, true );
-			return actions.getDossiers( dossiers, '' );
+			return actions.getDossiers( dossiers );
+		},
+
+		* getDocuments() {
+			const { currentDossierId } = store.getState();
+			const path = '/wp/v2/media?dossiers[]=' + currentDossierId + '&context=edit';
+
+			const documents = yield actions.fetchFromAPI( path, true );
+			return actions.getDocuments( documents );
 		},
 	},
 } );

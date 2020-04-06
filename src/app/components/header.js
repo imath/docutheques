@@ -19,7 +19,7 @@ class DocuthequesHeader extends Component {
 	}
 
 	setCurrentState( currentState ) {
-		dispatch( 'docutheques' ).setCurrentState( currentState  );
+		dispatch( 'docutheques' ).setCurrentState( currentState );
 	}
 
 	render() {

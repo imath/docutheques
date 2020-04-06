@@ -146,3 +146,75 @@ function docutheques_dossiers_rest_get_args( $args = array() ) {
 	);
 }
 add_filter( 'rest_dossiers_query', 'docutheques_dossiers_rest_get_args' );
+
+/**
+ * Resets the queried dossiers as 0 was requested.
+ *
+ * @since 1.0.0
+ *
+ * @param WP_Query $wp_query The WP_Query instance.
+ */
+function docutheques_documents_reset_querried_dossiers( $wp_query ) {
+	remove_action( 'parse_query', 'docutheques_documents_reset_querried_dossiers' );
+
+	if ( isset( $wp_query->query['tax_query'] ) && isset( $wp_query->query_vars['tax_query'] ) ) {
+		// Remove the tax query completely if `dossiers` is the only one.
+		if ( 1 === count( $wp_query->query['tax_query'] ) && 1 === count( $wp_query->query_vars['tax_query'] ) ) {
+			unset( $wp_query->query['tax_query'], $wp_query->query_vars['tax_query'] );
+		} else {
+			// Only remove the `dossiers` tax query part.
+			foreach ( $wp_query->query['tax_query'] as $kq_tq => $q_tax_query ) {
+				if ( 'dossiers' !== $q_tax_query['taxonomy'] ) {
+					continue;
+				}
+
+				unset( $wp_query->query['tax_query'][ $kq_tq ] );
+			}
+
+			// Only remove the `dossiers` tax query part.
+			foreach ( $wp_query->query_vars['tax_query'] as $kqv_tq => $qv_tax_query ) {
+				if ( 'dossiers' !== $qv_tax_query['taxonomy'] ) {
+					continue;
+				}
+
+				unset( $wp_query->query_vars['tax_query'][ $kqv_tq ] );
+			}
+		}
+
+		foreach ( $wp_query->tax_query->queries as $ktq => $tax_query ) {
+			if ( 'dossiers' !== $tax_query['taxonomy'] ) {
+				continue;
+			}
+
+			unset( $wp_query->tax_query->queries[ $ktq ] );
+		}
+
+		if ( isset( $wp_query->tax_query->queried_terms['dossiers'] ) ) {
+			unset( $wp_query->tax_query->queried_terms['dossiers'] );
+		}
+	}
+}
+
+/**
+ * Filters the attachment query arguments for a `get_items` request.
+ *
+ * @since 1.0.0
+ *
+ * @param array           $args    Key value array of query var to query value.
+ * @param WP_REST_Request $request The request used.
+ * @return array                   Unchanged arguments.
+ */
+function docutheques_documents_rest_get_args( $args = array(), $request ) {
+	$has_dossiers_param = $request->get_param( 'dossiers' );
+
+	if ( ! $has_dossiers_param ) {
+		return $args;
+	}
+
+	if ( ! array_filter( $has_dossiers_param ) ) {
+		add_action( 'parse_query', 'docutheques_documents_reset_querried_dossiers' );
+	}
+
+	return $args;
+}
+add_filter( 'rest_attachment_query', 'docutheques_documents_rest_get_args', 10, 2 );
