@@ -1,13 +1,31 @@
 /* DocuThèques App styles */
+#docutheques .corps-docutheques {
+	display: flex;
+	flex-wrap: wrap;
+}
 
-#docutheques .arbre-des-dossiers {
+#docutheques .arbre-des-dossiers,
+#docutheques .liste-documents,
+#docutheques .formulaire-dossier,
+#docutheques .formulaire-document {
 	overflow: auto;
 	margin: 16px 0;
 	padding: 10px 10px 0;
 	border: 1px solid #ccd0d4;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	background: #fff;
-	max-width: 20%;
+}
+
+#docutheques .corps-docutheques .arbre-des-dossiers {
+	width: 20%;
+	max-width: 22%;
+}
+
+#docutheques .corps-docutheques .liste-documents,
+#docutheques .corps-docutheques .formulaire-dossier,
+#docutheques .corps-docutheques .formulaire-document {
+	width: 70%;
+	max-width: 73%;
 }
 
 #docutheques .liste-dossiers,

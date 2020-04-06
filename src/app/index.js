@@ -11,7 +11,10 @@ const { compose } = wp.compose;
  */
 import './store';
 import DocuthequesHeader from './components/header';
-import DocuthequesDossiers from './components/terms-tree'
+import DocuthequesDossiers from './components/terms-tree';
+import DocuthequesDocuments from './components/documents';
+import DocuthequesDossierForm from './components/ajout-dossier';
+import DocuthequesDocumentForm  from './components/ajout-document';
 
 class Docutheques extends Component {
 	constructor() {
@@ -28,19 +31,29 @@ class Docutheques extends Component {
 				<DocuthequesHeader
 					user={ user }
 				/>
-				<DocuthequesDossiers />
+				<div className="corps-docutheques">
+					<DocuthequesDossiers />
 
-				{ 'documentForm' === currentState && (
-					<div>{ __( 'Formulaire d’envoi de fichiers.', 'docutheques' ) }</div>
-				) }
+					{ 'documentForm' === currentState && (
+						<DocuthequesDocumentForm
+							user= { user }
+							dossier={ currentDossierId }
+						/>
+					) }
 
-				{ 'dossierForm' === currentState && (
-					<div>{ __( 'Formulaire d’envoi de dossiers.', 'docutheques' ) }</div>
-				) }
+					{ 'dossierForm' === currentState && (
+						<DocuthequesDossierForm
+							user= { user }
+							dossier={ currentDossierId }
+						/>
+					) }
 
-				{ 'documentsBrowser' === currentState && (
-					<div>{ __( 'Liste des documents.', 'docutheques' ) }</div>
-				) }
+					{ 'documentsBrowser' === currentState && (
+						<DocuthequesDocuments
+							dossier={ currentDossierId }
+						/>
+					) }
+				</div>
 			</Fragment>
 		);
 	}
