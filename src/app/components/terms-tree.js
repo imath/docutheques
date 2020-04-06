@@ -60,6 +60,7 @@ class DocuthequesDossiers extends Component {
 
 	renderDossiers( renderedDossiers ) {
 		const { dossierID, dossierAncestors } = this.state;
+		const { currentDossierId } = this.props;
 
 		return renderedDossiers.map( ( dossier ) => {
 			dossier.classes = ['sous-choix-dossiers'];
@@ -70,8 +71,12 @@ class DocuthequesDossiers extends Component {
 				dossier.classes = [...dossier.classes, 'is-parent-selected' ];
 			}
 
+			/**
+			 * @todo I need to make sure the selected sub folder is displayed !
+			 */
+
 			return (
-				<li key={ dossier.id } className="choix-dossiers">
+				<li key={ dossier.id } className={ currentDossierId === dossier.id ? "is-current-dossier choix-dossiers" : "choix-dossiers" }>
 					<a href="#" onClick={ ( e ) => this.setDossier( dossier.id, dossier.parent, e ) }>
 						<Dashicon icon="portfolio" />
 						<span className="dossier-name">{ unescape( dossier.name ) }</span>
@@ -87,7 +92,7 @@ class DocuthequesDossiers extends Component {
 	}
 
 	render() {
-		const { dossiers } = this.props;
+		const { dossiers, currentDossierId } = this.props;
 		const tree = this.buildTermsTree( dossiers );
 		let renderedDossiers = null;
 
@@ -97,7 +102,7 @@ class DocuthequesDossiers extends Component {
 
 		return (
 			<ul className="arbre-des-dossiers">
-				<li>
+				<li className={ currentDossierId === 0 ? "is-current-dossier choix-dossiers" : "choix-dossiers" }>
 					<a href="#" onClick={ ( e ) => this.setDossier( 0, 0, e ) }>
 						<Dashicon icon="admin-home" />
 						<span className="dossier-root">{ __( 'Racine', 'docutheques' ) }</span>
@@ -110,7 +115,12 @@ class DocuthequesDossiers extends Component {
 };
 
 export default compose( [
-	withSelect( ( select ) => ( {
-		dossiers: select( 'docutheques' ).getDossiers(),
-	} ) ),
+	withSelect( ( select ) => {
+		const docuThequesStore = select( 'docutheques' );
+
+		return {
+			dossiers: docuThequesStore.getDossiers(),
+			currentDossierId: docuThequesStore.getCurrentDossierId(),
+		};
+	} ),
 ] )( DocuthequesDossiers );

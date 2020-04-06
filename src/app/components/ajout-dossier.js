@@ -3,8 +3,9 @@
  */
 const { Component, createElement } = wp.element;
 const { TextControl, TextareaControl, Button } = wp.components;
-const { dispatch } = wp.data;
+const { dispatch, withDispatch } = wp.data;
 const { __ } = wp.i18n;
+const { compose } = wp.compose;
 
 const DEFAULT_STATE = {
 	name: '',
@@ -21,23 +22,37 @@ class DocuthequesDossierForm extends Component {
 		this.resetState = this.resetState.bind( this );
 	}
 
+	componentDidMount() {
+		const { dossier } = this.props;
+
+		if ( dossier ) {
+			this.setState( { parent: dossier } );
+		}
+	}
+
 	resetState() {
 		this.setState( DEFAULT_STATE );
+		dispatch( 'docutheques' ).setCurrentState( 'documentsBrowser' );
 	}
 
 	closeForm( e ) {
 		e.preventDefault();
 
 		this.resetState();
-		dispatch( 'docutheques' ).setCurrentState( 'documentsBrowser' );
 	}
 
 	submitForm( e ) {
 		e.preventDefault();
+
+		const { onCreateDossier } = this.props;
+
+		onCreateDossier( this.state );
+
+		this.resetState();
 	}
 
 	render() {
-		const { user, dossier } = this.props;
+		const { user } = this.props;
 		const { name, description } = this.state;
 
 		return (
@@ -72,4 +87,10 @@ class DocuthequesDossierForm extends Component {
 	}
 }
 
-export default DocuthequesDossierForm;
+export default compose( [
+	withDispatch( ( dispatch ) => ( {
+		onCreateDossier( dossier ) {
+			dispatch( 'docutheques' ).insertDossier( dossier );
+		},
+	} ) ),
+] )( DocuthequesDossierForm );

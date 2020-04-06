@@ -51,6 +51,16 @@
 	padding-left: 1em;
 }
 
+li.choix-dossiers a {
+	padding: 0.2em 0.5em 0.2em 0.2em;
+}
+
+#docutheques li.is-current-dossier > a {
+	background-color: #0073aa;
+	color: #fff;
+	font-weight: 600;
+}
+
 #docutheques .sous-choix-dossiers {
 	display: none;
 }

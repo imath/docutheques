@@ -12,7 +12,7 @@ class DocuthequesDocuments extends Component {
 	}
 
 	render() {
-		const { documents, dossier } = this.props;
+		const { documents } = this.props;
 
 		return (
 			<div className="liste-documents">
@@ -23,9 +23,9 @@ class DocuthequesDocuments extends Component {
 }
 
 export default compose( [
-	withSelect( ( select ) => {
+	withSelect( ( select, { dossier } ) => {
 		return {
-			documents: select( 'docutheques' ).getDocuments(),
+			documents: select( 'docutheques' ).getDocuments( dossier ),
 		};
 	} ),
 ] )( DocuthequesDocuments );

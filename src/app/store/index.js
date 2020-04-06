@@ -7,15 +7,50 @@ const { registerStore } = wp.data;
 const DEFAULT_STATE = {
 	user: {},
 	documents: [],
-	dossiers: [],
 	uploaded: [],
-	errored: [],
+	dossiers: [],
+	created: [],
+	errored: {
+		documents: [],
+		dossiers: [],
+	},
 	uploading: false,
-	ended: false,
+	uploadEnded: false,
+	creating: false,
+	createEnded: false,
 	isSelectable: false,
 	currentState: 'documentsBrowser',
 	currentDossierId: 0,
 };
+
+function * insertDossier( dossier ) {
+	let creating = true, created;
+
+	yield { type: 'DOSSIER_CREATE_START', creating, dossier };
+
+	const formData = new FormData();
+	formData.append( 'name', dossier.name );
+	formData.append( 'description', dossier.description );
+	formData.append( 'parent', dossier.parent );
+
+	creating = false;
+	try {
+		created = yield actions.createFromAPI( '/wp/v2/dossiers', formData );
+		yield { type: 'DOSSIER_CREATE_END', creating };
+
+		return actions.addDossier( created );
+	} catch ( error ) {
+		created = {
+			id: uniqueId(),
+			name: dossier.name,
+			error: error.message,
+		};
+
+		yield { type: 'DOSSIER_CREATE_END', creating };
+
+		return actions.traceErrors( created );
+	}
+}
 
 const actions = {
 	getCurrentUser( user ) {
@@ -60,6 +95,29 @@ const actions = {
 			parse,
 		};
 	},
+
+	insertDossier,
+	createFromAPI( path, formData ) {
+		return {
+			type: 'CREATE_FROM_API',
+			path,
+			formData,
+		};
+	},
+
+	addDossier( dossier ) {
+		return {
+			type: 'ADD_DOSSIER',
+			dossier,
+		};
+	},
+
+	traceErrors( item ) {
+		return {
+			type: 'ADD_ERROR',
+			item,
+		};
+	}
 };
 
 const store = registerStore( 'docutheques', {
@@ -93,6 +151,47 @@ const store = registerStore( 'docutheques', {
 				return {
 					...state,
 					currentDossierId: action.currentDossierId,
+				};
+
+			case 'DOSSIER_CREATE_START':
+				return {
+					...state,
+					creating: action.creating,
+				};
+
+			case 'DOSSIER_CREATE_END':
+				return {
+					...state,
+					creating: action.creating,
+					createEnded: true,
+				};
+
+			case 'ADD_DOSSIER':
+				return {
+					...state,
+					dossiers: [
+						...state.dossiers,
+						action.dossier,
+					],
+					currentDossierId: action.dossier.id,
+				};
+
+			case 'ADD_ERROR':
+				const updateErrors = item.type && 'attachment' === item.type ? {
+					documents: [
+						...state.errored.documents,
+						action.item,
+					]
+				} : {
+					dossiers: [
+						...state.errored.dossiers,
+						action.item,
+					]
+				};
+
+				return {
+					...state,
+					errored: updateErrors,
 				};
 		}
 
@@ -132,6 +231,10 @@ const store = registerStore( 'docutheques', {
 		FETCH_FROM_API( action ) {
 			return apiFetch( { path: action.path, parse: action.parse } );
 		},
+
+		CREATE_FROM_API( action ) {
+			return apiFetch( { path: action.path, method: 'POST', body: action.formData } );
+		}
 	},
 
 	resolvers: {
@@ -147,8 +250,7 @@ const store = registerStore( 'docutheques', {
 			return actions.getDossiers( dossiers );
 		},
 
-		* getDocuments() {
-			const { currentDossierId } = store.getState();
+		* getDocuments( currentDossierId = 0 ) {
 			const path = '/wp/v2/media?dossiers[]=' + currentDossierId + '&context=edit';
 
 			const documents = yield actions.fetchFromAPI( path, true );
