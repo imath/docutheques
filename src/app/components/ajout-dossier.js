@@ -25,7 +25,7 @@ class DocuthequesDossierForm extends Component {
 	componentDidMount() {
 		const { dossier } = this.props;
 
-		if ( dossier ) {
+		if ( !! dossier || 0 === dossier ) {
 			this.setState( { parent: dossier } );
 		}
 	}

@@ -24,8 +24,9 @@ class DocuthequesDossiers extends Component {
 
 	componentDidMount() {
 		const { currentDossierId } = this.props;
+		const { dossierID } = this.state;
 
-		if ( currentDossierId ) {
+		if ( ( !! currentDossierId || 0 === currentDossierId ) && currentDossierId !== dossierID ) {
 			this.setState( { dossierID: currentDossierId } );
 		}
 	}
@@ -78,10 +79,6 @@ class DocuthequesDossiers extends Component {
 			} else if ( -1 !== indexOf( dossierAncestors, dossier.id ) ) {
 				dossier.classes = [...dossier.classes, 'is-parent-selected' ];
 			}
-
-			/**
-			 * @todo I need to make sure the selected sub folder is displayed !
-			 */
 
 			return (
 				<li key={ dossier.id } className={ currentDossierId === dossier.id ? "is-current-dossier choix-dossiers" : "choix-dossiers" }>

@@ -4,6 +4,11 @@
 const { apiFetch } = wp;
 const { registerStore } = wp.data;
 
+/**
+ * External dependencies.
+ */
+const { filter } = lodash;
+
 const DEFAULT_STATE = {
 	user: {},
 	documents: [],
@@ -138,7 +143,7 @@ const store = registerStore( 'docutheques', {
 			case 'GET_DOCUMENTS':
 				return {
 					...state,
-					documents: action.documents,
+					documents: [ ...state.documents, ...action.documents ],
 				};
 
 			case 'SET_CURRENT_STATE':
@@ -212,8 +217,13 @@ const store = registerStore( 'docutheques', {
 		},
 
 		getDocuments( state ) {
-			const { documents } = state;
-			return documents;
+			const { documents, currentDossierId } = state;
+
+			if ( 0 === currentDossierId ) {
+				return filter( documents, { 'dossiers': [] } );
+			}
+
+			return filter( documents, { 'dossiers': [ currentDossierId ] } );
 		},
 
 		getCurrentState( state ) {
@@ -252,7 +262,6 @@ const store = registerStore( 'docutheques', {
 
 		* getDocuments( currentDossierId = 0 ) {
 			const path = '/wp/v2/media?dossiers[]=' + currentDossierId + '&context=edit';
-
 			const documents = yield actions.fetchFromAPI( path, true );
 			return actions.getDocuments( documents );
 		},
