@@ -22,6 +22,14 @@ class DocuthequesDossiers extends Component {
 		};
 	}
 
+	componentDidMount() {
+		const { currentDossierId } = this.props;
+
+		if ( currentDossierId ) {
+			this.setState( { dossierID: currentDossierId } );
+		}
+	}
+
 	setDossier( id, parent, e ) {
 		e.preventDefault();
 		let { dossierAncestors } = this.state;
