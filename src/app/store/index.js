@@ -261,7 +261,7 @@ const store = registerStore( 'docutheques', {
 		},
 
 		* getDocuments( currentDossierId = 0 ) {
-			const path = '/wp/v2/media?dossiers[]=' + currentDossierId + '&context=edit';
+			const path = '/wp/v2/media?dossiers[]=' + currentDossierId + '&per_page=20&context=edit';
 			const documents = yield actions.fetchFromAPI( path, true );
 			return actions.getDocuments( documents );
 		},

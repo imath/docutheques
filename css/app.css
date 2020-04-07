@@ -95,3 +95,99 @@ li.choix-dossiers a {
 	border: none;
 	box-shadow: none;
 }
+
+#docutheques .liste-documents .media-items {
+	overflow: auto;
+	outline: none;
+	padding-top: 0.5em;
+}
+
+#docutheques .liste-documents .media-item {
+	position: relative;
+	float: left;
+	padding: 8px;
+	margin: 0;
+	color: #444;
+	cursor: pointer;
+	list-style: none;
+	text-align: center;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	width: 20%;
+	box-sizing: border-box;
+}
+
+#docutheques .liste-documents .media-item .item-preview {
+	position: relative;
+	box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+	background: #eee;
+	cursor: pointer;
+}
+
+#docutheques .liste-documents .media-item .item-preview:before {
+	content: "";
+	display: block;
+	padding-top: 100%;
+}
+
+#docutheques .liste-documents .media-item .vignette {
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	opacity: 1;
+	transition: opacity .1s;
+}
+
+#docutheques .liste-documents .media-item .vignette .centered {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	transform: translate( 50%, 50% );
+}
+
+#docutheques .liste-documents .media-item .vignette:after {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+}
+
+#docutheques .liste-documents .media-item .vignette svg {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width:150px;
+	height: 150px;
+	max-width: 50%;
+	max-height: 50%;
+}
+
+#docutheques .liste-documents .media-item .vignette .centered svg {
+	transform: translate( -50%, -50% );
+}
+
+#docutheques .liste-documents .media-item .media-name {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	overflow: hidden;
+	max-height: 100%;
+	word-wrap: break-word;
+	text-align: center;
+	font-weight: 600;
+	background: rgba(255, 255, 255, 0.8);
+	box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+}

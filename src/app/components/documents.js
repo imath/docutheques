@@ -30,7 +30,7 @@ class DocuthequesDocuments extends Component {
 						createdDate={ document.date }
 						modifiedDate={ document.modified }
 						link={ document.link }
-						type={ document.media_type }
+						type={ 'image' === document.media_type ? document.media_type : document.mime_type }
 					/>
 				);
 			} );
@@ -44,7 +44,9 @@ class DocuthequesDocuments extends Component {
 
 		return (
 			<div className="liste-documents">
-				{ documentItems }
+				<div className="media-items">
+					{ documentItems }
+				</div>
 			</div>
 		);
 	}
