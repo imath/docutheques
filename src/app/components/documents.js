@@ -7,6 +7,11 @@ const { withSelect } = wp.data;
 const { compose } = wp.compose;
 
 /**
+ * External dependencies.
+ */
+const { filter } = lodash;
+
+/**
  * Internal dependencies.
  */
 import DocuthequesDocument from './document';
@@ -17,11 +22,19 @@ class DocuthequesDocuments extends Component {
 	}
 
 	render() {
-		const { documents } = this.props;
-		let documentItems;
+		const { documents, dossier } = this.props;
+		let documentsByDossier, documentItems;
 
 		if ( documents && documents.length ) {
-			documentItems = documents.map( ( document ) => {
+			if ( 0 === dossier ) {
+				documentsByDossier = filter( documents, ( document ) => {
+					return ! document.dossiers.length;
+				} );
+			} else {
+				documentsByDossier = filter( documents, { 'dossiers': [ dossier ] } );
+			}
+
+			documentItems = documentsByDossier.map( ( document ) => {
 				return (
 					<DocuthequesDocument
 						key={ 'media-item-' + document.id }
@@ -34,7 +47,9 @@ class DocuthequesDocuments extends Component {
 					/>
 				);
 			} );
-		} else {
+		}
+
+		if ( ! documentsByDossier || ! documentsByDossier.length ) {
 			return (
 				<div className="liste-documents">
 					{ __( 'Ce dossier ne contient aucun document', 'docutheques' ) }

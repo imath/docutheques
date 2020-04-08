@@ -191,3 +191,34 @@ li.choix-dossiers a {
 	background: rgba(255, 255, 255, 0.8);
 	box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
 }
+
+#docutheques .uploader-container.enabled {
+	position: relative;
+	top: auto;
+	right: auto;
+	left: auto;
+	bottom: auto;
+	padding-top: 0;
+	margin-top: 20px;
+	border: 4px dashed #b4b9be;
+}
+
+#docutheques .enabled .uploader-inline {
+	min-height: 150px;
+	position: static;
+}
+
+#docutheques .enabled .dropzone-label {
+	font-weight: 600;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	transform: translateY(-50%);
+	padding: 0 10em;
+	text-align: center;
+}
+
+#docutheques .enabled .dropzone-label .components-form-file-upload {
+	margin-top: 1em;
+}

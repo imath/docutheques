@@ -36,7 +36,7 @@ class DocuthequesHeader extends Component {
 
 		if ( get( user, ['capabilities', 'upload_files'], false ) ) {
 			docuthequesActions = [ {
-				title: __( 'Ajouter un fichier', 'docutheques' ),
+				title: __( 'Ajouter un document', 'docutheques' ),
 				icon: 'media-text',
 				onClick: () => this.setCurrentState( 'documentForm' ),
 			}, ...docuthequesActions ];

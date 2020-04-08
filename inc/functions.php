@@ -157,40 +157,40 @@ add_filter( 'rest_dossiers_query', 'docutheques_dossiers_rest_get_args' );
 function docutheques_documents_reset_querried_dossiers( $wp_query ) {
 	remove_action( 'parse_query', 'docutheques_documents_reset_querried_dossiers' );
 
-	if ( isset( $wp_query->query['tax_query'] ) && isset( $wp_query->query_vars['tax_query'] ) ) {
-		// Remove the tax query completely if `dossiers` is the only one.
-		if ( 1 === count( $wp_query->query['tax_query'] ) && 1 === count( $wp_query->query_vars['tax_query'] ) ) {
-			unset( $wp_query->query['tax_query'], $wp_query->query_vars['tax_query'] );
-		} else {
-			// Only remove the `dossiers` tax query part.
-			foreach ( $wp_query->query['tax_query'] as $kq_tq => $q_tax_query ) {
-				if ( 'dossiers' !== $q_tax_query['taxonomy'] ) {
-					continue;
-				}
-
-				unset( $wp_query->query['tax_query'][ $kq_tq ] );
+	if ( isset( $wp_query->query['tax_query'] ) ) {
+		foreach ( $wp_query->query['tax_query'] as $kq_tq => $q_tax_query ) {
+			if ( 'dossiers' !== $q_tax_query['taxonomy'] ) {
+				continue;
 			}
 
-			// Only remove the `dossiers` tax query part.
-			foreach ( $wp_query->query_vars['tax_query'] as $kqv_tq => $qv_tax_query ) {
-				if ( 'dossiers' !== $qv_tax_query['taxonomy'] ) {
-					continue;
-				}
-
-				unset( $wp_query->query_vars['tax_query'][ $kqv_tq ] );
-			}
+			unset( $wp_query->query['tax_query'][ $kq_tq ]['field'], $wp_query->query['tax_query'][ $kq_tq ]['terms'] );
+			$wp_query->query['tax_query'][ $kq_tq ]['operator'] = 'NOT EXISTS';
 		}
+	}
 
+	if ( isset( $wp_query->query_vars['tax_query'] ) ) {
+		foreach ( $wp_query->query_vars['tax_query'] as $kqv_tq => $qv_tax_query ) {
+			if ( 'dossiers' !== $qv_tax_query['taxonomy'] ) {
+				continue;
+			}
+
+			unset( $wp_query->query_vars['tax_query'][ $kqv_tq ]['field'], $wp_query->query_vars['tax_query'][ $kqv_tq ]['terms'] );
+			$wp_query->query_vars['tax_query'][ $kqv_tq ]['operator'] = 'NOT EXISTS';
+		}
+	}
+
+	if ( isset( $wp_query->tax_query ) ) {
 		foreach ( $wp_query->tax_query->queries as $ktq => $tax_query ) {
 			if ( 'dossiers' !== $tax_query['taxonomy'] ) {
 				continue;
 			}
 
-			unset( $wp_query->tax_query->queries[ $ktq ] );
+			$wp_query->tax_query->queries[ $ktq ]['terms']    = array();
+			$wp_query->tax_query->queries[ $ktq ]['operator'] = 'NOT EXISTS';
 		}
 
 		if ( isset( $wp_query->tax_query->queried_terms['dossiers'] ) ) {
-			unset( $wp_query->tax_query->queried_terms['dossiers'] );
+			$wp_query->tax_query->queried_terms['dossiers'] = array( 'field' => 'term_id' );
 		}
 	}
 }
@@ -218,3 +218,29 @@ function docutheques_documents_rest_get_args( $args = array(), $request ) {
 	return $args;
 }
 add_filter( 'rest_attachment_query', 'docutheques_documents_rest_get_args', 10, 2 );
+
+/**
+ * Saves the dossier the document is attached to.
+ *
+ * @since 1.0.0
+ *
+ * @param WP_Post         $document Inserted or updated document
+ *                                  object.
+ * @param WP_REST_Request $request  The request sent to the API.
+ */
+function docutheques_rest_save_document( $document, $request ) {
+	$dossiers = $request->get_param( 'dossiers' );
+
+	if ( $dossiers ) {
+		$dossier = (int) reset( $dossiers );
+
+		if ( $dossier ) {
+			$result = wp_set_object_terms( $document->ID, $dossier, 'dossiers' );
+
+			if ( is_wp_error( $result ) ) {
+				return $result;
+			}
+		}
+	}
+}
+add_action( 'rest_insert_attachment', 'docutheques_rest_save_document', 10, 2 );

@@ -7,7 +7,7 @@ const { registerStore } = wp.data;
 /**
  * External dependencies.
  */
-const { filter } = lodash;
+const { filter, reject } = lodash;
 
 const DEFAULT_STATE = {
 	user: {},
@@ -27,6 +27,35 @@ const DEFAULT_STATE = {
 	currentState: 'documentsBrowser',
 	currentDossierId: 0,
 };
+
+function * insertDocument( document, dossier = 0 ) {
+	let uploading = true, uploaded;
+
+	yield { type: 'UPLOAD_START', uploading, document };
+
+	const formData = new FormData();
+	formData.append( 'file', document );
+	formData.append( 'dossiers', [ dossier ] );
+
+	uploading = false;
+	try {
+		uploaded = yield actions.createFromAPI( '/wp/v2/media', formData );
+		yield { type: 'UPLOAD_END', uploading, uploaded };
+		uploaded.uploaded = true;
+
+		return actions.addDocument( uploaded );
+	} catch ( error ) {
+		uploaded = {
+			id: uniqueId(),
+			name: file.name,
+			error: error.message,
+		};
+
+		yield { type: 'UPLOAD_END', uploading, uploaded };
+
+		return actions.traceErrors( uploaded );
+	}
+}
 
 function * insertDossier( dossier ) {
 	let creating = true, created;
@@ -101,6 +130,7 @@ const actions = {
 		};
 	},
 
+	insertDocument,
 	insertDossier,
 	createFromAPI( path, formData ) {
 		return {
@@ -114,6 +144,19 @@ const actions = {
 		return {
 			type: 'ADD_DOSSIER',
 			dossier,
+		};
+	},
+
+	addDocument( document ) {
+		return {
+			type: 'ADD_DOCUMENT',
+			document,
+		};
+	},
+
+	reset_uploads() {
+		return {
+			type: 'RESET_UPLOADS',
 		};
 	},
 
@@ -181,6 +224,45 @@ const store = registerStore( 'docutheques', {
 					currentDossierId: action.dossier.id,
 				};
 
+			case 'UPLOAD_START':
+				return {
+					...state,
+					uploading: action.uploading,
+					uploaded: [
+						...state.uploaded,
+						action.document,
+					],
+				};
+
+			case 'UPLOAD_END':
+				return {
+					...state,
+					uploading: action.uploading,
+					uploaded: reject( state.uploaded, ( u ) => { return u.name === action.uploaded.name || u.title === action.uploaded.title; } ),
+					ended: true,
+				};
+
+			case 'ADD_DOCUMENT':
+				return {
+					...state,
+					documents: [
+						...reject( state.documents, [ 'id', action.document.id ] ),
+						action.document,
+					],
+				};
+
+			case 'RESET_UPLOADS':
+				return {
+					...state,
+					uploading: false,
+					uploaded: [],
+					errored: {
+						dossiers: state.errored.dossiers,
+						documents: [],
+					},
+					uploadEnded: false,
+				};
+
 			case 'ADD_ERROR':
 				const updateErrors = item.type && 'attachment' === item.type ? {
 					documents: [
@@ -217,13 +299,8 @@ const store = registerStore( 'docutheques', {
 		},
 
 		getDocuments( state ) {
-			const { documents, currentDossierId } = state;
-
-			if ( 0 === currentDossierId ) {
-				return filter( documents, { 'dossiers': [] } );
-			}
-
-			return filter( documents, { 'dossiers': [ currentDossierId ] } );
+			const { documents } = state;
+			return documents;
 		},
 
 		getCurrentState( state ) {
