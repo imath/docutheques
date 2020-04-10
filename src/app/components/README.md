@@ -5,3 +5,5 @@
 - How to edit dossiers ?
 - edit-document.js (do not forgot to allow editing date, parent dossiers and description)
 - Moving can be done using the dossiers sidebar
+- Handle dossier create errors
+- there can be other errors than create ones
