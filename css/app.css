@@ -232,3 +232,18 @@ li.choix-dossiers a {
     vertical-align: sub;
     animation: rotation 2s infinite linear;
 }
+
+#docutheques .docutheques-erreurs .components-notice.is-dismissible,
+#docutheques .docutheques-infos .components-notice.is-info {
+	padding-right: 0;
+}
+
+#docutheques .components-notice.is-dismissible .dashicon,
+#docutheques .components-notice.is-info .dashicon{
+	vertical-align: sub;
+	margin-right: 0.5em;
+}
+
+#docutheques .docutheques-erreurs {
+	padding-bottom: 1em;
+}

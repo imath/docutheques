@@ -7,7 +7,7 @@ const { registerStore } = wp.data;
 /**
  * External dependencies.
  */
-const { filter, reject, last, orderBy } = lodash;
+const { uniqueId, filter, reject, last, orderBy } = lodash;
 
 const DEFAULT_STATE = {
 	user: {},
@@ -50,8 +50,9 @@ function * insertDocument( document, dossier = 0 ) {
 	} catch ( error ) {
 		uploaded = {
 			id: uniqueId(),
-			name: file.name,
+			name: document.name,
 			error: error.message,
+			type: 'attachment',
 		};
 
 		yield { type: 'UPLOAD_END', uploading, uploaded };
@@ -81,6 +82,7 @@ function * insertDossier( dossier ) {
 			id: uniqueId(),
 			name: dossier.name,
 			error: error.message,
+			type: 'dossier',
 		};
 
 		yield { type: 'DOSSIER_CREATE_END', creating };
@@ -168,6 +170,14 @@ const actions = {
 			type: 'ADD_ERROR',
 			item,
 		};
+	},
+
+	dismissError( errorType, id ) {
+		return {
+			type: 'REMOVE_ERROR',
+			errorType,
+			id,
+		};
 	}
 };
 
@@ -246,6 +256,8 @@ const store = registerStore( 'docutheques', {
 
 						if ( action.uploaded && action.uploaded.source_url ) {
 							fileName = last( action.uploaded.source_url.split( '/' ) );
+						} else if ( action.uploaded && action.uploaded.error ) {
+							fileName = action.uploaded.name;
 						}
 
 						return document.name === fileName;
@@ -275,12 +287,14 @@ const store = registerStore( 'docutheques', {
 				};
 
 			case 'ADD_ERROR':
-				const updateErrors = item.type && 'attachment' === item.type ? {
+				const updateErrors = action.item.type && 'attachment' === action.item.type ? {
 					documents: [
 						...state.errored.documents,
 						action.item,
-					]
+					],
+					dossiers: state.errored.dossiers,
 				} : {
+					documents: state.errored.documents,
 					dossiers: [
 						...state.errored.dossiers,
 						action.item,
@@ -290,6 +304,20 @@ const store = registerStore( 'docutheques', {
 				return {
 					...state,
 					errored: updateErrors,
+				};
+
+			case 'REMOVE_ERROR':
+				const dismissError = action.errorType === 'documents' ? {
+					documents: reject( state.errored.documents, [ 'id', action.id ] ),
+					dossiers: state.errored.dossiers,
+				} : {
+					documents: state.errored.documents,
+					dossiers: reject( state.errored.dossiers, [ 'id', action.id ] ),
+				};
+
+				return {
+					...state,
+					errored: dismissError,
 				};
 		}
 
@@ -317,6 +345,11 @@ const store = registerStore( 'docutheques', {
 		getUploads( state ) {
 			const { uploaded } = state;
 			return uploaded;
+		},
+
+		getErrors( state ) {
+			const { errored } = state;
+			return errored;
 		},
 
 		getCurrentState( state ) {

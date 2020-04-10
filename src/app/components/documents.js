@@ -16,6 +16,8 @@ const { filter } = lodash;
  */
 import DocuthequesDocument from './document';
 import DocuthequesChargement from './chargement';
+import DocuthequesErreurs from './erreurs';
+import DocuthequesInfos from './infos';
 
 class DocuthequesDocuments extends Component {
 	constructor() {
@@ -54,13 +56,15 @@ class DocuthequesDocuments extends Component {
 		if ( ( ! documentsByDossier || ! documentsByDossier.length ) && ! hasChargements ) {
 			return (
 				<div className="liste-documents">
-					{ __( 'Ce dossier ne contient aucun document', 'docutheques' ) }
+					<DocuthequesErreurs />
+					<DocuthequesInfos />
 				</div>
 			);
 		}
 
 		return (
 			<div className="liste-documents">
+				<DocuthequesErreurs />
 				<DocuthequesChargement chargements={ chargements } />
 				<div className="media-items">
 					{ documentItems }
