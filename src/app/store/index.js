@@ -7,7 +7,7 @@ const { registerStore } = wp.data;
 /**
  * External dependencies.
  */
-const { filter, reject } = lodash;
+const { filter, reject, last, orderBy } = lodash;
 
 const DEFAULT_STATE = {
 	user: {},
@@ -35,7 +35,10 @@ function * insertDocument( document, dossier = 0 ) {
 
 	const formData = new FormData();
 	formData.append( 'file', document );
-	formData.append( 'dossiers', [ dossier ] );
+
+	if ( 0 !== dossier ) {
+		formData.append( 'dossiers', [ dossier ] );
+	}
 
 	uploading = false;
 	try {
@@ -238,7 +241,15 @@ const store = registerStore( 'docutheques', {
 				return {
 					...state,
 					uploading: action.uploading,
-					uploaded: reject( state.uploaded, ( u ) => { return u.name === action.uploaded.name || u.title === action.uploaded.title; } ),
+					uploaded: reject( state.uploaded, ( document ) => {
+						let fileName = '';
+
+						if ( action.uploaded && action.uploaded.source_url ) {
+							fileName = last( action.uploaded.source_url.split( '/' ) );
+						}
+
+						return document.name === fileName;
+					} ),
 					ended: true,
 				};
 
@@ -300,7 +311,12 @@ const store = registerStore( 'docutheques', {
 
 		getDocuments( state ) {
 			const { documents } = state;
-			return documents;
+			return orderBy( documents, ['modified'], ['desc'] );
+		},
+
+		getUploads( state ) {
+			const { uploaded } = state;
+			return uploaded;
 		},
 
 		getCurrentState( state ) {

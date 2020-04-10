@@ -15,6 +15,7 @@ const { filter } = lodash;
  * Internal dependencies.
  */
 import DocuthequesDocument from './document';
+import DocuthequesChargement from './chargement';
 
 class DocuthequesDocuments extends Component {
 	constructor() {
@@ -22,7 +23,8 @@ class DocuthequesDocuments extends Component {
 	}
 
 	render() {
-		const { documents, dossier } = this.props;
+		const { documents, chargements, dossier } = this.props;
+		const hasChargements = chargements && chargements.length ? true : false;
 		let documentsByDossier, documentItems;
 
 		if ( documents && documents.length ) {
@@ -49,7 +51,7 @@ class DocuthequesDocuments extends Component {
 			} );
 		}
 
-		if ( ! documentsByDossier || ! documentsByDossier.length ) {
+		if ( ( ! documentsByDossier || ! documentsByDossier.length ) && ! hasChargements ) {
 			return (
 				<div className="liste-documents">
 					{ __( 'Ce dossier ne contient aucun document', 'docutheques' ) }
@@ -59,6 +61,7 @@ class DocuthequesDocuments extends Component {
 
 		return (
 			<div className="liste-documents">
+				<DocuthequesChargement chargements={ chargements } />
 				<div className="media-items">
 					{ documentItems }
 				</div>
@@ -69,8 +72,11 @@ class DocuthequesDocuments extends Component {
 
 export default compose( [
 	withSelect( ( select, { dossier } ) => {
+		const store = select( 'docutheques' );
+
 		return {
-			documents: select( 'docutheques' ).getDocuments( dossier ),
+			documents: store.getDocuments( dossier ),
+			chargements: store.getUploads(),
 		};
 	} ),
 ] )( DocuthequesDocuments );

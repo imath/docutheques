@@ -222,3 +222,13 @@ li.choix-dossiers a {
 #docutheques .enabled .dropzone-label .components-form-file-upload {
 	margin-top: 1em;
 }
+
+#docutheques .chargement-de-documents {
+    color: #f56e28;
+    text-align: center;
+}
+
+#docutheques .chargement-de-documents .dashicon {
+    vertical-align: sub;
+    animation: rotation 2s infinite linear;
+}
