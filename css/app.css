@@ -5,7 +5,6 @@
 }
 
 #docutheques .arbre-des-dossiers,
-#docutheques .liste-documents,
 #docutheques .formulaire-dossier,
 #docutheques .formulaire-document {
 	overflow: auto;
@@ -16,17 +15,36 @@
 	background: #fff;
 }
 
+#docutheques .corps-docutheques .media-toolbar.wp-filter {
+	margin: 25px 0 0;
+}
+
+#docutheques .corps-docutheques .view-switch .view-list:before {
+    content: "\f111";
+}
+
+#docutheques .corps-docutheques .media-toolbar-secondary .select-mode-toggle-button {
+    margin: 0 8px 0 0;
+    vertical-align: middle;
+}
+
+#docutheques .liste-documents {
+	overflow: auto;
+	margin: 0 0 16px 0;
+	padding: 8px;
+}
+
 #docutheques .corps-docutheques .arbre-des-dossiers {
 	width: 20%;
-	max-width: 22%;
+	max-width: 20%;
 }
 
 #docutheques .corps-docutheques .liste-documents,
 #docutheques .corps-docutheques .formulaire-dossier,
 #docutheques .corps-docutheques .formulaire-document {
 	position: relative;
-	width: 70%;
-	max-width: 73%;
+	width: calc( 80% - 44px );
+	max-width: calc( 80% - 44px );
 }
 
 #docutheques .corps-docutheques .formulaire-dossier .close,
@@ -99,7 +117,7 @@ li.choix-dossiers a {
 #docutheques .liste-documents .media-items {
 	overflow: auto;
 	outline: none;
-	padding-top: 0.5em;
+	padding-top: 0.5px;
 }
 
 #docutheques .liste-documents .media-item {
@@ -242,6 +260,11 @@ li.choix-dossiers a {
 #docutheques .components-notice.is-info .dashicon{
 	vertical-align: sub;
 	margin-right: 0.5em;
+}
+
+#docutheques .docutheques-erreurs,
+#docutheques .docutheques-infos {
+	padding-top: 4px;
 }
 
 #docutheques .docutheques-erreurs {

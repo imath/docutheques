@@ -26,6 +26,7 @@ const DEFAULT_STATE = {
 	isSelectable: false,
 	currentState: 'documentsBrowser',
 	currentDossierId: 0,
+	isAdvancedEditMode: false,
 };
 
 function * insertDocument( document, dossier = 0 ) {
@@ -178,7 +179,14 @@ const actions = {
 			errorType,
 			id,
 		};
-	}
+	},
+
+	switchMode( isAdvancedEditMode ) {
+		return {
+			type: 'SWITCH_MODE',
+			isAdvancedEditMode,
+		};
+	},
 };
 
 const store = registerStore( 'docutheques', {
@@ -319,6 +327,12 @@ const store = registerStore( 'docutheques', {
 					...state,
 					errored: dismissError,
 				};
+
+			case 'SWITCH_MODE':
+				return {
+					...state,
+					isAdvancedEditMode: action.isAdvancedEditMode,
+				};
 		}
 
 		return state;
@@ -361,6 +375,11 @@ const store = registerStore( 'docutheques', {
 			const { currentDossierId } = state;
 			return currentDossierId;
 		},
+
+		isAdvancedEditMode( state ) {
+			const { isAdvancedEditMode } = state;
+			return isAdvancedEditMode;
+		}
 	},
 
 	controls: {

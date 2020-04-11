@@ -48,6 +48,7 @@ class DocuthequesDossiers extends Component {
 
 		dispatch( 'docutheques' ).setCurrentDossier( id );
 		dispatch( 'docutheques' ).setCurrentState( 'documentsBrowser' );
+		dispatch( 'docutheques' ).switchMode( false );
 	}
 
 	buildTermsTree( flatTerms ) {

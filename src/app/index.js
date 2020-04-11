@@ -11,6 +11,7 @@ const { compose } = wp.compose;
  */
 import './store';
 import DocuthequesHeader from './components/header';
+import DocuthequesToolbar from './components/barre-outils';
 import DocuthequesDossiers from './components/terms-tree';
 import DocuthequesDocuments from './components/documents';
 import DocuthequesDossierForm from './components/ajout-dossier';
@@ -32,6 +33,9 @@ class Docutheques extends Component {
 					user={ user }
 				/>
 				<div className="corps-docutheques">
+					<DocuthequesToolbar
+						dossier={ currentDossierId }
+					/>
 					<DocuthequesDossiers />
 
 					{ 'documentForm' === currentState && (
