@@ -23,9 +23,15 @@
     content: "\f111";
 }
 
-#docutheques .corps-docutheques .media-toolbar-secondary .select-mode-toggle-button {
+#docutheques .corps-docutheques .media-toolbar-secondary .select-mode-toggle-button,
+.delete-dossier-confirmation .confirmation-buttons button {
     margin: 0 8px 0 0;
     vertical-align: middle;
+}
+
+.delete-dossier-confirmation .confirmation-buttons {
+	margin-top: 2em;
+	text-align: right;
 }
 
 #docutheques .liste-documents {
