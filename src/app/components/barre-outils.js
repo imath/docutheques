@@ -48,10 +48,10 @@ class DocuthequesToolbar extends Component {
 					{ isAdvancedEditMode && ! documentsSelection && (
 						<Fragment>
 							<Button isLarge={ true } className="button media-button select-mode-toggle-button">
-								{ __( 'Supprimer le dossier actif', 'docutheques' ) }
+								{ __( 'Modifier le dossier actif', 'docutheques' ) }
 							</Button>
 							<Button isLarge={ true } className="button media-button select-mode-toggle-button">
-								{ __( 'Retirer les documents du dossier actif', 'docutheques' ) }
+								{ __( 'Supprimer le dossier actif', 'docutheques' ) }
 							</Button>
 						</Fragment>
 					) }
