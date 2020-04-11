@@ -23,7 +23,7 @@ class DocuthequesHeader extends Component {
 	}
 
 	render() {
-		const { user } = this.props;
+		const { user, isAdvancedEditMode } = this.props;
 		let docuthequesActions = [];
 
 		if ( get( user, ['capabilities', 'manage_categories'], false ) ) {
@@ -50,11 +50,13 @@ class DocuthequesHeader extends Component {
 			<Fragment>
 				<h1 className="wp-heading-inline">{ __( 'Administration des DocuThèques', 'docutheques' ) }</h1>
 
-				<DropdownMenu
-					icon="insert"
-					label={ __( 'Ajouter', 'docutheques' ) }
-					controls={ docuthequesActions }
-				/>
+				{ ! isAdvancedEditMode && (
+					<DropdownMenu
+						icon="insert"
+						label={ __( 'Ajouter', 'docutheques' ) }
+						controls={ docuthequesActions }
+					/>
+				) }
 
 				<hr className="wp-header-end" />
 			</Fragment>

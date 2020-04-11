@@ -25,12 +25,13 @@ class Docutheques extends Component {
 	}
 
 	render() {
-		const { user, currentState, currentDossierId } = this.props;
+		const { user, currentState, currentDossierId, isAdvancedEditMode } = this.props;
 
 		return (
 			<Fragment>
 				<DocuthequesHeader
 					user={ user }
+					isAdvancedEditMode={ isAdvancedEditMode }
 				/>
 				<div className="corps-docutheques">
 					<DocuthequesToolbar
@@ -71,6 +72,7 @@ const DocuthequesAdministration = compose( [
 			user: docuThequesStore.getCurrentUser(),
 			currentState: docuThequesStore.getCurrentState(),
 			currentDossierId: docuThequesStore.getCurrentDossierId(),
+			isAdvancedEditMode: docuThequesStore.isAdvancedEditMode(),
 		};
 	} ),
 ] )( Docutheques );
