@@ -7,6 +7,11 @@ const { __ } = wp.i18n;
 const { withDispatch, dispatch } = wp.data;
 const { compose } = wp.compose;
 
+/**
+ * External dependencies.
+ */
+const { get } = lodash;
+
 class DocuthequesDocumentForm extends Component {
 	constructor() {
 		super( ...arguments );
@@ -39,7 +44,11 @@ class DocuthequesDocumentForm extends Component {
 	render() {
 		const { user, dossier } = this.props;
 		const dzClass = 'enabled';
-		const dzLabel = __( 'Déposer votre ou vos document(s) ici.', 'docutheques' );
+		const titleForm = 0 !== dossier ? __( 'Téléverser un ou plusieurs nouveau(x) document(s) dans le dossier actif', 'docutheques' ) : __( 'Téléverser un ou plusieurs nouveau(x) document(s)', 'docutheques' );
+
+		if ( ! get( user, ['capabilities', 'upload_files'], false ) ) {
+			return null;
+		}
 
 		return (
 			<div className="formulaire-document">
@@ -47,7 +56,7 @@ class DocuthequesDocumentForm extends Component {
 					<span className="screen-reader-text">{ __( 'Fermer le formulaire d’ajout de document(s)', 'docutheques' ) }</span>
 				</button>
 
-				<h2 className="title">{ __( 'Téléverser un ou plusieurs nouveau(x) document(s) dans le dossier actif', 'docutheques' ) }</h2>
+				<h2 className="title">{ titleForm }</h2>
 
 				<div className={ 'uploader-container ' + dzClass }>
 					<DropZoneProvider>

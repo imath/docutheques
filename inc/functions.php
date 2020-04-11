@@ -220,7 +220,7 @@ function docutheques_documents_rest_get_args( $args = array(), $request ) {
 add_filter( 'rest_attachment_query', 'docutheques_documents_rest_get_args', 10, 2 );
 
 /**
- * Saves the dossier the document is attached to.
+ * Sets the dossier the document is attached to.
  *
  * @since 1.0.0
  *

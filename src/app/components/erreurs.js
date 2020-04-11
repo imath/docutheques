@@ -62,7 +62,7 @@ class DocuthequesErreurs extends Component {
 								/* translators: 1: file name. 2: error message. */
 								__( 'Le dossier « %1$s » n‘a pas pu être créé en raison de cette erreur : %2$s', 'docutheques' ),
 								error.name,
-								error.message
+								error.error
 							) }
 						</p>
 					</Notice>
@@ -73,6 +73,7 @@ class DocuthequesErreurs extends Component {
 		return (
 			<div className="docutheques-erreurs">
 				{ documentErrors }
+				{ dossierErrors }
 			</div>
 		);
 	}
