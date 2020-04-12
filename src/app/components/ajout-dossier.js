@@ -59,7 +59,7 @@ class DocuthequesDossierForm extends Component {
 	render() {
 		const { user, dossier } = this.props;
 		const { name, description } = this.state;
-		const titleForm = 0 !== dossier ? __( 'Créer un nouveau sous-dossier dans le dossier actif', 'docutheques' ) : __( 'Créer une nouvelle docuthèque', 'docutheques' );
+		const titleForm = 0 !== dossier ? __( 'Créer un nouveau dossier', 'docutheques' ) : __( 'Créer une nouvelle DocuThèque', 'docutheques' );
 
 		if ( ! get( user, ['capabilities', 'manage_categories'], false ) ) {
 			return null;
@@ -74,7 +74,7 @@ class DocuthequesDossierForm extends Component {
 				<h2 className="title">{ titleForm }</h2>
 
 				<TextControl
-					label={ __( 'Nom du dossier (obligatoire)', 'docutheques' ) }
+					label={  0 !== dossier ? __( 'Nom du dossier (obligatoire)', 'docutheques' ) : __( 'Nom de la DocuThèque (obligatoire)', 'docutheques' ) }
 					value={ name }
 					onChange={ ( name ) => this.setState( { name: name } ) }
 				/>

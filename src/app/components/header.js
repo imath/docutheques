@@ -23,13 +23,13 @@ class DocuthequesHeader extends Component {
 	}
 
 	render() {
-		const { user, isAdvancedEditMode } = this.props;
+		const { user, isAdvancedEditMode, dossier } = this.props;
 		let docuthequesActions = [];
 
 		if ( get( user, ['capabilities', 'manage_categories'], false ) ) {
 			docuthequesActions = [ {
-				title: __( 'Ajouter un dossier', 'docutheques' ),
-				icon: 'category',
+				title: 0 === dossier ? __( 'Ajouter une DocuThèque', 'docutheques' ) : __( 'Ajouter un dossier', 'docutheques' ),
+				icon: 0 === dossier ? 'portfolio' : 'category',
 				onClick: () => this.setCurrentState( 'dossierForm' ),
 			}, ...docuthequesActions ];
 		}

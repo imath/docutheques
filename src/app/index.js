@@ -31,6 +31,7 @@ class Docutheques extends Component {
 			<Fragment>
 				<DocuthequesHeader
 					user={ user }
+					dossier={ currentDossierId }
 					isAdvancedEditMode={ isAdvancedEditMode }
 				/>
 				<div className="corps-docutheques">
