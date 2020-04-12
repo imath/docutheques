@@ -26,5 +26,8 @@ function docutheques_globals() {
 
 	// URL.
 	$docutheques->url = plugin_dir_url( dirname( __FILE__ ) );
+
+	// List of catched objects when the dossier is being deleted.
+	$docutheques->deleting_dossier = array();
 }
 add_action( 'plugins_loaded', 'docutheques_globals' );

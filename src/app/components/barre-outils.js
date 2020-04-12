@@ -2,8 +2,8 @@
  * WordPress dependencies
  */
 const { Component, Fragment, createElement } = wp.element;
-const { Button, Modal } = wp.components;
-const { withSelect, dispatch } = wp.data;
+const { Button, Modal, CheckboxControl } = wp.components;
+const { withSelect, withDispatch, dispatch } = wp.data;
 const { compose } = wp.compose;
 const { __ } = wp.i18n;
 
@@ -14,6 +14,9 @@ class DocuthequesToolbar extends Component {
 		this.state = {
 			isDeleteDossierModalOpen: false,
 			isDeleteDocumentModalOpen: false,
+			options: {
+				deleteDocuments: false,
+			},
 		};
 
 		this.openDossierModal = this.openDossierModal.bind( this );
@@ -35,17 +38,24 @@ class DocuthequesToolbar extends Component {
 		this.setState( { isDeleteDossierModalOpen: false } );
 	}
 
-	deleteDossier() {
-		const { dossier } = this.props;
+	setDossierDeleteOption( checked ) {
+		this.setState( { options: {
+			deleteDocuments: checked,
+		} } )
+	}
 
-		// @todo handle Dossier delete.
+	deleteDossier() {
+		const { dossier, onDeleteDossier } = this.props;
+		const { options } = this.state;
+
+		onDeleteDossier( dossier, options );
 
 		this.setState( { isDeleteDossierModalOpen: false } );
 	}
 
 	render() {
 		const { dossier, isAdvancedEditMode } = this.props;
-		const { isDeleteDossierModalOpen } = this.state;
+		const { isDeleteDossierModalOpen, options } = this.state;
 		const documentsSelection = 0;
 		let gridClass = 'view-grid';
 		let avancedEditClass = 'view-list';
@@ -86,11 +96,17 @@ class DocuthequesToolbar extends Component {
 									className="delete-dossier-confirmation"
 								>
 
-									{ __( 'Cette action supprimera tous les éventuels dossiers et documents contenus dans ce dossier, vous confirmez ?', 'docutheques' ) }
+									<p>{ __( 'Cette action supprimera tous les éventuels dossiers contenus dans ce dossier.', 'docutheques' ) }</p>
+
+									<CheckboxControl
+										label={ __( 'Supprimer tous les documents contenus dans ce ou ces dossier(s).', 'docutheques' ) }
+										checked={ options.deleteDocuments }
+										onChange={ ( checked ) => this.setDossierDeleteOption( checked ) }
+									/>
 
 									<div className="confirmation-buttons">
 										<Button isLarge={ false } isPrimary={ true } onClick={ this.deleteDossier }>
-											{ __( 'Supprimer', 'docutheques' ) }
+											{ __( 'Confirmer', 'docutheques' ) }
 										</Button>
 
 										<Button isLarge={ false } isSecondary={ true } onClick={ this.closeDossierModal }>
@@ -114,4 +130,9 @@ export default compose( [
 			isAdvancedEditMode: select( 'docutheques' ).isAdvancedEditMode(),
 		};
 	} ),
+	withDispatch( ( dispatch ) => ( {
+		onDeleteDossier( dossier, options = null ) {
+			dispatch( 'docutheques' ).deleteDossier( dossier, options );
+		},
+	} ) ),
 ] )( DocuthequesToolbar );

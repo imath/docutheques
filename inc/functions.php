@@ -148,6 +148,83 @@ function docutheques_dossiers_rest_get_args( $args = array() ) {
 add_filter( 'rest_dossiers_query', 'docutheques_dossiers_rest_get_args' );
 
 /**
+ * Init the documents list for the deleted dossiers.
+ *
+ * @since 1.0.0
+ *
+ * @param int    $term     Term ID.
+ * @param string $taxonomy Taxonomy Name.
+ */
+function docutheques_is_deleting_dossier( $term = 0, $taxonomy = '' ) {
+	if ( 'dossiers' === $taxonomy ) {
+		$docutheques = docutheques();
+
+		$key_dossier = 'term_id_' . $term;
+		if ( ! isset( $docutheques->deleting_dossier[ $key_dossier ] ) ) {
+			$docutheques->deleting_dossier = array_merge( $docutheques->deleting_dossier, array( $key_dossier => array() ) );
+		}
+	}
+}
+add_action( 'pre_delete_term', 'docutheques_is_deleting_dossier', 10, 2 );
+
+/**
+ * Catch all documents to delete with the deleted dossiers.
+ *
+ * @since 1.0.0
+ *
+ * @param int   $term         Term ID.
+ * @param int   $tt_id        Term taxonomy ID.
+ * @param mixed $deleted_term Copy of the already-deleted term, in the form specified
+ *                            by the parent function. WP_Error otherwise.
+ * @param array $object_ids   List of term object IDs.
+ */
+function docutheques_deleted_dossier_get_documents( $term = 0, $tt_id = 0, $deleted_term = null, $object_ids ) {
+	$docutheques = docutheques();
+	$dossier_key = 'term_id_' . $term;
+
+	if ( isset( $docutheques->deleting_dossier[ $dossier_key ] ) ) {
+		$docutheques->deleting_dossier[ $dossier_key ] = $object_ids;
+	}
+}
+add_action( 'delete_dossiers', 'docutheques_deleted_dossier_get_documents', 10, 4 );
+
+/**
+ * Completely deletes the content of a dossier.
+ *
+ * @since 1.0.0
+ *
+ * @param WP_Term          $term     The deleted term.
+ * @param WP_REST_Response $response The response data.
+ * @param WP_REST_Request  $request  The request sent to the API.
+ */
+function docutheques_delete_dossier( $term, $response, $request ) {
+	$sous_dossiers    = $request->get_param( 'sousDossiers' );
+	$delete_documents = $request->get_param( 'deleteDocuments' );
+
+	if ( $sous_dossiers ) {
+		foreach ( wp_parse_id_list( $sous_dossiers ) as $sous_dossier_id ) {
+			wp_delete_term( $sous_dossier_id, 'dossiers' );
+		}
+	}
+
+	if ( $delete_documents ) {
+		$alldossiers  = array_merge( $sous_dossiers, array( $term->term_id ) );
+		$alldocuments = docutheques()->deleting_dossier;
+
+		foreach ( $alldossiers as $dossier_id ) {
+			$key = 'term_id_' . $dossier_id;
+
+			if ( isset( $alldocuments[ $key ] ) ) {
+				foreach ( $alldocuments[ $key ] as $document_id ) {
+					wp_delete_attachment( (int) $document_id, true );
+				}
+			}
+		}
+	}
+}
+add_action( 'rest_delete_dossiers', 'docutheques_delete_dossier', 10, 3 );
+
+/**
  * Resets the queried dossiers as 0 was requested.
  *
  * @since 1.0.0

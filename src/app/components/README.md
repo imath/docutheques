@@ -8,3 +8,4 @@
 - [x] Handle dossier create errors
 - [ ] there can be other errors than create ones
 - [ ] Update the file of an existing attachment: check `$post_type->get_rest_controller();`
+- [ ] The filename can be different from the uploaded file once the upload is accomplished.

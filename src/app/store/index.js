@@ -7,7 +7,7 @@ const { registerStore } = wp.data;
 /**
  * External dependencies.
  */
-const { uniqueId, filter, reject, last, orderBy } = lodash;
+const { uniqueId, filter, reject, last, orderBy, assignIn, forEach } = lodash;
 
 const DEFAULT_STATE = {
 	user: {},
@@ -23,6 +23,8 @@ const DEFAULT_STATE = {
 	uploadEnded: false,
 	creating: false,
 	createEnded: false,
+	deleting: false,
+	deleteEnded: false,
 	isSelectable: false,
 	currentState: 'documentsBrowser',
 	currentDossierId: 0,
@@ -92,6 +94,46 @@ function * insertDossier( dossier ) {
 	}
 }
 
+function getAllChildren( dossierID ) {
+	const getStore = store.getState();
+	const { dossiers } = getStore;
+	let children = filter( dossiers, { parent: dossierID } );
+
+	forEach( children, ( dossier ) => {
+		const subChildren = getAllChildren( dossier.id );
+		children = [ ...children, ...subChildren ];
+	} );
+
+	return children;
+}
+
+function * deleteDossier( dossierID, options = {} ) {
+	let deleting = true, deleted;
+	options.sousDossiers = getAllChildren( dossierID ).map( ( d ) => ( d.id ) );
+
+	yield { type: 'DOSSIER_DELETE_START', deleting, dossierID };
+
+	deleting = false;
+	try {
+		deleted = yield actions.deleteFromAPI( '/wp/v2/dossiers/' + dossierID , options );
+		yield { type: 'DOSSIER_DELETE_END', deleting };
+
+		return actions.removeDossier( deleted.previous, options );
+	} catch ( error ) {
+		deleted = {
+			id: dossierID,
+			name: '',
+			error: error.message,
+			type: 'dossier',
+			actionType: 'delete',
+		};
+
+		yield { type: 'DOSSIER_DELETE_END', deleting };
+
+		return actions.traceErrors( deleted );
+	}
+}
+
 const actions = {
 	getCurrentUser( user ) {
 		return {
@@ -146,6 +188,15 @@ const actions = {
 		};
 	},
 
+	deleteDossier,
+	deleteFromAPI( path, options = null ) {
+		return {
+			type: 'DELETE_FROM_API',
+			path,
+			options,
+		};
+	},
+
 	addDossier( dossier ) {
 		return {
 			type: 'ADD_DOSSIER',
@@ -157,6 +208,14 @@ const actions = {
 		return {
 			type: 'ADD_DOCUMENT',
 			document,
+		};
+	},
+
+	removeDossier( dossier, options ) {
+		return {
+			type: 'REMOVE_DOSSIER',
+			dossier,
+			options,
 		};
 	},
 
@@ -243,6 +302,44 @@ const store = registerStore( 'docutheques', {
 						action.dossier,
 					],
 					currentDossierId: action.dossier.id,
+				};
+
+			case 'REMOVE_DOSSIER':
+				/**
+				 * @todo
+				 *
+				 * remove the documents if needed. And check the below way of removing dossiers.
+				 * best would be to merge options.sousDossier ids with dossier.id.
+				 */
+				return {
+					...state,
+					dossiers: reject( state.dossiers, ( dossier ) => {
+						let id = 0;
+
+						if ( action.dossier && action.dossier.id ) {
+							id = action.dossier.id;
+						}
+
+						if ( dossier.id === id ) {
+							return true;
+						}
+
+						return dossier.parent === id;
+					} ),
+					currentDossierId: 0,
+				};
+
+			case 'DOSSIER_DELETE_START':
+				return {
+					...state,
+					deleting: action.deleting,
+				};
+
+			case 'DOSSIER_DELETE_END':
+				return {
+					...state,
+					deleting: action.deleting,
+					deleteEnded: true,
 				};
 
 			case 'UPLOAD_START':
@@ -389,7 +486,17 @@ const store = registerStore( 'docutheques', {
 
 		CREATE_FROM_API( action ) {
 			return apiFetch( { path: action.path, method: 'POST', body: action.formData } );
-		}
+		},
+
+		DELETE_FROM_API( action ) {
+			let options = { path: action.path, method: 'DELETE', data: { force: true } };
+
+			if ( action.options ) {
+				options.data = assignIn( options.data, action.options );
+			}
+
+			return apiFetch( options );
+		},
 	},
 
 	resolvers: {

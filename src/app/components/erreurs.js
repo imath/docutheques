@@ -58,10 +58,16 @@ class DocuthequesErreurs extends Component {
 					>
 						<p>
 							<Dashicon icon="warning" />
-							{ sprintf(
+							{ ! error.actionType && sprintf(
 								/* translators: 1: file name. 2: error message. */
 								__( 'Le dossier « %1$s » n‘a pas pu être créé en raison de cette erreur : %2$s', 'docutheques' ),
 								error.name,
+								error.error
+							) }
+
+							{ error.actionType && 'delete' === error.actionType && sprintf(
+								/* translators: %s is the error message. */
+								__( 'Le dossier actif n‘a pas pu être supprimé en raison de cette erreur : %s', 'docutheques' ),
 								error.error
 							) }
 						</p>
