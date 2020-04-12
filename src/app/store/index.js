@@ -7,7 +7,7 @@ const { registerStore } = wp.data;
 /**
  * External dependencies.
  */
-const { uniqueId, filter, reject, last, orderBy, assignIn, forEach } = lodash;
+const { uniqueId, filter, reject, indexOf, orderBy, assignIn, forEach } = lodash;
 
 const DEFAULT_STATE = {
 	user: {},
@@ -46,6 +46,8 @@ function * insertDocument( document, dossier = 0 ) {
 	uploading = false;
 	try {
 		uploaded = yield actions.createFromAPI( '/wp/v2/media', formData );
+		uploaded.submittedName = document.name;
+
 		yield { type: 'UPLOAD_END', uploading, uploaded };
 		uploaded.uploaded = true;
 
@@ -305,28 +307,35 @@ const store = registerStore( 'docutheques', {
 				};
 
 			case 'REMOVE_DOSSIER':
-				/**
-				 * @todo
-				 *
-				 * remove the documents if needed. And check the below way of removing dossiers.
-				 * best would be to merge options.sousDossier ids with dossier.id.
-				 */
+				let removedDossiers = [ action.dossier.id ];
+				if ( action.options.sousDossiers ) {
+					removedDossiers = [ ...action.options.sousDossiers, ...removedDossiers ];
+				}
+				const { documents } = state;
+				let updatedDocuments;
+
+				if ( action.options.deleteDocuments ) {
+					forEach( removedDossiers, ( dossierID ) => {
+						updatedDocuments = reject( documents, { 'dossiers': [ dossierID ] } );
+					} );
+				} else {
+					updatedDocuments = documents.map( ( document ) => {
+						if ( -1 !== indexOf( removedDossiers, document.dossiers[0] ) ) {
+							document.dossiers = [];
+						}
+
+						return document;
+					} );
+				}
+
 				return {
 					...state,
 					dossiers: reject( state.dossiers, ( dossier ) => {
-						let id = 0;
-
-						if ( action.dossier && action.dossier.id ) {
-							id = action.dossier.id;
-						}
-
-						if ( dossier.id === id ) {
-							return true;
-						}
-
-						return dossier.parent === id;
+						return -1 !== indexOf( removedDossiers, dossier.id );
 					} ),
+					documents: updatedDocuments,
 					currentDossierId: 0,
+					isAdvancedEditMode: false,
 				};
 
 			case 'DOSSIER_DELETE_START':
@@ -359,8 +368,8 @@ const store = registerStore( 'docutheques', {
 					uploaded: reject( state.uploaded, ( document ) => {
 						let fileName = '';
 
-						if ( action.uploaded && action.uploaded.source_url ) {
-							fileName = last( action.uploaded.source_url.split( '/' ) );
+						if ( action.uploaded && action.uploaded.submittedName ) {
+							fileName = action.uploaded.submittedName;
 						} else if ( action.uploaded && action.uploaded.error ) {
 							fileName = action.uploaded.name;
 						}
