@@ -39,7 +39,9 @@ class Docutheques extends Component {
 					<DocuthequesToolbar
 						currentState={ currentState }
 					/>
-					<DocuthequesDossiers />
+					<DocuthequesDossiers
+						currentState={ currentState }
+					/>
 
 					{ 'documentForm' === currentState && (
 						<DocuthequesDocumentForm

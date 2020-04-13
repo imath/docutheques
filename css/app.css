@@ -69,6 +69,16 @@
 	z-index: 1;
 }
 
+#docutheques .formulaire-dossier .docutheques-infos .components-notice {
+	margin: 0;
+	margin-bottom: 1em;
+}
+
+#docutheques .formulaire-dossier .components-button,
+#docutheques .formulaire-document .components-button {
+	margin-right: 1em;
+}
+
 #docutheques .liste-dossiers,
 #docutheques .sous-choix-dossiers {
 	padding-top: 0.5em;

@@ -31,6 +31,7 @@ const DEFAULT_STATE = {
 	currentState: 'documentsBrowser',
 	currentDossierId: 0,
 	isAdvancedEditMode: false,
+	newDossierParentId: 0,
 };
 
 function * insertDocument( document, dossier = 0 ) {
@@ -200,6 +201,13 @@ const actions = {
 		};
 	},
 
+	newDossierParent( parentId ) {
+		return {
+			type: 'NEW_DOSSIER_PARENT',
+			parentId,
+		};
+	},
+
 	fetchFromAPI( path, parse ) {
 		return {
 			type: 'FETCH_FROM_API',
@@ -327,6 +335,12 @@ const store = registerStore( 'docutheques', {
 					currentDossierId: action.currentDossierId,
 				};
 
+			case 'NEW_DOSSIER_PARENT':
+				return {
+					...state,
+					newDossierParentId: action.parentId,
+				};
+
 			case 'DOSSIER_CREATE_START':
 				return {
 					...state,
@@ -358,6 +372,7 @@ const store = registerStore( 'docutheques', {
 						action.dossier,
 					],
 					currentDossierId: action.dossier.id,
+					isAdvancedEditMode: false,
 				};
 
 			case 'DOSSIER_UPDATE_START':
@@ -552,6 +567,11 @@ const store = registerStore( 'docutheques', {
 		getCurrentDossier( state ) {
 			const { currentDossierId, dossiers } = state;
 			return find( dossiers, { id: currentDossierId } );
+		},
+
+		getNewDossierParentId( state ) {
+			const { newDossierParentId } = state;
+			return newDossierParentId;
 		},
 
 		isAdvancedEditMode( state ) {

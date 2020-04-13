@@ -13,7 +13,7 @@ class DocuthequesInfos extends Component {
 	}
 
 	render() {
-		const { dossier } = this.props;
+		const { dossier, children } = this.props;
 		let message = __( 'Il n’existe aucun document directement rattaché à la racine pour le moment.', 'docutheques' );
 
 		if ( !! dossier && 0 === dossier.parent ) {
@@ -32,7 +32,7 @@ class DocuthequesInfos extends Component {
 				>
 					<p>
 						<Dashicon icon="info" />
-						{ message }
+						{ children || message }
 					</p>
 				</Notice>
 			</div>

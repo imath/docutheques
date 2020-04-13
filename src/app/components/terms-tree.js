@@ -23,7 +23,8 @@ class DocuthequesDossiers extends Component {
 	}
 
 	componentDidMount() {
-		const { currentDossierId } = this.props;
+		const { currentDossier } = this.props;
+		const currentDossierId = !! currentDossier ? currentDossier.id : 0;
 		const { dossierID } = this.state;
 
 		if ( ( !! currentDossierId || 0 === currentDossierId ) && currentDossierId !== dossierID ) {
@@ -33,6 +34,7 @@ class DocuthequesDossiers extends Component {
 
 	setDossier( id, parent, e ) {
 		e.preventDefault();
+		const { currentState, currentDossier } = this.props;
 		let { dossierAncestors } = this.state;
 
 		if ( 0 !== parent ) {
@@ -46,9 +48,13 @@ class DocuthequesDossiers extends Component {
 			dossierAncestors: dossierAncestors,
 		} );
 
-		dispatch( 'docutheques' ).setCurrentDossier( id );
-		dispatch( 'docutheques' ).setCurrentState( 'documentsBrowser' );
-		dispatch( 'docutheques' ).switchMode( false );
+		if ( 'dossierEditForm' === currentState && !! currentDossier && 0 !== currentDossier.parent ) {
+			dispatch( 'docutheques' ).newDossierParent( id );
+		} else {
+			dispatch( 'docutheques' ).setCurrentDossier( id );
+			dispatch( 'docutheques' ).setCurrentState( 'documentsBrowser' );
+			dispatch( 'docutheques' ).switchMode( false );
+		}
 	}
 
 	buildTermsTree( flatTerms ) {
@@ -70,7 +76,8 @@ class DocuthequesDossiers extends Component {
 
 	renderDossiers( renderedDossiers ) {
 		const { dossierID, dossierAncestors } = this.state;
-		const { currentDossierId } = this.props;
+		const { currentDossier } = this.props;
+		const currentDossierId = !! currentDossier ? currentDossier.id : 0;
 
 		return renderedDossiers.map( ( dossier ) => {
 			dossier.classes = ['sous-choix-dossiers'];
@@ -98,7 +105,8 @@ class DocuthequesDossiers extends Component {
 	}
 
 	render() {
-		const { dossiers, currentDossierId } = this.props;
+		const { dossiers, currentDossier } = this.props;
+		const currentDossierId = !! currentDossier ? currentDossier.id : 0;
 		const tree = this.buildTermsTree( dossiers );
 		let renderedDossiers = null;
 
@@ -126,7 +134,7 @@ export default compose( [
 
 		return {
 			dossiers: docuThequesStore.getDossiers(),
-			currentDossierId: docuThequesStore.getCurrentDossierId(),
+			currentDossier: docuThequesStore.getCurrentDossier(),
 		};
 	} ),
 ] )( DocuthequesDossiers );

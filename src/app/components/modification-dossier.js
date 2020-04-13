@@ -12,6 +12,11 @@ const { __ } = wp.i18n;
  */
 const { get } = lodash;
 
+/**
+ * Internal dependencies
+ */
+import DocuthequesInfos from './infos';
+
 const DEFAULT_STATE = {
 	name: '',
 	description: '',
@@ -40,8 +45,12 @@ class DocuthequesDossierEditForm extends Component {
 	}
 
 	resetState() {
+		const { dossier } = this.props;
+
 		this.setState( DEFAULT_STATE );
 		dispatch( 'docutheques' ).setCurrentState( 'documentsBrowser' );
+		dispatch( 'docutheques' ).newDossierParent( 0 );
+		dispatch( 'docutheques' ).setCurrentDossier( dossier.id );
 	}
 
 	closeForm( e ) {
@@ -53,9 +62,14 @@ class DocuthequesDossierEditForm extends Component {
 	submitForm( e ) {
 		e.preventDefault();
 
-		const { onUpdateDossier, dossier } = this.props;
+		const { onUpdateDossier, dossier, newParent } = this.props;
+		let editDossier = this.state;
 
-		onUpdateDossier( dossier, this.state );
+		if ( 0 !== newParent ) {
+			editDossier.parent = newParent;
+		}
+
+		onUpdateDossier( dossier, editDossier );
 
 		this.resetState();
 	}
@@ -89,6 +103,12 @@ class DocuthequesDossierEditForm extends Component {
 					onChange={ ( description ) => this.setState( { description: description } ) }
 				/>
 
+				{ 0 !== parent && (
+					<DocuthequesInfos>
+						{ __( 'Utiliser la barre latérale de gauche pour déplacer le dossier dans une nouvelle DocuThèque.', 'docutheques' ) }
+					</DocuthequesInfos>
+				) }
+
 				<Button isLarge={ true } onClick={ ( e ) => this.closeForm( e ) }>
 					{ __( 'Annuler', 'docutheques' ) }
 				</Button>
@@ -103,8 +123,11 @@ class DocuthequesDossierEditForm extends Component {
 
 export default compose( [
 	withSelect( ( select ) => {
+		const store = select( 'docutheques' );
+
 		return {
-			dossier: select( 'docutheques' ).getCurrentDossier(),
+			dossier: store.getCurrentDossier(),
+			newParent: store.getNewDossierParentId(),
 		};
 	} ),
 	withDispatch( ( dispatch ) => ( {
