@@ -10,7 +10,7 @@ const { compose } = wp.compose;
 /**
  * External dependencies.
  */
-const { join, indexOf, groupBy, unescape } = lodash;
+const { join, indexOf, groupBy, unescape, forEach, filter } = lodash;
 
 class DocuthequesDossiers extends Component {
 	constructor() {
@@ -22,6 +22,18 @@ class DocuthequesDossiers extends Component {
 		};
 	}
 
+	getAncestors( parentID ) {
+		const { dossiers } = this.props;
+		let parents = filter( dossiers, { id: parentID } );
+
+		forEach( parents, ( dossier ) => {
+			const grandParents = this.getAncestors( dossier.parent );
+			parents = [ ...parents, ...grandParents ];
+		} );
+
+		return parents;
+	}
+
 	componentDidMount() {
 		const { currentDossier } = this.props;
 		const currentDossierId = !! currentDossier ? currentDossier.id : 0;
@@ -29,6 +41,19 @@ class DocuthequesDossiers extends Component {
 
 		if ( ( !! currentDossierId || 0 === currentDossierId ) && currentDossierId !== dossierID ) {
 			this.setState( { dossierID: currentDossierId } );
+		}
+	}
+
+	componentDidUpdate( prevProps ) {
+		const { currentState, currentDossier } = this.props;
+		const { dossierAncestors } = this.state;
+
+		if ( prevProps.currentState !== currentState && !! currentDossier ) {
+			if ( -1 === indexOf( dossierAncestors, currentDossier.parent ) ) {
+				const ancestors = this.getAncestors( currentDossier.parent ).map( ( ancestor ) => ancestor.id );
+
+				this.setState( { dossierAncestors: ancestors } );
+			}
 		}
 	}
 
