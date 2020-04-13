@@ -25,6 +25,8 @@ const DEFAULT_STATE = {
 	createEnded: false,
 	deleting: false,
 	deleteEnded: false,
+	updating: false,
+	updateEnded: false,
 	isSelectable: false,
 	currentState: 'documentsBrowser',
 	currentDossierId: 0,
@@ -93,6 +95,32 @@ function * insertDossier( dossier ) {
 		yield { type: 'DOSSIER_CREATE_END', creating };
 
 		return actions.traceErrors( created );
+	}
+}
+
+function * updateDossier( previous, dossier ) {
+	let updating = true, updated;
+
+	yield { type: 'DOSSIER_UPDATE_START', updating, dossier };
+
+	updating = false;
+	try {
+		updated = yield actions.updateFromAPI( '/wp/v2/dossiers/' + previous.id, dossier );
+		yield { type: 'DOSSIER_UPDATE_END', updating };
+
+		return actions.editDossier( updated );
+	} catch ( error ) {
+		updated = {
+			id: uniqueId(),
+			name: previous.name,
+			error: error.message,
+			type: 'dossier',
+			actionType: 'update',
+		};
+
+		yield { type: 'DOSSIER_UPDATE_END', updating };
+
+		return actions.traceErrors( updated );
 	}
 }
 
@@ -190,8 +218,17 @@ const actions = {
 		};
 	},
 
+	updateDossier,
+	updateFromAPI( path, options = {} ) {
+		return {
+			type: 'UPDATE_FROM_API',
+			path,
+			options,
+		};
+	},
+
 	deleteDossier,
-	deleteFromAPI( path, options = null ) {
+	deleteFromAPI( path, options = {} ) {
 		return {
 			type: 'DELETE_FROM_API',
 			path,
@@ -202,6 +239,13 @@ const actions = {
 	addDossier( dossier ) {
 		return {
 			type: 'ADD_DOSSIER',
+			dossier,
+		};
+	},
+
+	editDossier( dossier ) {
+		return {
+			type: 'EDIT_DOSSIER',
 			dossier,
 		};
 	},
@@ -304,6 +348,29 @@ const store = registerStore( 'docutheques', {
 						action.dossier,
 					],
 					currentDossierId: action.dossier.id,
+				};
+
+			case 'EDIT_DOSSIER':
+				return {
+					...state,
+					dossiers: [
+						...reject( state.dossiers, [ 'id', action.dossier.id ] ),
+						action.dossier,
+					],
+					currentDossierId: action.dossier.id,
+				};
+
+			case 'DOSSIER_UPDATE_START':
+				return {
+					...state,
+					updating: action.updating,
+				};
+
+			case 'DOSSIER_UPDATE_END':
+				return {
+					...state,
+					updating: action.updating,
+					updateEnded: true,
 				};
 
 			case 'REMOVE_DOSSIER':
@@ -454,7 +521,7 @@ const store = registerStore( 'docutheques', {
 
 		getDossiers( state ) {
 			const { dossiers } = state;
-			return dossiers;
+			return orderBy( dossiers, ['name'], ['asc'] );
 		},
 
 		getDocuments( state ) {
@@ -500,6 +567,10 @@ const store = registerStore( 'docutheques', {
 
 		CREATE_FROM_API( action ) {
 			return apiFetch( { path: action.path, method: 'POST', body: action.formData } );
+		},
+
+		UPDATE_FROM_API( action ) {
+			return apiFetch( { path: action.path, method: 'PUT', data: action.options } );
 		},
 
 		DELETE_FROM_API( action ) {

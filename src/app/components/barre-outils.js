@@ -53,8 +53,12 @@ class DocuthequesToolbar extends Component {
 		this.setState( { isDeleteDossierModalOpen: false } );
 	}
 
+	setCurrentState( currentState ) {
+		dispatch( 'docutheques' ).setCurrentState( currentState );
+	}
+
 	render() {
-		const { dossier, isAdvancedEditMode } = this.props;
+		const { dossier, isAdvancedEditMode, currentState } = this.props;
 		const { isDeleteDossierModalOpen, options } = this.state;
 		const documentsSelection = 0;
 		let gridClass = 'view-grid';
@@ -83,10 +87,10 @@ class DocuthequesToolbar extends Component {
 
 					{ isAdvancedEditMode && ! documentsSelection && (
 						<Fragment>
-							<Button isLarge={ true } className="button media-button select-mode-toggle-button">
+							<Button isLarge={ true } className="button media-button select-mode-toggle-button" onClick={ () => this.setCurrentState( 'dossierEditForm' ) }>
 								{ 0 === dossier.parent ? __( 'Modifier la DocuThèque', 'docutheques' ) : __( 'Modifier le dossier', 'docutheques' ) }
 							</Button>
-							<Button isLarge={ true } className="button media-button select-mode-toggle-button" onClick={ this.openDossierModal }>
+							<Button isLarge={ true } disabled={ 'dossierEditForm' === currentState } className="button media-button select-mode-toggle-button" onClick={ this.openDossierModal }>
 								{ 0 === dossier.parent ? __( 'Supprimer la DocuThèque', 'docutheques' ) : __( 'Supprimer le dossier', 'docutheques' ) }
 							</Button>
 							{ isDeleteDossierModalOpen && (

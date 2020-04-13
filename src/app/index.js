@@ -15,6 +15,7 @@ import DocuthequesToolbar from './components/barre-outils';
 import DocuthequesDossiers from './components/terms-tree';
 import DocuthequesDocuments from './components/documents';
 import DocuthequesDossierForm from './components/ajout-dossier';
+import DocuthequesDossierEditForm from './components/modification-dossier';
 import DocuthequesDocumentForm  from './components/ajout-document';
 
 class Docutheques extends Component {
@@ -35,7 +36,9 @@ class Docutheques extends Component {
 					isAdvancedEditMode={ isAdvancedEditMode }
 				/>
 				<div className="corps-docutheques">
-					<DocuthequesToolbar />
+					<DocuthequesToolbar
+						currentState={ currentState }
+					/>
 					<DocuthequesDossiers />
 
 					{ 'documentForm' === currentState && (
@@ -49,6 +52,12 @@ class Docutheques extends Component {
 						<DocuthequesDossierForm
 							user= { user }
 							dossier={ currentDossierId }
+						/>
+					) }
+
+					{ 'dossierEditForm' === currentState && (
+						<DocuthequesDossierEditForm
+							user= { user }
 						/>
 					) }
 
