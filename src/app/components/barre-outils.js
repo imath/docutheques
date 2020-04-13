@@ -48,7 +48,7 @@ class DocuthequesToolbar extends Component {
 		const { dossier, onDeleteDossier } = this.props;
 		const { options } = this.state;
 
-		onDeleteDossier( dossier, options );
+		onDeleteDossier( dossier.id, options );
 
 		this.setState( { isDeleteDossierModalOpen: false } );
 	}
@@ -74,7 +74,7 @@ class DocuthequesToolbar extends Component {
 							<span className="screen-reader-text">{ __( 'Afficher le mode d’édition simple', 'docutheques' ) }</span>
 						</a>
 
-						{ 0 !== dossier && (
+						{ !! dossier && (
 							<a href="#edit-mode" className={ avancedEditClass } onClick={ ( e ) => this.switchMode( e, true ) }>
 								<span className="screen-reader-text">{ __( 'Afficher le mode d’édition avancée', 'docutheques' ) }</span>
 							</a>
@@ -84,22 +84,22 @@ class DocuthequesToolbar extends Component {
 					{ isAdvancedEditMode && ! documentsSelection && (
 						<Fragment>
 							<Button isLarge={ true } className="button media-button select-mode-toggle-button">
-								{ __( 'Modifier le dossier actif', 'docutheques' ) }
+								{ 0 === dossier.parent ? __( 'Modifier la DocuThèque', 'docutheques' ) : __( 'Modifier le dossier', 'docutheques' ) }
 							</Button>
 							<Button isLarge={ true } className="button media-button select-mode-toggle-button" onClick={ this.openDossierModal }>
-								{ __( 'Supprimer le dossier actif', 'docutheques' ) }
+								{ 0 === dossier.parent ? __( 'Supprimer la DocuThèque', 'docutheques' ) : __( 'Supprimer le dossier', 'docutheques' ) }
 							</Button>
 							{ isDeleteDossierModalOpen && (
 								<Modal
-									title={ __( 'Suppression du dossier actif', 'docutheques' ) }
+									title={ 0 === dossier.parent ? __( 'Suppression de la DocuThèque', 'docutheques' ) : __( 'Suppression du dossier', 'docutheques' ) }
 									onRequestClose={ this.closeDossierModal }
 									className="delete-dossier-confirmation"
 								>
 
-									<p>{ __( 'Cette action supprimera tous les éventuels dossiers contenus dans ce dossier.', 'docutheques' ) }</p>
+									<p>{ 0 === dossier.parent ? __( 'Cette action supprimera tous les éventuels dossiers contenus dans cette DocuThèque.', 'docutheques' ) : __( 'Cette action supprimera tous les éventuels dossiers contenus dans ce dossier.', 'docutheques' ) }</p>
 
 									<CheckboxControl
-										label={ __( 'Supprimer tous les documents contenus dans ce ou ces dossier(s).', 'docutheques' ) }
+										label={ 0 === dossier.parent ? __( 'Supprimer tous les documents contenus dans cette DocuThèque.', 'docutheques' ) : __( 'Supprimer tous les documents contenus dans ce dossier.', 'docutheques' ) }
 										checked={ options.deleteDocuments }
 										onChange={ ( checked ) => this.setDossierDeleteOption( checked ) }
 									/>
@@ -126,8 +126,10 @@ class DocuthequesToolbar extends Component {
 
 export default compose( [
 	withSelect( ( select ) => {
+		const store = select( 'docutheques' );
 		return {
-			isAdvancedEditMode: select( 'docutheques' ).isAdvancedEditMode(),
+			isAdvancedEditMode: store.isAdvancedEditMode(),
+			dossier: store.getCurrentDossier(),
 		};
 	} ),
 	withDispatch( ( dispatch ) => ( {

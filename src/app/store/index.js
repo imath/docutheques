@@ -7,7 +7,7 @@ const { registerStore } = wp.data;
 /**
  * External dependencies.
  */
-const { uniqueId, filter, reject, indexOf, orderBy, assignIn, forEach } = lodash;
+const { uniqueId, filter, reject, indexOf, orderBy, assignIn, forEach, find } = lodash;
 
 const DEFAULT_STATE = {
 	user: {},
@@ -480,6 +480,11 @@ const store = registerStore( 'docutheques', {
 		getCurrentDossierId( state ) {
 			const { currentDossierId } = state;
 			return currentDossierId;
+		},
+
+		getCurrentDossier( state ) {
+			const { currentDossierId, dossiers } = state;
+			return find( dossiers, { id: currentDossierId } );
 		},
 
 		isAdvancedEditMode( state ) {

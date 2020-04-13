@@ -35,9 +35,7 @@ class Docutheques extends Component {
 					isAdvancedEditMode={ isAdvancedEditMode }
 				/>
 				<div className="corps-docutheques">
-					<DocuthequesToolbar
-						dossier={ currentDossierId }
-					/>
+					<DocuthequesToolbar />
 					<DocuthequesDossiers />
 
 					{ 'documentForm' === currentState && (
