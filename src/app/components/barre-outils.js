@@ -80,14 +80,14 @@ class DocuthequesToolbar extends Component {
 							<span className="screen-reader-text">{ __( 'Afficher le mode d’édition simple', 'docutheques' ) }</span>
 						</a>
 
-						{ !! dossier && ! isNewForm && (
+						{ ! isNewForm && (
 							<a href="#edit-mode" className={ avancedEditClass } onClick={ ( e ) => this.switchMode( e, true ) }>
 								<span className="screen-reader-text">{ __( 'Afficher le mode d’édition avancée', 'docutheques' ) }</span>
 							</a>
 						) }
 					</div>
 
-					{ isAdvancedEditMode && ! documentsSelection && ! isNewForm && (
+					{ isAdvancedEditMode && !! dossier && ! documentsSelection && ! isNewForm && (
 						<Fragment>
 							<Button isLarge={ true } className="button media-button select-mode-toggle-button" onClick={ () => this.setCurrentState( 'dossierEditForm' ) }>
 								{ 0 === dossier.parent ? __( 'Modifier la DocuThèque', 'docutheques' ) : __( 'Modifier le dossier', 'docutheques' ) }

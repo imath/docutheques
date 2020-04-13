@@ -66,6 +66,7 @@ class Docutheques extends Component {
 					{ 'documentsBrowser' === currentState && (
 						<DocuthequesDocuments
 							dossier={ currentDossierId }
+							isAdvancedEditMode={ isAdvancedEditMode }
 						/>
 					) }
 				</div>

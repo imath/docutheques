@@ -3,6 +3,8 @@
  */
 const { Component, createElement } = wp.element;
 const { Dashicon } = wp.components;
+const { withDispatch } = wp.data;
+const { compose } = wp.compose;
 const { __ } = wp.i18n;
 
 /**
@@ -48,6 +50,14 @@ class DocuthequesDocument extends Component {
 
 	onMediaClick( id, e ) {
 		e.preventDefault();
+
+		const { isAdvancedEditMode, toggleDocumentSelection, isSelected } = this.props;
+
+		if ( ! isAdvancedEditMode ) {
+			return;
+		}
+
+		return toggleDocumentSelection( id, ! isSelected );
 	}
 
 	render() {
@@ -57,12 +67,23 @@ class DocuthequesDocument extends Component {
 			createdDate,
 			modifiedDate,
 			link,
-			type
+			type,
+			isSelected,
+			isAdvancedEditMode,
 		} = this.props;
+		let classes = 'media-item unselectable';
+
+		if ( isAdvancedEditMode ) {
+			classes = 'media-item selectable';
+
+			if ( isSelected ) {
+				classes += ' selected';
+			}
+		}
 
 		return (
 			<div
-				className="media-item"
+				className={ classes }
 				role="checkbox"
 				onClick={ ( e ) => this.onMediaClick( id, e ) }
 			>
@@ -76,9 +97,21 @@ class DocuthequesDocument extends Component {
 						</div>
 					</div>
 				</div>
+				{ isAdvancedEditMode && isSelected && (
+					<button type="button" className="check" tabIndex="-1">
+						<span className="media-modal-icon"></span>
+						<span className="screen-reader-text">{ __( 'Retirer de la sélection.', 'docutheques' ) }</span>
+					</button>
+				) }
 			</div>
 		);
 	}
 }
 
-export default DocuthequesDocument;
+export default compose( [
+	withDispatch( ( dispatch ) => ( {
+		toggleDocumentSelection( id, isSelected ) {
+			dispatch( 'docutheques' ).toggleDocumentSelection( id, isSelected );
+		},
+	} ) ),
+] )( DocuthequesDocument );

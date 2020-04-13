@@ -300,6 +300,14 @@ const actions = {
 			isAdvancedEditMode,
 		};
 	},
+
+	toggleDocumentSelection( id, isSelected ) {
+		return {
+			type: 'TOGGLE_DOCUMENT_SELECTION',
+			id,
+			isSelected,
+		};
+	},
 };
 
 const store = registerStore( 'docutheques', {
@@ -520,6 +528,18 @@ const store = registerStore( 'docutheques', {
 				return {
 					...state,
 					isAdvancedEditMode: action.isAdvancedEditMode,
+				};
+
+			case 'TOGGLE_DOCUMENT_SELECTION':
+				return {
+					...state,
+					documents: state.documents.map( document => {
+						if ( action.id === document.id ) {
+							document.selected = action.isSelected
+						}
+
+						return document;
+					} ),
 				};
 		}
 

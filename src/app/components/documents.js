@@ -25,7 +25,7 @@ class DocuthequesDocuments extends Component {
 	}
 
 	render() {
-		const { documents, chargements, dossier } = this.props;
+		const { documents, chargements, dossier, isAdvancedEditMode } = this.props;
 		const hasChargements = chargements && chargements.length ? true : false;
 		let documentsByDossier, documentItems;
 
@@ -48,6 +48,8 @@ class DocuthequesDocuments extends Component {
 						modifiedDate={ document.modified }
 						link={ document.link }
 						type={ 'image' === document.media_type ? document.media_type : document.mime_type }
+						isSelected= { document.selected || false }
+						isAdvancedEditMode={ isAdvancedEditMode }
 					/>
 				);
 			} );
@@ -66,7 +68,7 @@ class DocuthequesDocuments extends Component {
 			<div className="liste-documents">
 				<DocuthequesErreurs />
 				<DocuthequesChargement chargements={ chargements } />
-				<div className="media-items">
+				<div className={ isAdvancedEditMode ? 'media-items mode-select' : 'media-items' }>
 					{ documentItems }
 				</div>
 			</div>
