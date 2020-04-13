@@ -3,6 +3,8 @@
  */
 const { Component, createElement } = wp.element;
 const { Notice, Dashicon } = wp.components;
+const { withSelect } = wp.data;
+const { compose } = wp.compose;
 const { __ } = wp.i18n;
 
 class DocuthequesInfos extends Component {
@@ -11,6 +13,17 @@ class DocuthequesInfos extends Component {
 	}
 
 	render() {
+		const { dossier } = this.props;
+		let message = __( 'Il n’existe aucun document directement rattaché à la racine pour le moment.', 'docutheques' );
+
+		if ( !! dossier && 0 === dossier.parent ) {
+			message = __( 'Cette DocuThèque ne contient aucun document directement rattaché pour le moment.', 'docutheques' )
+		}
+
+		if ( !! dossier && 0 !== dossier.parent ) {
+			message = __( 'Ce dossier ne contient aucun document directement rattaché pour le moment.', 'docutheques' )
+		}
+
 		return (
 			<div className="docutheques-infos">
 				<Notice
@@ -19,7 +32,7 @@ class DocuthequesInfos extends Component {
 				>
 					<p>
 						<Dashicon icon="info" />
-						{ __( 'Ce dossier ne contient aucun document pour le moment.', 'docutheques' ) }
+						{ message }
 					</p>
 				</Notice>
 			</div>
@@ -27,4 +40,10 @@ class DocuthequesInfos extends Component {
 	}
 }
 
-export default DocuthequesInfos;
+export default compose( [
+	withSelect( ( select ) => {
+		return {
+			dossier: select( 'docutheques' ).getCurrentDossier(),
+		};
+	} ),
+] )( DocuthequesInfos );
