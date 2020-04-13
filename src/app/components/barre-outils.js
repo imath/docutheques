@@ -61,6 +61,8 @@ class DocuthequesToolbar extends Component {
 		const { dossier, isAdvancedEditMode, currentState } = this.props;
 		const { isDeleteDossierModalOpen, options } = this.state;
 		const documentsSelection = 0;
+		const isNewForm = -1 !== ['documentForm', 'dossierForm'].indexOf( currentState );
+
 		let gridClass = 'view-grid';
 		let avancedEditClass = 'view-list';
 
@@ -78,14 +80,14 @@ class DocuthequesToolbar extends Component {
 							<span className="screen-reader-text">{ __( 'Afficher le mode d’édition simple', 'docutheques' ) }</span>
 						</a>
 
-						{ !! dossier && (
+						{ !! dossier && ! isNewForm && (
 							<a href="#edit-mode" className={ avancedEditClass } onClick={ ( e ) => this.switchMode( e, true ) }>
 								<span className="screen-reader-text">{ __( 'Afficher le mode d’édition avancée', 'docutheques' ) }</span>
 							</a>
 						) }
 					</div>
 
-					{ isAdvancedEditMode && ! documentsSelection && (
+					{ isAdvancedEditMode && ! documentsSelection && ! isNewForm && (
 						<Fragment>
 							<Button isLarge={ true } className="button media-button select-mode-toggle-button" onClick={ () => this.setCurrentState( 'dossierEditForm' ) }>
 								{ 0 === dossier.parent ? __( 'Modifier la DocuThèque', 'docutheques' ) : __( 'Modifier le dossier', 'docutheques' ) }
