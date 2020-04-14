@@ -7,7 +7,7 @@ const { registerStore } = wp.data;
 /**
  * External dependencies.
  */
-const { uniqueId, filter, reject, indexOf, orderBy, assignIn, forEach, find } = lodash;
+const { uniqueId, filter, reject, indexOf, orderBy, assignIn, forEach, find, keys } = lodash;
 
 const DEFAULT_STATE = {
 	user: {},
@@ -66,6 +66,58 @@ function * insertDocument( document, dossier = 0 ) {
 		yield { type: 'UPLOAD_END', uploading, uploaded };
 
 		return actions.traceErrors( uploaded );
+	}
+}
+
+function * updateDocument( editedDocument ) {
+	let uploading = true, updated, uploaded;
+	let document = editedDocument.file || null;
+
+	if ( document ) {
+		yield { type: 'UPLOAD_START', uploading, document };
+	} else {
+		yield { type: 'DOCUMENT_UPDATE_START', uploading };
+	}
+
+	const formData = new FormData();
+	formData.append( 'id', editedDocument.id );
+	formData.append( 'file', document );
+	formData.append( 'title', editedDocument.title.raw );
+	formData.append( 'description', editedDocument.description.raw );
+	formData.append( 'dossiers', editedDocument.dossiers );
+	formData.append( 'date', editedDocument.date );
+
+	uploading = false;
+	try {
+		updated = yield actions.updateFromAPI( '/wp/v2/media/' + editedDocument.id, null, formData );
+		updated.uploaded = true;
+
+		if ( document ) {
+			uploaded = updated;
+			uploaded.submittedName = document.name;
+			yield { type: 'UPLOAD_END', uploading, uploaded };
+		} else {
+			yield { type: 'DOCUMENT_UPDATE_END', uploading, updated };
+		}
+
+		return actions.editDocument( updated );
+	} catch ( error ) {
+		updated = {
+			id: uniqueId(),
+			name: document && document.name ? document.name : editedDocument.title.raw,
+			error: error.message,
+			type: 'document',
+			actionType: 'update',
+		};
+
+		if ( document ) {
+			uploaded = updated;
+			yield { type: 'UPLOAD_END', uploading, uploaded };
+		} else {
+			yield { type: 'DOCUMENT_UPDATE_END', uploading, updated };
+		}
+
+		return actions.traceErrors( updated );
 	}
 }
 
@@ -227,11 +279,13 @@ const actions = {
 	},
 
 	updateDossier,
-	updateFromAPI( path, options = {} ) {
+	updateDocument,
+	updateFromAPI( path, options, formData ) {
 		return {
 			type: 'UPDATE_FROM_API',
 			path,
 			options,
+			formData,
 		};
 	},
 
@@ -261,6 +315,13 @@ const actions = {
 	addDocument( document ) {
 		return {
 			type: 'ADD_DOCUMENT',
+			document,
+		};
+	},
+
+	editDocument( document ) {
+		return {
+			type: 'EDIT_DOCUMENT',
 			document,
 		};
 	},
@@ -470,6 +531,7 @@ const store = registerStore( 'docutheques', {
 				};
 
 			case 'ADD_DOCUMENT':
+			case 'EDIT_DOCUMENT':
 				return {
 					...state,
 					documents: [
@@ -564,6 +626,11 @@ const store = registerStore( 'docutheques', {
 			return orderBy( documents, ['modified'], ['desc'] );
 		},
 
+		getSelectedDocuments( state ) {
+			const { documents } = state;
+			return filter( documents, { selected: true } );
+		},
+
 		getUploads( state ) {
 			const { uploaded } = state;
 			return uploaded;
@@ -610,7 +677,19 @@ const store = registerStore( 'docutheques', {
 		},
 
 		UPDATE_FROM_API( action ) {
-			return apiFetch( { path: action.path, method: 'PUT', data: action.options } );
+			let options = { path: action.path };
+
+			if ( null !== action.options ) {
+				options.method = 'PUT';
+				options.data = action.options;
+			}
+
+			if ( action.formData ) {
+				options.method = 'POST';
+				options.body = action.formData;
+			}
+
+			return apiFetch( options );
 		},
 
 		DELETE_FROM_API( action ) {

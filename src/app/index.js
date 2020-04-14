@@ -17,6 +17,7 @@ import DocuthequesDocuments from './components/documents';
 import DocuthequesDossierForm from './components/ajout-dossier';
 import DocuthequesDossierEditForm from './components/modification-dossier';
 import DocuthequesDocumentForm  from './components/ajout-document';
+import DocuthequesDocumentsEditForm from './components/modification-documents';
 
 class Docutheques extends Component {
 	constructor() {
@@ -45,6 +46,13 @@ class Docutheques extends Component {
 
 					{ 'documentForm' === currentState && (
 						<DocuthequesDocumentForm
+							user= { user }
+							dossier={ currentDossierId }
+						/>
+					) }
+
+					{ 'documentsEditForm' === currentState && (
+						<DocuthequesDocumentsEditForm
 							user= { user }
 							dossier={ currentDossierId }
 						/>

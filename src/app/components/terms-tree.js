@@ -73,7 +73,7 @@ class DocuthequesDossiers extends Component {
 			dossierAncestors: dossierAncestors,
 		} );
 
-		if ( 'dossierEditForm' === currentState && !! currentDossier && 0 !== currentDossier.parent ) {
+		if ( ( 'dossierEditForm' === currentState && !! currentDossier && 0 !== currentDossier.parent ) || 'documentsEditForm' === currentState ) {
 			dispatch( 'docutheques' ).newDossierParent( id );
 		} else {
 			dispatch( 'docutheques' ).setCurrentDossier( id );

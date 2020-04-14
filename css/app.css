@@ -6,13 +6,38 @@
 
 #docutheques .arbre-des-dossiers,
 #docutheques .formulaire-dossier,
-#docutheques .formulaire-document {
+#docutheques .formulaire-document,
+#docutheques .formulaire-modification-document {
 	overflow: auto;
 	margin: 16px 0;
 	padding: 10px;
 	border: 1px solid #ccd0d4;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	background: #fff;
+}
+
+#docutheques .formulaire-modification-document .detail-document {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+#docutheques .formulaire-modification-document .detail-document > div {
+	width: 48%;
+	margin-right: 1em;
+}
+
+#docutheques .formulaire-modification-document .detail-document .components-datetime__date {
+	border: none;
+}
+
+#docutheques .formulaire-modification-document .detail-document span.label {
+	text-align: center;
+    width: 100%;
+    display: inline-block;
+}
+
+#docutheques .formulaire-modification-document .detail-document .components-datetime__date .DayPicker {
+	margin: 0 auto;
 }
 
 #docutheques .corps-docutheques .media-toolbar.wp-filter {
@@ -24,12 +49,14 @@
 }
 
 #docutheques .corps-docutheques .media-toolbar-secondary .select-mode-toggle-button,
-.delete-dossier-confirmation .confirmation-buttons button {
+.delete-dossier-confirmation .confirmation-buttons button,
+.delete-document-confirmation .confirmation-buttons button {
     margin: 0 8px 0 0;
     vertical-align: middle;
 }
 
-.delete-dossier-confirmation .confirmation-buttons {
+.delete-dossier-confirmation .confirmation-buttons,
+.delete-document-confirmation .confirmation-buttons {
 	margin-top: 2em;
 	text-align: right;
 }
@@ -47,14 +74,16 @@
 
 #docutheques .corps-docutheques .liste-documents,
 #docutheques .corps-docutheques .formulaire-dossier,
-#docutheques .corps-docutheques .formulaire-document {
+#docutheques .corps-docutheques .formulaire-document,
+#docutheques .corps-docutheques .formulaire-modification-document {
 	position: relative;
 	width: calc( 80% - 44px );
 	max-width: calc( 80% - 44px );
 }
 
 #docutheques .corps-docutheques .formulaire-dossier .close,
-#docutheques .corps-docutheques .formulaire-document .close {
+#docutheques .corps-docutheques .formulaire-document .close,
+#docutheques .corps-docutheques .formulaire-modification-document .close {
 	background-color: transparent;
 	border: 0;
 	cursor: pointer;
@@ -69,13 +98,15 @@
 	z-index: 1;
 }
 
-#docutheques .formulaire-dossier .docutheques-infos .components-notice {
+#docutheques .formulaire-dossier .docutheques-infos .components-notice,
+#docutheques .formulaire-modification-document .docutheques-infos .components-notice {
 	margin: 0;
 	margin-bottom: 1em;
 }
 
 #docutheques .formulaire-dossier .components-button,
-#docutheques .formulaire-document .components-button {
+#docutheques .formulaire-document .components-button,
+#docutheques .formulaire-modification-document .components-button {
 	margin-right: 1em;
 }
 

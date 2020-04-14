@@ -5,7 +5,7 @@ const { Component, Fragment, createElement } = wp.element;
 const { Button, Modal, CheckboxControl } = wp.components;
 const { withSelect, withDispatch, dispatch } = wp.data;
 const { compose } = wp.compose;
-const { __ } = wp.i18n;
+const { __, _n, sprintf } = wp.i18n;
 
 class DocuthequesToolbar extends Component {
 	constructor() {
@@ -22,6 +22,9 @@ class DocuthequesToolbar extends Component {
 		this.openDossierModal = this.openDossierModal.bind( this );
 		this.closeDossierModal = this.closeDossierModal.bind( this );
 		this.deleteDossier = this.deleteDossier.bind( this );
+		this.openDocumentModal = this.openDocumentModal.bind( this );
+		this.closeDocumentModal = this.closeDocumentModal.bind( this );
+		this.deleteDocument = this.deleteDocument.bind( this );
 	}
 
 	switchMode( e, mode ) {
@@ -34,8 +37,16 @@ class DocuthequesToolbar extends Component {
 		this.setState( { isDeleteDossierModalOpen: true } );
 	}
 
+	openDocumentModal() {
+		this.setState( { isDeleteDocumentModalOpen: true } );
+	}
+
 	closeDossierModal() {
 		this.setState( { isDeleteDossierModalOpen: false } );
+	}
+
+	closeDocumentModal() {
+		this.setState( { isDeleteDocumentModalOpen: false } );
 	}
 
 	setDossierDeleteOption( checked ) {
@@ -53,14 +64,17 @@ class DocuthequesToolbar extends Component {
 		this.setState( { isDeleteDossierModalOpen: false } );
 	}
 
+	deleteDocument() {
+		return;
+	}
+
 	setCurrentState( currentState ) {
 		dispatch( 'docutheques' ).setCurrentState( currentState );
 	}
 
 	render() {
-		const { dossier, isAdvancedEditMode, currentState } = this.props;
-		const { isDeleteDossierModalOpen, options } = this.state;
-		const documentsSelection = 0;
+		const { dossier, isAdvancedEditMode, currentState, selectedDocuments } = this.props;
+		const { isDeleteDossierModalOpen, isDeleteDocumentModalOpen, options } = this.state;
 		const isNewForm = -1 !== ['documentForm', 'dossierForm'].indexOf( currentState );
 
 		let gridClass = 'view-grid';
@@ -87,7 +101,7 @@ class DocuthequesToolbar extends Component {
 						) }
 					</div>
 
-					{ isAdvancedEditMode && !! dossier && ! documentsSelection && ! isNewForm && (
+					{ isAdvancedEditMode && !! dossier && ! selectedDocuments.length && ! isNewForm && (
 						<Fragment>
 							<Button isLarge={ true } className="button media-button select-mode-toggle-button" onClick={ () => this.setCurrentState( 'dossierEditForm' ) }>
 								{ 0 === dossier.parent ? __( 'Modifier la DocuThèque', 'docutheques' ) : __( 'Modifier le dossier', 'docutheques' ) }
@@ -124,6 +138,49 @@ class DocuthequesToolbar extends Component {
 							) }
 						</Fragment>
 					) }
+
+					{ isAdvancedEditMode && 0 !== selectedDocuments.length && ! isNewForm && (
+						<Fragment>
+							<Button isLarge={ true } className="button media-button select-mode-toggle-button" onClick={ () => this.setCurrentState( 'documentsEditForm' ) }>
+								{ 1 === selectedDocuments.length ? __( 'Modifier le document', 'docutheques' ) : __( 'Modifier les documents', 'docutheques' ) }
+							</Button>
+							<Button isLarge={ true } disabled={ 'documentEditForm' === currentState } className="button media-button select-mode-toggle-button" onClick={ this.openDocumentModal }>
+								{ 1 === selectedDocuments.length ? __( 'Supprimer le document', 'docutheques' ) : __( 'Supprimer les documents', 'docutheques' ) }
+							</Button>
+							{ isDeleteDocumentModalOpen && (
+								<Modal
+									title={ 1 === selectedDocuments.length ? __( 'Suppression d’un document', 'docutheques' ) : __( 'Suppression de documents', 'docutheques' ) }
+									onRequestClose={ this.closeDocumentModal }
+									className="delete-document-confirmation"
+								>
+
+									<p>
+										{ sprintf(
+											/* translators: %d: number of documents to delete. */
+											_n(
+												'Cette action est irréversible, merci de confirmer que vous souhaitez supprimer un document.',
+												'Cette action est irréversible, merci de confirmer que vous souhaitez supprimer %d documents.',
+												selectedDocuments.length,
+												'docutheques'
+											),
+											selectedDocuments.length
+										) }
+									</p>
+
+									<div className="confirmation-buttons">
+										<Button isLarge={ false } isPrimary={ true } onClick={ this.deleteDocument }>
+											{ __( 'Confirmer', 'docutheques' ) }
+										</Button>
+
+										<Button isLarge={ false } isSecondary={ true } onClick={ this.closeDocumentModal }>
+											{ __( 'Annuler', 'docutheques' ) }
+										</Button>
+									</div>
+
+								</Modal>
+							) }
+						</Fragment>
+					) }
 				</div>
 			</div>
 		);
@@ -136,6 +193,7 @@ export default compose( [
 		return {
 			isAdvancedEditMode: store.isAdvancedEditMode(),
 			dossier: store.getCurrentDossier(),
+			selectedDocuments: store.getSelectedDocuments(),
 		};
 	} ),
 	withDispatch( ( dispatch ) => ( {
