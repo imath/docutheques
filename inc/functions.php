@@ -120,6 +120,12 @@ function docutheques_init() {
 			'query_var'          => 'docutheques-dossier',
 		)
 	);
+
+	// Reset the Attachment REST controller.
+	$attachment_post_type = get_post_type_object( 'attachment' );
+	if ( isset( $attachment_post_type->rest_controller_class ) && 'DocuTheques_REST_Documents_Controller' !== $attachment_post_type->rest_controller_class ) {
+		$attachment_post_type->rest_controller_class = 'DocuTheques_REST_Documents_Controller';
+	}
 }
 add_action( 'init', 'docutheques_init', 20 );
 
@@ -321,67 +327,3 @@ function docutheques_rest_save_document( $document, $request ) {
 	}
 }
 add_action( 'rest_insert_attachment', 'docutheques_rest_save_document', 10, 2 );
-
-/**
- * Updates the document source file if needed.
- *
- * @since 1.0.0
- *
- * @param stdClass        $document An object representing a single post prepared
- *                                  for inserting or updating the database.
- * @param WP_REST_Request $request  Request object.
- * @return stdClass The updated document object.
- */
-function docutheques_maybe_update_document_file( $document, $request ) {
-	$route = $request->get_route();
-
-	if ( isset( $document->ID ) && '/wp/v2/media/' . $document->ID === $route ) {
-		$files   = $request->get_file_params();
-		$headers = $request->get_headers();
-
-		if ( ! empty( $files ) ) {
-			$overrides = array(
-				'test_form' => false,
-			);
-
-			/**
-			 * The upload size needs to be checked on Multisite.
-			 *
-			 * @todo
-			 *
-			 * $size_check = self::check_upload_size( $files['file'] );
-			 *  if ( is_wp_error( $size_check ) ) {
-			 *   return $size_check;
-			 * }
-			 */
-
-			// Include filesystem functions to get access to wp_handle_upload().
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-
-			$file = wp_handle_upload( $files['file'], $overrides );
-
-			if ( isset( $file['error'] ) ) {
-				return new WP_Error(
-					'rest_upload_unknown_error',
-					$file['error'],
-					array( 'status' => 500 )
-				);
-			}
-
-			$document->post_mime_type = $file['type'];
-			$document->guid           = $file['url']; // The Guid is not updated.
-			$document->file           = $file['file'];
-
-			// Include media and image functions to get access to wp_generate_attachment_metadata().
-			require_once ABSPATH . 'wp-admin/includes/media.php';
-			require_once ABSPATH . 'wp-admin/includes/image.php';
-
-			// Post-process the upload (create image sub-sizes, make PDF thumbnails, etc.) and insert attachment meta.
-			// At this point the server may run out of resources and post-processing of uploaded images may fail.
-			wp_update_attachment_metadata( $document->ID, wp_generate_attachment_metadata( $document->ID, $file ) );
-		}
-	}
-
-	return $document;
-}
-add_filter( 'rest_pre_insert_attachment', 'docutheques_maybe_update_document_file', 10, 2 );

@@ -7,7 +7,7 @@ const { registerStore } = wp.data;
 /**
  * External dependencies.
  */
-const { uniqueId, filter, reject, indexOf, orderBy, assignIn, forEach, find, keys } = lodash;
+const { uniqueId, filter, reject, indexOf, orderBy, assignIn, forEach, find, keys, uniqWith, first } = lodash;
 
 const DEFAULT_STATE = {
 	user: {},
@@ -70,13 +70,14 @@ function * insertDocument( document, dossier = 0 ) {
 }
 
 function * updateDocument( editedDocument ) {
-	let uploading = true, updated, uploaded;
+	let uploading = true, updated, updating, uploaded;
 	let document = editedDocument.file || null;
 
 	if ( document ) {
 		yield { type: 'UPLOAD_START', uploading, document };
 	} else {
-		yield { type: 'DOCUMENT_UPDATE_START', uploading };
+		updating = true;
+		yield { type: 'DOCUMENT_UPDATE_START', updating };
 	}
 
 	const formData = new FormData();
@@ -88,6 +89,7 @@ function * updateDocument( editedDocument ) {
 	formData.append( 'date', editedDocument.date );
 
 	uploading = false;
+	updating = false;
 	try {
 		updated = yield actions.updateFromAPI( '/wp/v2/media/' + editedDocument.id, null, formData );
 		updated.uploaded = true;
@@ -97,7 +99,7 @@ function * updateDocument( editedDocument ) {
 			uploaded.submittedName = document.name;
 			yield { type: 'UPLOAD_END', uploading, uploaded };
 		} else {
-			yield { type: 'DOCUMENT_UPDATE_END', uploading, updated };
+			yield { type: 'DOCUMENT_UPDATE_END', updating };
 		}
 
 		return actions.editDocument( updated );
@@ -114,7 +116,7 @@ function * updateDocument( editedDocument ) {
 			uploaded = updated;
 			yield { type: 'UPLOAD_END', uploading, uploaded };
 		} else {
-			yield { type: 'DOCUMENT_UPDATE_END', uploading, updated };
+			yield { type: 'DOCUMENT_UPDATE_END', updating };
 		}
 
 		return actions.traceErrors( updated );
@@ -387,9 +389,11 @@ const store = registerStore( 'docutheques', {
 				};
 
 			case 'GET_DOCUMENTS':
+				const documentsUniques = uniqWith( [ ...state.documents, ...action.documents ], ( vState, vAction ) => ( vState.id === vAction.id ) );
+
 				return {
 					...state,
-					documents: [ ...state.documents, ...action.documents ],
+					documents: documentsUniques,
 				};
 
 			case 'SET_CURRENT_STATE':
@@ -445,12 +449,14 @@ const store = registerStore( 'docutheques', {
 				};
 
 			case 'DOSSIER_UPDATE_START':
+			case 'DOCUMENT_UPDATE_START':
 				return {
 					...state,
 					updating: action.updating,
 				};
 
 			case 'DOSSIER_UPDATE_END':
+			case 'DOCUMENT_UPDATE_END':
 				return {
 					...state,
 					updating: action.updating,
@@ -531,13 +537,25 @@ const store = registerStore( 'docutheques', {
 				};
 
 			case 'ADD_DOCUMENT':
-			case 'EDIT_DOCUMENT':
 				return {
 					...state,
 					documents: [
 						...reject( state.documents, [ 'id', action.document.id ] ),
 						action.document,
 					],
+				};
+
+			case 'EDIT_DOCUMENT':
+				const dossierID = first( action.document.dossiers );
+
+				return {
+					...state,
+					documents: [
+						...reject( state.documents, [ 'id', action.document.id ] ),
+						action.document,
+					],
+					currentDossierId: dossierID ? dossierID : 0,
+					isAdvancedEditMode: false,
 				};
 
 			case 'RESET_UPLOADS':

@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-const { Component, Fragment, createElement } = wp.element;
+const { Component, createElement } = wp.element;
 const { TextControl, TextareaControl, Button, DatePicker, ExternalLink, Dashicon, FormFileUpload } = wp.components;
 const { withSelect, dispatch, withDispatch } = wp.data;
 const { compose } = wp.compose;
@@ -72,7 +72,7 @@ class DocuthequesDocumentsEditForm extends Component {
 		let { documents } = this.state;
 		let editDocuments = [];
 
-		if ( !! document ) {
+		if ( !! document.id ) {
 			if ( file ) {
 				document.file = file;
 			}
@@ -95,9 +95,8 @@ class DocuthequesDocumentsEditForm extends Component {
 
 	render() {
 		const { user } = this.props;
-		const { documents, document, replaceFile, file } = this.state;
+		const { documents, document, replaceFile } = this.state;
 		const titleForm = 1 === documents.length ? __( 'Modifier un document', 'docutheques' ) : __( 'Modifier des documents', 'docutheques' );
-		console.log( file );
 
 		if ( ! get( user, ['capabilities', 'upload_files'], false ) ) {
 			return null;
@@ -133,7 +132,7 @@ class DocuthequesDocumentsEditForm extends Component {
 							{ ! replaceFile && (
 								<div className="document-source">
 									{ '' !== document.source_url && ! document.new_source_url &&
-										<ExternalLink href={ document.source_url }>{ __( 'Télécharger le document', 'docutheques' ) }</ExternalLink>
+										<ExternalLink href={ document.source_url }>{ __( 'Télécharger le fichier associé', 'docutheques' ) }</ExternalLink>
 									}
 
 									{ !! document.new_source_url &&
@@ -147,9 +146,9 @@ class DocuthequesDocumentsEditForm extends Component {
 										</div>
 									}
 
-									<Button onClick={ ( e ) => this.setState( { replaceFile: true } ) }>
+									<Button isSecondary={ true } onClick={ ( e ) => this.setState( { replaceFile: true } ) }>
 										<Dashicon icon="upload" />
-										{ __( 'Remplacer par une nouvelle version du document', 'docutheques' ) }
+										{ __( 'Remplacer le fichier associé', 'docutheques' ) }
 									</Button>
 								</div>
 							) }

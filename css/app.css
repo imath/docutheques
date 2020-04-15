@@ -32,8 +32,8 @@
 
 #docutheques .formulaire-modification-document .detail-document span.label {
 	text-align: center;
-    width: 100%;
-    display: inline-block;
+	width: 100%;
+	display: inline-block;
 }
 
 #docutheques .formulaire-modification-document .detail-document .components-datetime__date .DayPicker {
@@ -45,14 +45,14 @@
 }
 
 #docutheques .corps-docutheques .view-switch .view-list:before {
-    content: "\f111";
+	content: "\f111";
 }
 
 #docutheques .corps-docutheques .media-toolbar-secondary .select-mode-toggle-button,
 .delete-dossier-confirmation .confirmation-buttons button,
 .delete-document-confirmation .confirmation-buttons button {
-    margin: 0 8px 0 0;
-    vertical-align: middle;
+	margin: 0 8px 0 0;
+	vertical-align: middle;
 }
 
 .delete-dossier-confirmation .confirmation-buttons,
@@ -108,6 +108,11 @@
 #docutheques .formulaire-document .components-button,
 #docutheques .formulaire-modification-document .components-button {
 	margin-right: 1em;
+}
+
+#docutheques .formulaire-modification-document .document-source .components-button {
+	margin-left: 1em;
+	vertical-align: middle;
 }
 
 #docutheques .liste-dossiers,
@@ -289,13 +294,13 @@ li.choix-dossiers a {
 }
 
 #docutheques .chargement-de-documents {
-    color: #f56e28;
-    text-align: center;
+	color: #f56e28;
+	text-align: center;
 }
 
 #docutheques .chargement-de-documents .dashicon {
-    vertical-align: sub;
-    animation: rotation 2s infinite linear;
+	vertical-align: sub;
+	animation: rotation 2s infinite linear;
 }
 
 #docutheques .docutheques-erreurs .components-notice.is-dismissible,
