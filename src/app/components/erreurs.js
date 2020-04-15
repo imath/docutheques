@@ -37,7 +37,7 @@ class DocuthequesErreurs extends Component {
 							<Dashicon icon="warning" />
 							{ sprintf(
 								/* translators: 1: file name. 2: error message. */
-								__( 'Le document « %1$s » n‘a pas pu être téléchargé en raison de cette erreur : %2$s', 'docutheques' ),
+								__( 'Le document « %1$s » n‘a pas pu être téléversé en raison de cette erreur : %2$s', 'docutheques' ),
 								error.name,
 								error.error
 							) }
