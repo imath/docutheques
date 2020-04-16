@@ -35,9 +35,16 @@ class DocuthequesErreurs extends Component {
 					>
 						<p>
 							<Dashicon icon="warning" />
-							{ sprintf(
+							{ ! error.actionType && sprintf(
 								/* translators: 1: file name. 2: error message. */
-								__( 'Le document « %1$s » n‘a pas pu être téléversé en raison de cette erreur : %2$s', 'docutheques' ),
+								__( 'Le document « %1$s » n‘a pas pu être créé en raison de cette erreur : %2$s', 'docutheques' ),
+								error.name,
+								error.error
+							) }
+
+							{ error.actionType && 'update' === error.actionType && sprintf(
+								/* translators: 1: file name. 2: error message. */
+								__( 'Le document « %1$s » n‘a pas pu être modifié en raison de cette erreur : %2$s', 'docutheques' ),
 								error.name,
 								error.error
 							) }

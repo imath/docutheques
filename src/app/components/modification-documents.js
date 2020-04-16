@@ -81,11 +81,17 @@ class DocuthequesDocumentsEditForm extends Component {
 		}
 
 		editDocuments = documents.map( ( document ) => {
+			const editedDocument = pick( document, ['id', 'title', 'description', 'date', 'file'] );
+
 			if ( dossier !== newParent ) {
-				document.dossiers = [ newParent ];
+				if ( 0 !== newParent ) {
+					editedDocument.dossiers = [ newParent ];
+				} else {
+					editedDocument.dossiers = [];
+				}
 			}
 
-			return pick( document, ['id', 'title', 'description', 'dossiers', 'date', 'file'] );
+			return editedDocument;
 		} );
 
 		onUpdateDocuments( editDocuments );

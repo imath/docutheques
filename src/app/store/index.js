@@ -108,7 +108,7 @@ function * updateDocument( editedDocument ) {
 			id: uniqueId(),
 			name: document && document.name ? document.name : editedDocument.title.raw,
 			error: error.message,
-			type: 'document',
+			type: 'attachment',
 			actionType: 'update',
 		};
 

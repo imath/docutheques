@@ -142,7 +142,7 @@ class DocuthequesToolbar extends Component {
 					{ isAdvancedEditMode && 0 !== selectedDocuments.length && ! isNewForm && (
 						<Fragment>
 							<Button isLarge={ true } className="button media-button select-mode-toggle-button" onClick={ () => this.setCurrentState( 'documentsEditForm' ) }>
-								{ 1 === selectedDocuments.length ? __( 'Modifier le document', 'docutheques' ) : __( 'Modifier les documents', 'docutheques' ) }
+								{ 1 === selectedDocuments.length ? __( 'Modifier le document', 'docutheques' ) : __( 'Déplacer les documents', 'docutheques' ) }
 							</Button>
 							<Button isLarge={ true } disabled={ 'documentEditForm' === currentState } className="button media-button select-mode-toggle-button" onClick={ this.openDocumentModal }>
 								{ 1 === selectedDocuments.length ? __( 'Supprimer le document', 'docutheques' ) : __( 'Supprimer les documents', 'docutheques' ) }
