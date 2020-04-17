@@ -336,7 +336,7 @@ const actions = {
 		};
 	},
 
-	reset_uploads() {
+	resetUploads() {
 		return {
 			type: 'RESET_UPLOADS',
 		};

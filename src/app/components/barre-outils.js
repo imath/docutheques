@@ -70,6 +70,10 @@ class DocuthequesToolbar extends Component {
 
 	setCurrentState( currentState ) {
 		dispatch( 'docutheques' ).setCurrentState( currentState );
+
+		if ( 'documentsEditForm' === currentState ) {
+			dispatch( 'docutheques' ).resetUploads();
+		}
 	}
 
 	render() {

@@ -81,7 +81,7 @@ class DocuthequesDocumentsEditForm extends Component {
 		}
 
 		editDocuments = documents.map( ( document ) => {
-			const editedDocument = pick( document, ['id', 'title', 'description', 'date', 'file'] );
+			const editedDocument = pick( document, ['id', 'title', 'description', 'dossiers', 'date', 'file'] );
 
 			if ( dossier !== newParent ) {
 				if ( 0 !== newParent ) {

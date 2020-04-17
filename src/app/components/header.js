@@ -20,6 +20,10 @@ class DocuthequesHeader extends Component {
 
 	setCurrentState( currentState ) {
 		dispatch( 'docutheques' ).setCurrentState( currentState );
+
+		if ( 'documentForm' === currentState ) {
+			dispatch( 'docutheques' ).resetUploads();
+		}
 	}
 
 	render() {
