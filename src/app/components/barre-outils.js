@@ -65,7 +65,11 @@ class DocuthequesToolbar extends Component {
 	}
 
 	deleteDocument() {
-		return;
+		const { selectedDocuments, onDeleteDocuments } = this.props;
+
+		onDeleteDocuments( selectedDocuments );
+
+		this.setState( { isDeleteDocumentModalOpen: false } )
 	}
 
 	setCurrentState( currentState ) {
@@ -203,6 +207,11 @@ export default compose( [
 	withDispatch( ( dispatch ) => ( {
 		onDeleteDossier( dossier, options = null ) {
 			dispatch( 'docutheques' ).deleteDossier( dossier, options );
+		},
+		onDeleteDocuments( documents ) {
+			documents.forEach( document => {
+				dispatch( 'docutheques' ).deleteDocument( document.id, document.title.raw );
+			} );
 		},
 	} ) ),
 ] )( DocuthequesToolbar );

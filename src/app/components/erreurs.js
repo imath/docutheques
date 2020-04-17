@@ -48,6 +48,13 @@ class DocuthequesErreurs extends Component {
 								error.name,
 								error.error
 							) }
+
+							{ error.actionType && 'delete' === error.actionType && sprintf(
+								/* translators: 1: file name. 2: error message. */
+								__( 'Le document « %1$s » n‘a pas pu être supprimé en raison de cette erreur : %2$s', 'docutheques' ),
+								error.name,
+								error.error
+							) }
 						</p>
 					</Notice>
 				);
@@ -72,15 +79,15 @@ class DocuthequesErreurs extends Component {
 								error.error
 							) }
 
-							{ error.actionType && 'delete' === error.actionType && sprintf(
-								/* translators: %s is the error message. */
-								__( 'Le dossier n‘a pas pu être supprimé en raison de cette erreur : %s', 'docutheques' ),
-								error.error
-							) }
-
 							{ error.actionType && 'update' === error.actionType && sprintf(
 								/* translators: %s is the error message. */
 								__( 'Le dossier n‘a pas pu être modifié en raison de cette erreur : %s', 'docutheques' ),
+								error.error
+							) }
+
+							{ error.actionType && 'delete' === error.actionType && sprintf(
+								/* translators: %s is the error message. */
+								__( 'Le dossier n‘a pas pu être supprimé en raison de cette erreur : %s', 'docutheques' ),
 								error.error
 							) }
 						</p>

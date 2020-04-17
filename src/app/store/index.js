@@ -123,6 +123,32 @@ function * updateDocument( editedDocument ) {
 	}
 }
 
+function * deleteDocument( documentID, documentName ) {
+	let deleting = true, deleted;
+
+	yield { type: 'DOCUMENT_DELETE_START', deleting, documentID };
+
+	deleting = false;
+	try {
+		deleted = yield actions.deleteFromAPI( '/wp/v2/media/' + documentID, { force: true } );
+		yield { type: 'DOCUMENT_DELETE_END', deleting };
+
+		return actions.removeDocument( deleted.previous );
+	} catch ( error ) {
+		deleted = {
+			id: documentID,
+			name: documentName,
+			error: error.message,
+			type: 'attachment',
+			actionType: 'delete',
+		};
+
+		yield { type: 'DOCUMENT_DELETE_END', deleting };
+
+		return actions.traceErrors( deleted );
+	}
+}
+
 function * insertDossier( dossier ) {
 	let creating = true, created;
 
@@ -280,8 +306,8 @@ const actions = {
 		};
 	},
 
-	updateDossier,
 	updateDocument,
+	updateDossier,
 	updateFromAPI( path, options, formData ) {
 		return {
 			type: 'UPDATE_FROM_API',
@@ -291,26 +317,13 @@ const actions = {
 		};
 	},
 
+	deleteDocument,
 	deleteDossier,
 	deleteFromAPI( path, options = {} ) {
 		return {
 			type: 'DELETE_FROM_API',
 			path,
 			options,
-		};
-	},
-
-	addDossier( dossier ) {
-		return {
-			type: 'ADD_DOSSIER',
-			dossier,
-		};
-	},
-
-	editDossier( dossier ) {
-		return {
-			type: 'EDIT_DOSSIER',
-			dossier,
 		};
 	},
 
@@ -325,6 +338,27 @@ const actions = {
 		return {
 			type: 'EDIT_DOCUMENT',
 			document,
+		};
+	},
+
+	removeDocument( document ) {
+		return {
+			type: 'REMOVE_DOCUMENT',
+			document,
+		};
+	},
+
+	addDossier( dossier ) {
+		return {
+			type: 'ADD_DOSSIER',
+			dossier,
+		};
+	},
+
+	editDossier( dossier ) {
+		return {
+			type: 'EDIT_DOSSIER',
+			dossier,
 		};
 	},
 
@@ -495,12 +529,14 @@ const store = registerStore( 'docutheques', {
 					isAdvancedEditMode: false,
 				};
 
+			case 'DOCUMENT_DELETE_START':
 			case 'DOSSIER_DELETE_START':
 				return {
 					...state,
 					deleting: action.deleting,
 				};
 
+			case 'DOCUMENT_DELETE_END':
 			case 'DOSSIER_DELETE_END':
 				return {
 					...state,
@@ -555,6 +591,13 @@ const store = registerStore( 'docutheques', {
 						action.document,
 					],
 					currentDossierId: dossierID ? dossierID : 0,
+					isAdvancedEditMode: false,
+				};
+
+			case 'REMOVE_DOCUMENT':
+				return {
+					...state,
+					documents: reject( state.documents, [ 'id', action.document.id ] ),
 					isAdvancedEditMode: false,
 				};
 
