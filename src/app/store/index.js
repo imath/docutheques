@@ -192,7 +192,7 @@ function * updateDossier( previous, dossier ) {
 		return actions.editDossier( updated );
 	} catch ( error ) {
 		updated = {
-			id: uniqueId(),
+			id: previous.id,
 			name: previous.name,
 			error: error.message,
 			type: 'dossier',
@@ -717,9 +717,14 @@ const store = registerStore( 'docutheques', {
 			return find( dossiers, { id: currentDossierId } );
 		},
 
-		getNewDossierParentId( state ) {
-			const { newDossierParentId } = state;
-			return newDossierParentId;
+		getNewDossierParent( state ) {
+			const { newDossierParentId, dossiers } = state;
+
+			if ( 0 === newDossierParentId ) {
+				return { id: 0, name: 'root' };
+			}
+
+			return find( dossiers, { id: newDossierParentId } );
 		},
 
 		isAdvancedEditMode( state ) {

@@ -5,7 +5,7 @@ const { Component, createElement } = wp.element;
 const { TextControl, TextareaControl, Button } = wp.components;
 const { withSelect, dispatch, withDispatch } = wp.data;
 const { compose } = wp.compose;
-const { __ } = wp.i18n;
+const { sprintf, __ } = wp.i18n;
 
 /**
  * External dependencies.
@@ -18,6 +18,7 @@ const { get } = lodash;
 import DocuthequesInfos from './infos';
 
 const DEFAULT_STATE = {
+	id: 0,
 	name: '',
 	description: '',
 	parent: 0,
@@ -37,6 +38,7 @@ class DocuthequesDossierEditForm extends Component {
 
 		if ( !! dossier  ) {
 			this.setState( {
+				id: dossier.id,
 				name: dossier.name,
 				description: dossier.description,
 				parent: dossier.parent,
@@ -65,8 +67,8 @@ class DocuthequesDossierEditForm extends Component {
 		const { onUpdateDossier, dossier, newParent } = this.props;
 		let editDossier = this.state;
 
-		if ( 0 !== newParent ) {
-			editDossier.parent = newParent;
+		if ( 0 !== newParent.id && editDossier.id !== newParent.id ) {
+			editDossier.parent = newParent.id;
 		}
 
 		onUpdateDossier( dossier, editDossier );
@@ -75,8 +77,8 @@ class DocuthequesDossierEditForm extends Component {
 	}
 
 	render() {
-		const { user } = this.props;
-		const { name, description, parent } = this.state;
+		const { user, newParent } = this.props;
+		const { id, name, description, parent } = this.state;
 		const titleForm = 0 !== parent ? __( 'Modifier un dossier', 'docutheques' ) : __( 'Modifier une DocuThèque', 'docutheques' );
 
 		if ( ! get( user, ['capabilities', 'manage_categories'], false ) ) {
@@ -103,9 +105,19 @@ class DocuthequesDossierEditForm extends Component {
 					onChange={ ( description ) => this.setState( { description: description } ) }
 				/>
 
-				{ 0 !== parent && (
+				{ 0 !== parent && ! newParent.id && (
 					<DocuthequesInfos>
 						{ __( 'Utiliser la barre latérale de gauche pour déplacer le dossier dans une nouvelle DocuThèque.', 'docutheques' ) }
+					</DocuthequesInfos>
+				) }
+
+				{ 0 !== parent && !! newParent.id && id !== newParent.id && parent !== newParent.id && (
+					<DocuthequesInfos>
+						{ sprintf(
+							/* translators: %s: the name of the destination folder. */
+							__( 'Le dossier sera déplacé dans « %s ».', 'docutheques' ),
+							newParent.name
+						) }
 					</DocuthequesInfos>
 				) }
 
@@ -127,7 +139,7 @@ export default compose( [
 
 		return {
 			dossier: store.getCurrentDossier(),
-			newParent: store.getNewDossierParentId(),
+			newParent: store.getNewDossierParent(),
 		};
 	} ),
 	withDispatch( ( dispatch ) => ( {

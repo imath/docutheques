@@ -5,12 +5,12 @@ const { Component, createElement } = wp.element;
 const { TextControl, TextareaControl, Button, DatePicker, ExternalLink, Dashicon, FormFileUpload } = wp.components;
 const { withSelect, dispatch, withDispatch } = wp.data;
 const { compose } = wp.compose;
-const { __ } = wp.i18n;
+const { sprintf, __, _n } = wp.i18n;
 
 /**
  * External dependencies.
  */
-const { get, first, pick } = lodash;
+const { get, first, pick, join } = lodash;
 
 /**
  * Internal dependencies
@@ -34,7 +34,7 @@ class DocuthequesDocumentsEditForm extends Component {
 	}
 
 	componentDidMount() {
-		const { documents } = this.props;
+		const { documents, dossier } = this.props;
 
 		if ( !! documents.length  ) {
 			this.setState( {
@@ -46,6 +46,8 @@ class DocuthequesDocumentsEditForm extends Component {
 					document: first( documents ),
 				} );
 			}
+
+			dispatch( 'docutheques' ).newDossierParent( dossier );
 		}
 	}
 
@@ -83,9 +85,9 @@ class DocuthequesDocumentsEditForm extends Component {
 		editDocuments = documents.map( ( document ) => {
 			const editedDocument = pick( document, ['id', 'title', 'description', 'dossiers', 'date', 'file'] );
 
-			if ( dossier !== newParent ) {
-				if ( 0 !== newParent ) {
-					editedDocument.dossiers = [ newParent ];
+			if ( dossier !== newParent.id ) {
+				if ( 0 !== newParent.id ) {
+					editedDocument.dossiers = [ newParent.id ];
 				} else {
 					editedDocument.dossiers = [];
 				}
@@ -100,9 +102,27 @@ class DocuthequesDocumentsEditForm extends Component {
 	}
 
 	render() {
-		const { user } = this.props;
+		const { user, newParent } = this.props;
 		const { documents, document, replaceFile } = this.state;
 		const titleForm = 1 === documents.length ? __( 'Modifier un document', 'docutheques' ) : __( 'Modifier des documents', 'docutheques' );
+		let newParentName = '', documentNames = [], currentParent = 0;
+
+		if ( 0 === newParent.id ) {
+			newParentName = __( 'Racine', 'docutheques' );
+		} else {
+			newParentName = newParent.name;
+		}
+
+		if ( documents && documents.length ) {
+			documentNames = documents.map( ( doc ) => {
+				return doc.title.raw;
+			} );
+
+			currentParent = first( first( documents ).dossiers );
+			if ( undefined === currentParent ) {
+				currentParent = 0;
+			}
+		}
 
 		if ( ! get( user, ['capabilities', 'upload_files'], false ) ) {
 			return null;
@@ -187,12 +207,36 @@ class DocuthequesDocumentsEditForm extends Component {
 					</div>
 				) }
 
-				<DocuthequesInfos>
-					{ 1 === documents.length ?
-						__( 'Utiliser la barre latérale de gauche pour déplacer le document dans une nouvelle DocuThèque.', 'docutheques' ) :
-						__( 'Utiliser la barre latérale de gauche pour déplacer les documents dans une nouvelle DocuThèque.', 'docutheques' )
-					}
-				</DocuthequesInfos>
+				{ ( '' === newParentName || newParent.id === currentParent ) && (
+					<DocuthequesInfos>
+						{ sprintf(
+							/* translators: %s: the comma separated list of document names. */
+							_n(
+								'Utiliser la barre latérale de gauche pour déplacer le document « %s » dans une nouvelle DocuThèque.',
+								'Utiliser la barre latérale de gauche pour déplacer les documents « %s » dans une nouvelle DocuThèque.',
+								documents.length,
+								'docutheques'
+							),
+							join( documentNames, ', ' )
+						) }
+					</DocuthequesInfos>
+				) }
+
+				{ '' !== newParentName && newParent.id !== currentParent && (
+					<DocuthequesInfos>
+						{ sprintf(
+							/* translators: 1: the comma separated list of document names. 2: the name of the destination folder. */
+							_n(
+								'Le document « %1$s » sera déplacé dans « %2$s ».',
+								'Les documents « %1$s » seront déplacés dans « %2$s ».',
+								documents.length,
+								'docutheques'
+							),
+							join( documentNames, ', ' ),
+							newParentName
+						) }
+					</DocuthequesInfos>
+				) }
 
 				<Button isLarge={ true } onClick={ ( e ) => this.closeForm( e ) }>
 					{ __( 'Annuler', 'docutheques' ) }
@@ -212,7 +256,7 @@ export default compose( [
 
 		return {
 			documents: store.getSelectedDocuments(),
-			newParent: store.getNewDossierParentId(),
+			newParent: store.getNewDossierParent(),
 		};
 	} ),
 	withDispatch( ( dispatch ) => ( {
