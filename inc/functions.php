@@ -62,7 +62,11 @@ function docutheques_init() {
 		array(
 			'wp-blocks',
 			'wp-element',
+			'wp-components',
 			'wp-i18n',
+			'wp-editor',
+			'wp-block-editor',
+			'wp-api-fetch',
 		),
 		$docutheques->version,
 		true
@@ -72,7 +76,14 @@ function docutheques_init() {
 	register_block_type(
 		'docutheques/browser',
 		array(
-			'editor_script' => 'docutheques-browser',
+			'editor_script'   => 'docutheques-browser',
+			'render_callback' => 'docutheques_render_block',
+			'attributes'      => array(
+				'dossierID' => array(
+					'type'    => 'integer',
+					'default' => 0,
+				),
+			),
 		)
 	);
 
@@ -327,3 +338,22 @@ function docutheques_rest_save_document( $document, $request ) {
 	}
 }
 add_action( 'rest_insert_attachment', 'docutheques_rest_save_document', 10, 2 );
+
+/**
+ * Callback function to render the DocuThèques Block.
+ *
+ * @since 1.0.0
+ *
+ * @param array $attributes The block attributes.
+ * @return string           HTML output.
+ */
+function docutheques_render_block( $attributes = array() ) {
+	$block_args = wp_parse_args(
+		$attributes,
+		array(
+			'dossierID' => 0,
+		)
+	);
+
+	return $block_args['dossierID'];
+}
