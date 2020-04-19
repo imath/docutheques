@@ -7,7 +7,20 @@ const { registerStore } = wp.data;
 /**
  * External dependencies.
  */
-const { uniqueId, filter, reject, indexOf, orderBy, assignIn, forEach, find, keys, uniqWith, first } = lodash;
+const {
+	uniqueId,
+	filter,
+	reject,
+	indexOf,
+	orderBy,
+	assignIn,
+	forEach,
+	find,
+	keys,
+	uniqWith,
+	first,
+	hasIn
+} = lodash;
 
 const DEFAULT_STATE = {
 	user: {},
@@ -32,7 +45,19 @@ const DEFAULT_STATE = {
 	currentDossierId: 0,
 	isAdvancedEditMode: false,
 	newDossierParentId: 0,
+	totalDocuments: [],
 };
+
+async function parseDocuments( response ) {
+	const documents = await response.json().then( ( data ) => {
+		return data;
+	} );
+
+	store.dispatch(
+		actions.getDocuments( documents )
+	);
+}
+
 
 function * insertDocument( document, dossier = 0 ) {
 	let uploading = true, uploaded;
@@ -260,6 +285,14 @@ const actions = {
 		};
 	},
 
+	setTotalDocuments( dossier, total ) {
+		return {
+			type: 'SET_TOTAL_DOCUMENTS',
+			dossier,
+			total,
+		}
+	},
+
 	getDocuments( documents ) {
 		return {
 			type: 'GET_DOCUMENTS',
@@ -420,6 +453,21 @@ const store = registerStore( 'docutheques', {
 				return {
 					...state,
 					dossiers: action.dossiers,
+				};
+
+			case 'SET_TOTAL_DOCUMENTS':
+				let total = state.totalDocuments;
+
+				if ( ! find( total, [ 'id', action.dossier ] ) ) {
+					total = [
+						...state.totalDocuments,
+						{ id: action.dossier, total: action.total },
+					]
+				}
+
+				return {
+					...state,
+					totalDocuments: total,
 				};
 
 			case 'GET_DOCUMENTS':
@@ -784,8 +832,18 @@ const store = registerStore( 'docutheques', {
 
 		* getDocuments( currentDossierId = 0 ) {
 			const path = '/wp/v2/media?dossiers[]=' + currentDossierId + '&per_page=20&context=edit';
-			const documents = yield actions.fetchFromAPI( path, true );
-			return actions.getDocuments( documents );
+			const response = yield actions.fetchFromAPI( path, false );
+			let total;
+
+			if ( hasIn( response, [ 'headers', 'get' ] ) ) {
+				total = parseInt( response.headers.get( 'X-WP-Total' ), 10 );
+			} else {
+				total = parseInt( get( response, ['headers', 'X-WP-Total'], 0 ), 10 );
+			}
+
+			yield actions.setTotalDocuments( currentDossierId, total );
+
+			return parseDocuments( response );
 		},
 	},
 } );
