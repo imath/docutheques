@@ -355,5 +355,19 @@ function docutheques_render_block( $attributes = array() ) {
 		)
 	);
 
+	if ( $block_args['dossierID'] ) {
+		$dossier_id = (int) $block_args['dossierID'];
+
+		// Preloads Plugin's data.
+		$preload_data = array_reduce(
+			array(
+				sprintf( '/wp/v2/dossiers?parent=%d&context=view', $dossier_id ),
+				sprintf( '/wp/v2/media?dossiers[]=%d&per_page=20&context=view', $dossier_id ),
+			),
+			'rest_preload_api_request',
+			array()
+		);
+	}
+
 	return $block_args['dossierID'];
 }
