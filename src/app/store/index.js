@@ -7,7 +7,20 @@ const { registerStore } = wp.data;
 /**
  * External dependencies.
  */
-const { uniqueId, filter, reject, indexOf, orderBy, assignIn, forEach, find, keys, uniqWith, first } = lodash;
+const {
+	uniqueId,
+	filter,
+	reject,
+	indexOf,
+	orderBy,
+	assignIn,
+	forEach,
+	find,
+	keys,
+	uniqWith,
+	first,
+	hasIn
+} = lodash;
 
 const DEFAULT_STATE = {
 	user: {},
@@ -32,7 +45,29 @@ const DEFAULT_STATE = {
 	currentDossierId: 0,
 	isAdvancedEditMode: false,
 	newDossierParentId: 0,
+	totalDocuments: [],
 };
+
+async function parseDocuments( response ) {
+	const documents = await response.json().then( ( data ) => {
+		return data;
+	} );
+
+	store.dispatch(
+		actions.getDocuments( documents )
+	);
+}
+
+function * getDocumentsNextPage( dossier, page ) {
+	const path = '/wp/v2/media?dossiers[]=' + dossier + '&page=' + page + '&per_page=20&context=edit';
+	const nextPageDocuments = yield actions.fetchFromAPI( path, true );
+
+	if ( nextPageDocuments.length ) {
+		yield { type: 'SET_DOCUMENTS_CURRENT_PAGE', dossier, page };
+	}
+
+	return actions.getDocuments( nextPageDocuments );
+}
 
 function * insertDocument( document, dossier = 0 ) {
 	let uploading = true, uploaded;
@@ -260,6 +295,15 @@ const actions = {
 		};
 	},
 
+	setTotalDocuments( dossier, total ) {
+		return {
+			type: 'SET_TOTAL_DOCUMENTS',
+			dossier,
+			total,
+		};
+	},
+
+	getDocumentsNextPage,
 	getDocuments( documents ) {
 		return {
 			type: 'GET_DOCUMENTS',
@@ -421,6 +465,37 @@ const store = registerStore( 'docutheques', {
 					...state,
 					dossiers: action.dossiers,
 				};
+
+			case 'SET_TOTAL_DOCUMENTS':
+				let total = state.totalDocuments;
+
+				if ( ! find( total, [ 'id', action.dossier ] ) ) {
+					total = [
+						...state.totalDocuments,
+						{ id: action.dossier, total: action.total, currentPage: 1 },
+					]
+				}
+
+				return {
+					...state,
+					totalDocuments: total,
+				};
+
+			case 'SET_DOCUMENTS_CURRENT_PAGE':
+				const previousTotal = find( state.totalDocuments, [ 'id', action.dossier ] );
+				let updatedTotal = state.totalDocuments;
+
+				if ( previousTotal && previousTotal.currentPage ) {
+					updatedTotal = [
+						...reject( state.totalDocuments, [ 'id', action.dossier ] ),
+						{ id: action.dossier, total: previousTotal.total, currentPage: action.page },
+					];
+				}
+
+				return {
+					...state,
+					totalDocuments: updatedTotal,
+				}
 
 			case 'GET_DOCUMENTS':
 				const documentsUniques = uniqWith( [ ...state.documents, ...action.documents ], ( vState, vAction ) => ( vState.id === vAction.id ) );
@@ -692,6 +767,18 @@ const store = registerStore( 'docutheques', {
 			return filter( documents, { selected: true } );
 		},
 
+		getTotalDocuments( state ) {
+			const { currentDossierId, totalDocuments } = state;
+			const totalDossier = find( totalDocuments, ['id', currentDossierId ] );
+			return totalDossier && totalDossier.total ? totalDossier.total : 0;
+		},
+
+		getDocumentsCurrentPage( state ) {
+			const { currentDossierId, totalDocuments } = state;
+			const currentDossierPaginate = find( totalDocuments, ['id', currentDossierId ] );
+			return currentDossierPaginate && currentDossierPaginate.currentPage ? currentDossierPaginate.currentPage : 1;
+		},
+
 		getUploads( state ) {
 			const { uploaded } = state;
 			return uploaded;
@@ -784,8 +871,18 @@ const store = registerStore( 'docutheques', {
 
 		* getDocuments( currentDossierId = 0 ) {
 			const path = '/wp/v2/media?dossiers[]=' + currentDossierId + '&per_page=20&context=edit';
-			const documents = yield actions.fetchFromAPI( path, true );
-			return actions.getDocuments( documents );
+			const response = yield actions.fetchFromAPI( path, false );
+			let total;
+
+			if ( hasIn( response, [ 'headers', 'get' ] ) ) {
+				total = parseInt( response.headers.get( 'X-WP-Total' ), 10 );
+			} else {
+				total = parseInt( get( response, ['headers', 'X-WP-Total'], 0 ), 10 );
+			}
+
+			yield actions.setTotalDocuments( currentDossierId, total );
+
+			return parseDocuments( response );
 		},
 	},
 } );
