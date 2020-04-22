@@ -58,6 +58,16 @@ async function parseDocuments( response ) {
 	);
 }
 
+function * getDocumentsNextPage( dossier, page ) {
+	const path = '/wp/v2/media?dossiers[]=' + dossier + '&page=' + page + '&per_page=20&context=edit';
+	const nextPageDocuments = yield actions.fetchFromAPI( path, true );
+
+	if ( nextPageDocuments.length ) {
+		yield { type: 'SET_DOCUMENTS_CURRENT_PAGE', dossier, page };
+	}
+
+	return actions.getDocuments( nextPageDocuments );
+}
 
 function * insertDocument( document, dossier = 0 ) {
 	let uploading = true, uploaded;
@@ -290,9 +300,10 @@ const actions = {
 			type: 'SET_TOTAL_DOCUMENTS',
 			dossier,
 			total,
-		}
+		};
 	},
 
+	getDocumentsNextPage,
 	getDocuments( documents ) {
 		return {
 			type: 'GET_DOCUMENTS',
@@ -461,7 +472,7 @@ const store = registerStore( 'docutheques', {
 				if ( ! find( total, [ 'id', action.dossier ] ) ) {
 					total = [
 						...state.totalDocuments,
-						{ id: action.dossier, total: action.total },
+						{ id: action.dossier, total: action.total, currentPage: 1 },
 					]
 				}
 
@@ -469,6 +480,22 @@ const store = registerStore( 'docutheques', {
 					...state,
 					totalDocuments: total,
 				};
+
+			case 'SET_DOCUMENTS_CURRENT_PAGE':
+				const previousTotal = find( state.totalDocuments, [ 'id', action.dossier ] );
+				let updatedTotal = state.totalDocuments;
+
+				if ( previousTotal && previousTotal.currentPage ) {
+					updatedTotal = [
+						...reject( state.totalDocuments, [ 'id', action.dossier ] ),
+						{ id: action.dossier, total: previousTotal.total, currentPage: action.page },
+					];
+				}
+
+				return {
+					...state,
+					totalDocuments: updatedTotal,
+				}
 
 			case 'GET_DOCUMENTS':
 				const documentsUniques = uniqWith( [ ...state.documents, ...action.documents ], ( vState, vAction ) => ( vState.id === vAction.id ) );
@@ -738,6 +765,18 @@ const store = registerStore( 'docutheques', {
 		getSelectedDocuments( state ) {
 			const { documents } = state;
 			return filter( documents, { selected: true } );
+		},
+
+		getTotalDocuments( state ) {
+			const { currentDossierId, totalDocuments } = state;
+			const totalDossier = find( totalDocuments, ['id', currentDossierId ] );
+			return totalDossier && totalDossier.total ? totalDossier.total : 0;
+		},
+
+		getDocumentsCurrentPage( state ) {
+			const { currentDossierId, totalDocuments } = state;
+			const currentDossierPaginate = find( totalDocuments, ['id', currentDossierId ] );
+			return currentDossierPaginate && currentDossierPaginate.currentPage ? currentDossierPaginate.currentPage : 1;
 		},
 
 		getUploads( state ) {

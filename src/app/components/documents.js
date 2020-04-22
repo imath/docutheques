@@ -3,7 +3,7 @@
  */
 const { Component, createElement } = wp.element;
 const { __ } = wp.i18n;
-const { withSelect } = wp.data;
+const { withSelect, withDispatch } = wp.data;
 const { compose } = wp.compose;
 
 /**
@@ -22,6 +22,17 @@ import DocuthequesInfos from './infos';
 class DocuthequesDocuments extends Component {
 	constructor() {
 		super( ...arguments );
+
+		this.loadMoreDocuments = this.loadMoreDocuments.bind( this );
+	}
+
+	loadMoreDocuments( e ) {
+		const { documents, total, onSetCurrentPage, currentPage } = this.props;
+		const list = e.target;
+
+		if ( list.scrollHeight - list.scrollTop === list.clientHeight && total > documents.length ) {
+			onSetCurrentPage( currentPage + 1 );
+		}
 	}
 
 	render() {
@@ -68,7 +79,7 @@ class DocuthequesDocuments extends Component {
 			<div className="liste-documents">
 				<DocuthequesErreurs />
 				<DocuthequesChargement chargements={ chargements } />
-				<div className={ isAdvancedEditMode ? 'media-items mode-select' : 'media-items' }>
+				<div className={ isAdvancedEditMode ? 'media-items mode-select' : 'media-items' } onScroll={ ( e ) => this.loadMoreDocuments( e ) }>
 					{ documentItems }
 				</div>
 			</div>
@@ -82,7 +93,14 @@ export default compose( [
 
 		return {
 			documents: store.getDocuments( dossier ),
+			currentPage: store.getDocumentsCurrentPage(),
+			total: store.getTotalDocuments(),
 			chargements: store.getUploads(),
 		};
 	} ),
+	withDispatch( ( dispatch, { dossier } ) => ( {
+		onSetCurrentPage( page ) {
+			dispatch( 'docutheques' ).getDocumentsNextPage( dossier, page );
+		},
+	} ) ),
 ] )( DocuthequesDocuments );

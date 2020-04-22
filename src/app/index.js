@@ -85,13 +85,13 @@ class Docutheques extends Component {
 
 const DocuthequesAdministration = compose( [
 	withSelect( ( select ) => {
-		const docuThequesStore = select( 'docutheques' );
+		const store = select( 'docutheques' );
 
 		return {
-			user: docuThequesStore.getCurrentUser(),
-			currentState: docuThequesStore.getCurrentState(),
-			currentDossierId: docuThequesStore.getCurrentDossierId(),
-			isAdvancedEditMode: docuThequesStore.isAdvancedEditMode(),
+			user: store.getCurrentUser(),
+			currentState: store.getCurrentState(),
+			currentDossierId: store.getCurrentDossierId(),
+			isAdvancedEditMode: store.isAdvancedEditMode(),
 		};
 	} ),
 ] )( Docutheques );

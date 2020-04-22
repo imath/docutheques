@@ -61,18 +61,22 @@
 	text-align: right;
 }
 
-#docutheques .liste-documents {
-	overflow: auto;
-	margin: 0 0 16px 0;
-	padding: 8px;
-}
-
 #docutheques .corps-docutheques .arbre-des-dossiers {
 	width: 20%;
 	max-width: 20%;
+	max-height: calc( 100vh - 312px );
 }
 
-#docutheques .corps-docutheques .liste-documents,
+#docutheques .corps-docutheques .liste-documents {
+	position: relative;
+	margin: 16px 0;
+	padding: 0 0 0 8px;
+	width: calc( 80% - 24px );
+	height: calc( 100vh - 312px );
+	overflow: hidden;
+	box-sizing: border-box;
+}
+
 #docutheques .corps-docutheques .formulaire-dossier,
 #docutheques .corps-docutheques .formulaire-document,
 #docutheques .corps-docutheques .formulaire-modification-document {
@@ -167,9 +171,10 @@ li.choix-dossiers a {
 }
 
 #docutheques .liste-documents .media-items {
-	overflow: auto;
+	overflow-y: scroll;
 	outline: none;
 	padding-top: 0.5px;
+	max-height: 100%;
 }
 
 #docutheques .liste-documents .media-item {
