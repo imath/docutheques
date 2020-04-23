@@ -449,6 +449,11 @@ const actions = {
 			isSelected,
 		};
 	},
+	resetDocumentsSelection() {
+		return {
+			type: 'RESET_DOCUMENTS_SELECTION',
+		};
+	}
 };
 
 const store = registerStore( 'docutheques', {
@@ -733,7 +738,19 @@ const store = registerStore( 'docutheques', {
 					...state,
 					documents: state.documents.map( document => {
 						if ( action.id === document.id ) {
-							document.selected = action.isSelected
+							document.selected = action.isSelected;
+						}
+
+						return document;
+					} ),
+				};
+
+			case 'RESET_DOCUMENTS_SELECTION':
+				return {
+					...state,
+					documents: state.documents.map( document => {
+						if ( document.selected && true === document.selected ) {
+							document.selected = false;
 						}
 
 						return document;

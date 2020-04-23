@@ -31,6 +31,10 @@ class DocuthequesToolbar extends Component {
 		e.preventDefault();
 
 		dispatch( 'docutheques' ).switchMode( mode );
+
+		if ( false === mode ) {
+			this.cancelDocumentsSelection();
+		}
 	}
 
 	openDossierModal() {
@@ -78,6 +82,10 @@ class DocuthequesToolbar extends Component {
 		if ( 'documentsEditForm' === currentState ) {
 			dispatch( 'docutheques' ).resetUploads();
 		}
+	}
+
+	cancelDocumentsSelection() {
+		dispatch( 'docutheques' ).resetDocumentsSelection();
 	}
 
 	render() {
@@ -186,6 +194,11 @@ class DocuthequesToolbar extends Component {
 									</div>
 
 								</Modal>
+							) }
+							{ selectedDocuments.length >= 1 && (
+								<Button isLarge={ true } className="button media-button select-mode-toggle-button" onClick={ () => this.cancelDocumentsSelection() }>
+									{ __( 'Annuler la sélection', 'docutheques' ) }
+								</Button>
 							) }
 						</Fragment>
 					) }
