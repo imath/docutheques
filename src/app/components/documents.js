@@ -57,7 +57,7 @@ class DocuthequesDocuments extends Component {
 						title={ document.title.rendered }
 						createdDate={ document.date }
 						modifiedDate={ document.modified }
-						link={ document.link }
+						link={ document.source_url }
 						type={ 'image' === document.media_type ? document.media_type : document.mime_type }
 						isSelected= { document.selected || false }
 						isAdvancedEditMode={ isAdvancedEditMode }

@@ -253,6 +253,15 @@ li.choix-dossiers a {
 	transform: translate( -50%, -50% );
 }
 
+#docutheques .media-item .components-popover__content p {
+	text-align: left;
+	margin: 1em;
+}
+
+#docutheques .media-item .components-popover__content .fichier-source {
+	display: block;
+}
+
 #docutheques .liste-documents .media-item .media-name {
 	position: absolute;
 	left: 0;
@@ -338,10 +347,6 @@ li.choix-dossiers a {
 
 #docutheques .media-items.mode-select .selected .vignette {
 	opacity: 1;
-}
-
-#docutheques .media-items .unselectable .item-preview {
-	cursor: not-allowed;
 }
 
 #docutheques .media-items .selected .check,

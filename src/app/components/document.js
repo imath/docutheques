@@ -2,10 +2,12 @@
  * WordPress dependencies.
  */
 const { Component, createElement } = wp.element;
-const { Dashicon } = wp.components;
+const { Dashicon, Popover } = wp.components;
 const { withDispatch } = wp.data;
 const { compose } = wp.compose;
 const { __ } = wp.i18n;
+
+import { dateI18n } from '@wordpress/date';
 
 /**
  * Internal dependencies.
@@ -46,18 +48,41 @@ const Icon = ( { type } ) => {
 class DocuthequesDocument extends Component {
 	constructor() {
 		super( ...arguments );
+
+		this.state = {
+			popoverIsVisible: false,
+		};
+
+		this.doClose = this.doClose.bind( this );
 	}
 
 	onMediaClick( id, e ) {
 		e.preventDefault();
 
 		const { isAdvancedEditMode, toggleDocumentSelection, isSelected } = this.props;
+		const { popoverIsVisible } = this.state;
 
 		if ( ! isAdvancedEditMode ) {
+			this.setState( { popoverIsVisible: ! popoverIsVisible } );
 			return;
 		}
 
 		return toggleDocumentSelection( id, ! isSelected );
+	}
+
+	catchClick( e ) {
+		const link = e.target;
+
+		if ( link && link.getAttribute( 'href' ) ) {
+			window.open( link.getAttribute( 'href' ), '_blank' );
+		}
+	}
+
+	doClose( e ) {
+		e.preventDefault();
+
+		const { popoverIsVisible } = this.state;
+		this.setState( { popoverIsVisible: ! popoverIsVisible } );
 	}
 
 	render() {
@@ -71,6 +96,7 @@ class DocuthequesDocument extends Component {
 			isSelected,
 			isAdvancedEditMode,
 		} = this.props;
+		const { popoverIsVisible } = this.state;
 		let classes = 'media-item unselectable';
 
 		if ( isAdvancedEditMode ) {
@@ -87,6 +113,13 @@ class DocuthequesDocument extends Component {
 				role="checkbox"
 				onClick={ ( e ) => this.onMediaClick( id, e ) }
 			>
+				{ popoverIsVisible && (
+					<Popover focusOnMount="container" position="bottom center" onClick={ this.catchClick } onFocusOutside={ this.doClose }>
+						<p><strong>{ __( 'Date de publication :', 'docutheques' ) }</strong> { dateI18n( 'd/m/Y', createdDate ) }</p>
+						<p><strong>{ __( 'Date de modification :', 'docutheques' ) }</strong> { dateI18n( 'd/m/Y', modifiedDate ) }</p>
+						<p><strong>{ __( 'Fichier source :', 'docutheques' ) }</strong><a href={ link } className="fichier-source">{ title }</a></p>
+					</Popover>
+				) }
 				<div className="item-preview">
 					<div className="vignette">
 						<div className="centered">
