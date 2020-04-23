@@ -72,11 +72,20 @@ function docutheques_init() {
 		true
 	);
 
+	// Registers the the Browser Block's style.
+	wp_register_style(
+		'docutheques-widget',
+		trailingslashit( $docutheques->url ) . 'css/widget.css',
+		array(),
+		$docutheques->version
+	);
+
 	// Registers the Browser Block.
 	register_block_type(
 		'docutheques/browser',
 		array(
 			'editor_script'   => 'docutheques-browser',
+			'style'           => 'docutheques-widget',
 			'render_callback' => 'docutheques_render_block',
 			'attributes'      => array(
 				'dossierID' => array(
@@ -358,19 +367,140 @@ function docutheques_render_block( $attributes = array() ) {
 		)
 	);
 
-	if ( $block_args['dossierID'] ) {
-		$dossier_id = (int) $block_args['dossierID'];
+	$docutheque_id    = (int) $block_args['dossierID'];
+	$dossiers         = array();
+	$documents        = array();
+	$document_headers = array();
+	$output           = '';
+
+	if ( $docutheque_id ) {
+		$dossiers_path  = sprintf( '/wp/v2/dossiers?parent=%d&context=view', $docutheque_id );
+		$documents_path = sprintf( '/wp/v2/media?dossiers[]=%d&per_page=20&context=view', $docutheque_id );
 
 		// Preloads Plugin's data.
 		$preload_data = array_reduce(
 			array(
-				sprintf( '/wp/v2/dossiers?parent=%d&context=view', $dossier_id ),
-				sprintf( '/wp/v2/media?dossiers[]=%d&per_page=20&context=view', $dossier_id ),
+				$dossiers_path,
+				$documents_path,
 			),
 			'rest_preload_api_request',
 			array()
 		);
+
+		if ( isset( $preload_data[ $documents_path ] ) && $preload_data[ $documents_path ] ) {
+			$image_icon = sprintf(
+				'<img width="48" height="64" src="%s" class="attachment-thumbnail size-thumbnail" alt="" loading="lazy">',
+				esc_url( docutheques()->url . '/images/image.png' )
+			);
+
+			foreach ( $preload_data[ $documents_path ] as $document_elements => $document_data ) {
+				if ( 'body' === $document_elements ) {
+					foreach ( $document_data as $document ) {
+						$icon = '';
+						if ( 'image' !== $document['media_type'] ) {
+							$icon = wp_get_attachment_image( $document['id'], 'thumbnail', true );
+						} else {
+							$icon = $image_icon;
+						}
+
+						$documents[] = sprintf(
+							'<div class="docutheques-document">
+								<div class="docutheques-vignette">
+									<a href="%1$s" title="%2$s">
+										%3$s
+									</a>
+								</div>
+								<div class="docutheques-description">
+									<div class="docutheques-title">
+										<a href="%1$s" title="%2$s">
+											%4$s
+										</a>
+									</div>
+									<div class="docutheques-pubdate">
+										<strong class="docutheques-label">%5$s</strong>
+										<time datetime="%6$s">%7$s</time>
+									</div>
+								</div>
+							</div>',
+							esc_url( $document['link'] ),
+							sprintf(
+								/* translators: %s is the placeholder for the document title */
+								esc_attr__( 'Télécharger %s', 'docutheques' ),
+								esc_html( reset( $document['title'] ) )
+							),
+							$icon,
+							reset( $document['title'] ),
+							esc_html__( 'Publié le :', 'docuthèques' ),
+							esc_attr( $document['date'] ),
+							esc_html( date_i18n( get_option( 'date_format' ), strtotime( $document['date'] ) ) )
+						);
+					}
+				} elseif ( 'headers' === $document_elements ) {
+					$document_headers = $document_data;
+				}
+			}
+
+			if ( isset( $preload_data[ $dossiers_path ] ) && $preload_data[ $documents_path ] ) {
+				$dossier_icon = sprintf(
+					'<img width="48" height="38" src="%s" class="attachment-thumbnail size-thumbnail" alt="" loading="lazy">',
+					esc_url( docutheques()->url . '/images/category.png' )
+				);
+
+				foreach ( $preload_data[ $dossiers_path ] as $dossier_elements => $dossier_data ) {
+					if ( 'body' !== $dossier_elements ) {
+						continue;
+					}
+
+					foreach ( $dossier_data as $dossier ) {
+						$dossiers[] = sprintf(
+							'<div class="docutheques-dossier" id="dossier-%1$d">
+								<div class="docutheques-vignette">
+									<a href="#dossier-%1$d" title="%2$s">
+										%3$s
+									</a>
+								</div>
+								<div class="docutheques-description">
+									<div class="docutheques-title">
+										<a href="#dossier-%1$d" title="%2$s">
+											%4$s
+										</a>
+									</div>
+								</div>
+							</div>',
+							absint( $dossier['id'] ),
+							sprintf(
+								/* translators: %s is the placeholder for the name of the dossier */
+								esc_attr__( 'Ouvrir le dossier %s', 'docutheques' ),
+								esc_html( $dossier['name'] )
+							),
+							$dossier_icon,
+							$dossier['name']
+						);
+					}
+				}
+			}
+
+			// Merge Dossiers and Documents.
+			$docutheque_items = array_merge( $dossiers, $documents );
+
+			if ( $docutheque_items ) {
+				$output = sprintf(
+					'<ul class="docutheques" id="%d">%s</ul>',
+					absint( $docutheque_id ),
+					'<li>' . implode( '</li><li>', $docutheque_items ) . '</li>'
+				);
+			}
+		}
 	}
 
-	return $block_args['dossierID'];
+	/**
+	 * Filter here to override the block output.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string  $output        HTML Output.
+	 * @param integer $docutheque_id The DocuThèque ID.
+	 * @param array   $preload_data  The preloaded data for this DocuThèque.
+	 */
+	return apply_filters( 'docutheques_render_block_output', $output, $docutheque_id, $preload_data );
 }
