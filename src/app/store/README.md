@@ -1,4 +1,4 @@
 # Store
 
 ## Todo
-- Pagination
+- [x] Pagination
