@@ -9,7 +9,7 @@ const { compose } = wp.compose;
 /**
  * External dependencies.
  */
-const { filter } = lodash;
+const { filter, reject } = lodash;
 
 /**
  * Internal dependencies.
@@ -36,7 +36,7 @@ class DocuthequesDocuments extends Component {
 	}
 
 	render() {
-		const { documents, chargements, dossier, isAdvancedEditMode } = this.props;
+		const { documents, chargements, dossier, isAdvancedEditMode, searchTerms } = this.props;
 		const hasChargements = chargements && chargements.length ? true : false;
 		let documentsByDossier, documentItems;
 
@@ -47,6 +47,12 @@ class DocuthequesDocuments extends Component {
 				} );
 			} else {
 				documentsByDossier = filter( documents, { 'dossiers': [ dossier ] } );
+			}
+
+			if ( searchTerms ) {
+				documentsByDossier = reject( documentsByDossier, ( filteredDocument ) => {
+					return -1 === filteredDocument.title.raw.toLowerCase().indexOf( searchTerms.toLowerCase() );
+				} );
 			}
 
 			documentItems = documentsByDossier.map( ( document ) => {
@@ -70,7 +76,7 @@ class DocuthequesDocuments extends Component {
 			return (
 				<div className="liste-documents">
 					<DocuthequesErreurs />
-					<DocuthequesInfos />
+					<DocuthequesInfos searchTerms={ searchTerms } />
 				</div>
 			);
 		}
@@ -96,6 +102,7 @@ export default compose( [
 			currentPage: store.getDocumentsCurrentPage(),
 			total: store.getTotalDocuments(),
 			chargements: store.getUploads(),
+			searchTerms: store.getSearchTerms(),
 		};
 	} ),
 	withDispatch( ( dispatch, { dossier } ) => ( {

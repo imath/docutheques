@@ -5,7 +5,7 @@ const { Component, createElement } = wp.element;
 const { Notice, Dashicon } = wp.components;
 const { withSelect } = wp.data;
 const { compose } = wp.compose;
-const { __ } = wp.i18n;
+const { sprintf, __ } = wp.i18n;
 
 class DocuthequesInfos extends Component {
 	constructor() {
@@ -13,7 +13,7 @@ class DocuthequesInfos extends Component {
 	}
 
 	render() {
-		const { dossier, children } = this.props;
+		const { dossier, children, searchTerms } = this.props;
 		let message = __( 'Il n’existe aucun document directement rattaché à la racine pour le moment.', 'docutheques' );
 
 		if ( !! dossier && 0 === dossier.parent ) {
@@ -22,6 +22,14 @@ class DocuthequesInfos extends Component {
 
 		if ( !! dossier && 0 !== dossier.parent ) {
 			message = __( 'Ce dossier ne contient aucun document directement rattaché pour le moment.', 'docutheques' )
+		}
+
+		if ( searchTerms ) {
+			message = sprintf(
+				/* translators: %s is the placeholder for the searched terms */
+				__( 'Aucun document dont le nom contient « %s » n‘a été trouvé à cet emplacement.', 'docutheques' ),
+				searchTerms
+			);
 		}
 
 		return (

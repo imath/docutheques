@@ -2,7 +2,7 @@
  * WordPress dependencies
  */
 const { Component, Fragment, createElement } = wp.element;
-const { Button, Modal, CheckboxControl } = wp.components;
+const { Button, Modal, CheckboxControl, TextControl } = wp.components;
 const { withSelect, withDispatch, dispatch } = wp.data;
 const { compose } = wp.compose;
 const { __, _n, sprintf } = wp.i18n;
@@ -17,6 +17,7 @@ class DocuthequesToolbar extends Component {
 			options: {
 				deleteDocuments: false,
 			},
+			search: '',
 		};
 
 		this.openDossierModal = this.openDossierModal.bind( this );
@@ -25,6 +26,7 @@ class DocuthequesToolbar extends Component {
 		this.openDocumentModal = this.openDocumentModal.bind( this );
 		this.closeDocumentModal = this.closeDocumentModal.bind( this );
 		this.deleteDocument = this.deleteDocument.bind( this );
+		this.setSearchTerms = this.setSearchTerms.bind( this );
 	}
 
 	switchMode( e, mode ) {
@@ -88,9 +90,15 @@ class DocuthequesToolbar extends Component {
 		dispatch( 'docutheques' ).resetDocumentsSelection();
 	}
 
+	setSearchTerms( search ) {
+		this.setState( { search: search } );
+
+		dispatch( 'docutheques' ).setSearchTerms( search );
+	}
+
 	render() {
 		const { dossier, isAdvancedEditMode, currentState, selectedDocuments } = this.props;
-		const { isDeleteDossierModalOpen, isDeleteDocumentModalOpen, options } = this.state;
+		const { isDeleteDossierModalOpen, isDeleteDocumentModalOpen, options, search } = this.state;
 		const isNewForm = -1 !== ['documentForm', 'dossierForm'].indexOf( currentState );
 
 		let gridClass = 'view-grid';
@@ -203,6 +211,17 @@ class DocuthequesToolbar extends Component {
 						</Fragment>
 					) }
 				</div>
+				{ ! isAdvancedEditMode && (
+					<div className="media-toolbar-primary search-form">
+						<TextControl
+							label={ __( 'Rechercher un document', 'docutheque' ) }
+							value={ search }
+							onChange={ ( search ) => this.setSearchTerms( search ) }
+							className="search"
+							type="search"
+						/>
+					</div>
+				) }
 			</div>
 		);
 	}

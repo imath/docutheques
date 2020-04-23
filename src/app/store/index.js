@@ -46,6 +46,7 @@ const DEFAULT_STATE = {
 	isAdvancedEditMode: false,
 	newDossierParentId: 0,
 	totalDocuments: [],
+	search: '',
 };
 
 async function parseDocuments( response ) {
@@ -310,6 +311,12 @@ const actions = {
 			documents,
 		};
 	},
+	setSearchTerms( search ) {
+		return {
+			type: 'SET_SEARCH_TERMS',
+			search,
+		};
+	},
 
 	setCurrentState( currentState ) {
 		return {
@@ -508,6 +515,12 @@ const store = registerStore( 'docutheques', {
 				return {
 					...state,
 					documents: documentsUniques,
+				};
+
+			case 'SET_SEARCH_TERMS':
+				return {
+					...state,
+					search: action.search,
 				};
 
 			case 'SET_CURRENT_STATE':
@@ -777,6 +790,11 @@ const store = registerStore( 'docutheques', {
 		getDocuments( state ) {
 			const { documents } = state;
 			return orderBy( documents, ['modified'], ['desc'] );
+		},
+
+		getSearchTerms( state ) {
+			const { isAdvancedEditMode, search } = state;
+			return ! isAdvancedEditMode ? search : '';
 		},
 
 		getSelectedDocuments( state ) {

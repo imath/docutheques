@@ -55,6 +55,20 @@
 	vertical-align: middle;
 }
 
+#docutheques .media-toolbar-secondary {
+    max-width: 66%;
+    float: left;
+}
+
+#docutheques .media-toolbar-primary .components-base-control .components-base-control__field {
+    margin: 0;
+}
+
+#docutheques .media-toolbar-primary .components-base-control .components-base-control__label {
+    position: static;
+    margin-right: 0.5em;
+}
+
 .delete-dossier-confirmation .confirmation-buttons,
 .delete-document-confirmation .confirmation-buttons {
 	margin-top: 2em;
