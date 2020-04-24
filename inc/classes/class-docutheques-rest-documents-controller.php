@@ -134,4 +134,56 @@ class DocuTheques_REST_Documents_Controller extends WP_REST_Attachments_Controll
 
 		return $response;
 	}
+
+	/**
+	 * Prepares a single document output for response.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post         $post    Attachment object.
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_REST_Response Response object.
+	 */
+	public function prepare_item_for_response( $post, $request ) {
+		$is_docutheque_widget = 1 === (int) $request->get_param( 'docutheques_widget' );
+		$response             = parent::prepare_item_for_response( $post, $request );
+
+		if ( ! $is_docutheque_widget ) {
+			return $response;
+		}
+
+		$data = $response->get_data();
+		if ( 'image' !== $data['media_type'] ) {
+			$icon_data = wp_get_attachment_image_src( $post->ID, 'thumbnail', true );
+			if ( $icon_data ) {
+				$icon_url = reset( $icon_data );
+				$data['docutheques_icon_url'] = $icon_url;
+			}
+
+		} else {
+			$data['docutheques_icon_url'] = docutheques_get_default_image_src();
+		}
+
+		$data['docutheques_pub_date'] = date_i18n( get_option( 'date_format' ), strtotime( $data['date'] ) );
+		$data['docutheques_download'] = sprintf(
+			/* translators: %s is the placeholder for the document title */
+			__( 'Télécharger %s', 'docutheques' ),
+			reset( $data['title'] )
+		);
+
+		// Wrap the data in a response object.
+		$response = rest_ensure_response( $data );
+
+
+		/**
+		 * Filters a document returned from the REST API.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param WP_REST_Response $response The response object.
+		 * @param WP_Post          $post     The original document post.
+		 * @param WP_REST_Request  $request  Request used to generate the response.
+		 */
+		return apply_filters( 'docutheques_rest_prepare_document', $response, $post, $request );
+	}
 }

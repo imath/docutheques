@@ -49,6 +49,13 @@ const editDocuThequesBrowser = ( { attributes, setAttributes } ) => {
 };
 
 registerBlockType( 'docutheques/browser', {
+	supports: {
+		className: false,
+		anchor: false,
+		multiple: false,
+		reusable: false,
+	},
+
 	title: __( 'DocuTheques', 'docutheques' ),
 
 	description: __( 'Explorateur de documents.', 'docutheques' ),

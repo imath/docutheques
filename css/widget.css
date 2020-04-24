@@ -1,34 +1,61 @@
-.editor-styles-wrapper ul.docutheques,
-ul.docutheques {
+.editor-styles-wrapper .docutheque .fil-ariane-docutheque,
+.docutheque .fil-ariane-docutheque {
+	margin: 1em 0;
+	list-style: none;
+	padding-left: 0;
+}
+
+.editor-styles-wrapper .docutheque .racine-docutheque,
+.docutheque .racine-docutheque {
+	font-size: 140%;
+}
+
+.editor-styles-wrapper .docutheque .racine-docutheque-icon,
+.docutheque .racine-docutheque-icon {
+	text-decoration: none !important;
+	border: none !important;
+	display: inline-block;
+	padding: 0 10px;
+}
+
+.editor-styles-wrapper .docutheque svg.docutheque-icon,
+.docutheque svg.docutheque-icon {
+	width: 48px;
+	height: 48px;
+	vertical-align: bottom;
+}
+
+.editor-styles-wrapper .docutheque ul.docutheque-elements,
+.docutheque ul.docutheque-elements {
 	list-style: none;
 	margin: 1em 0;
 	padding: 0;
 }
 
-ul.docutheques li .docutheques-document,
-ul.docutheques li .docutheques-dossier {
+.docutheque ul.docutheque-elements li .docutheque-document,
+.docutheque ul.docutheque-elements li .docutheque-dossier {
 	display: flex;
 	flex-wrap: wrap;
 	border-bottom: solid 1px #878787;
 	padding: 1em 0;
 }
 
-ul.docutheques li .docutheques-dossier {
+.docutheque ul.docutheque-elements li .docutheque-dossier {
 	background-color: #f1f1f1;
 }
 
-ul.docutheques li:first-child {
+.docutheque ul.docutheque-elements li:first-child {
 	border-top: solid 1px #878787;
 }
 
-ul.docutheques li .docutheques-document .docutheques-vignette,
-ul.docutheques li .docutheques-dossier .docutheques-vignette {
+.docutheque ul.docutheque-elements li .docutheque-document .docutheque-vignette,
+.docutheque ul.docutheque-elements li .docutheque-dossier .docutheque-vignette {
 	padding-left: 10px;
 	width: 60px;
 }
 
-ul.docutheques li .docutheques-document .docutheques-description,
-ul.docutheques li .docutheques-dossier .docutheques-description {
+.docutheque ul.docutheque-elements li .docutheque-document .docutheque-description,
+.docutheque ul.docutheque-elements li .docutheque-dossier .docutheque-description {
 	width: calc( 100% - 60px );
 	padding: 0 1em;
 }

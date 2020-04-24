@@ -24,6 +24,9 @@ function docutheques_globals() {
 	// Path.
 	$docutheques->dir = plugin_dir_path( dirname( __FILE__ ) );
 
+	// Templates dir.
+	$docutheques->tmpl = trailingslashit( $docutheques->dir ) . 'templates';
+
 	// URL.
 	$docutheques->url = plugin_dir_url( dirname( __FILE__ ) );
 

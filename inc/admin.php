@@ -78,3 +78,22 @@ function docutheques_admin_menu() {
 	);
 }
 add_action( 'admin_menu', 'docutheques_admin_menu' );
+
+/**
+ * Only allow the DocuThèques block in WordPress pages.
+ *
+ * @since 1.0.0
+ *
+ * @param boolean|array $allowed_block_types Array of block type slugs, or
+ *                                           boolean to enable/disable all.
+ * @param WP_Post       $post                The post resource data.
+ * @return boolean|array The allowed block types.
+ */
+function docutheques_browser_block_is_allowed( $allowed_block_types, $post ) {
+	if ( 'page' !== get_post_type( $post ) ) {
+		unregister_block_type( 'docutheques/browser' );
+	}
+
+	return $allowed_block_types;
+}
+add_filter( 'allowed_block_types', 'docutheques_browser_block_is_allowed', 10, 2 );
