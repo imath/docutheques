@@ -314,7 +314,6 @@ class DocuTheques_REST_Documents_Controller extends WP_REST_Attachments_Controll
 		// Wrap the data in a response object.
 		$response = rest_ensure_response( $data );
 
-
 		/**
 		 * Filters a document returned from the REST API.
 		 *
