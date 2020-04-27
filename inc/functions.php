@@ -318,32 +318,6 @@ function docutheques_documents_reset_querried_dossiers( $wp_query ) {
 }
 
 /**
- * Sets the dossier the document is attached to.
- *
- * @since 1.0.0
- *
- * @param WP_Post         $document Inserted or updated document
- *                                  object.
- * @param WP_REST_Request $request  The request sent to the API.
- */
-function docutheques_rest_save_document( $document, $request ) {
-	$dossiers = $request->get_param( 'dossiers' );
-
-	if ( $dossiers ) {
-		$dossier = (int) reset( $dossiers );
-
-		if ( $dossier ) {
-			$result = wp_set_object_terms( $document->ID, $dossier, 'dossiers' );
-
-			if ( is_wp_error( $result ) ) {
-				return $result;
-			}
-		}
-	}
-}
-add_action( 'rest_insert_attachment', 'docutheques_rest_save_document', 10, 2 );
-
-/**
  * Gets the URL to a needed default image.
  *
  * @since 1.0.0

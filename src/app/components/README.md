@@ -10,4 +10,4 @@
 - [x] ~~Update the file of an existing attachment: check `$post_type->get_rest_controller();` and use the `rest_pre_insert_attachment` filter.~~
 - [x] Extend the WP_REST_Attachments_Controller to update the file of an existing attachment.
 - [x] The filename can be different from the uploaded file once the upload is accomplished.
-- [ ] Move some REST Attachment filters into the DocuThèques REST Controller.
+- [x] Move some REST Attachment filters into the DocuThèques REST Controller.

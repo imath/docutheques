@@ -102,6 +102,55 @@ class DocuTheques_REST_Documents_Controller extends WP_REST_Attachments_Controll
 	}
 
 	/**
+	 * Sets the dossier the document is attached to.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post         $document Inserted or updated document
+	 *                                  object.
+	 * @param WP_REST_Request $request  The request sent to the API.
+	 */
+	public function save_document( $document, $request ) {
+		$dossiers = $request->get_param( 'dossiers' );
+
+		if ( $dossiers ) {
+			$dossier = (int) reset( $dossiers );
+
+			if ( $dossier ) {
+				$result = wp_set_object_terms( $document->ID, $dossier, 'dossiers' );
+
+				if ( is_wp_error( $result ) ) {
+					return $result;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Creates a single attachment or document.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, WP_Error object on failure.
+	 */
+	public function create_item( $request ) {
+		$is_docutheques = $this->is_docutheques( $request, 'admin' );
+
+		if ( $is_docutheques ) {
+			add_action( 'rest_insert_attachment', array( $this, 'save_document' ), 10, 2 );
+		}
+
+		$response = parent::create_item( $request );
+
+		if ( $is_docutheques ) {
+			remove_filter( 'rest_insert_attachment', array( $this, 'save_document' ), 10, 2 );
+		}
+
+		return $response;
+	}
+
+	/**
 	 * Updates the attachment guid field.
 	 *
 	 * @since 1.0.0
@@ -202,13 +251,21 @@ class DocuTheques_REST_Documents_Controller extends WP_REST_Attachments_Controll
 	 * @return WP_REST_Response|WP_Error Response object on success, WP_Error object on failure.
 	 */
 	public function update_item( $request ) {
-		add_filter( 'rest_pre_insert_attachment', array( $this, 'update_attachment' ), 10, 2 );
-		add_action( 'edit_attachment', array( $this, 'edit_attachment_guid' ), 10, 1 );
+		$is_docutheques = $this->is_docutheques( $request, 'admin' );
+
+		if ( $is_docutheques ) {
+			add_filter( 'rest_pre_insert_attachment', array( $this, 'update_attachment' ), 10, 2 );
+			add_action( 'edit_attachment', array( $this, 'edit_attachment_guid' ), 10, 1 );
+			add_action( 'rest_insert_attachment', array( $this, 'save_document' ), 10, 2 );
+		}
 
 		$response = parent::update_item( $request );
 
-		remove_filter( 'rest_pre_insert_attachment', array( $this, 'update_attachment' ), 10, 2 );
-		remove_action( 'edit_attachment', array( $this, 'edit_attachment_guid' ), 10, 1 );
+		if ( $is_docutheques ) {
+			remove_filter( 'rest_pre_insert_attachment', array( $this, 'update_attachment' ), 10, 2 );
+			remove_action( 'edit_attachment', array( $this, 'edit_attachment_guid' ), 10, 1 );
+			remove_action( 'rest_insert_attachment', array( $this, 'save_document' ), 10, 2 );
+		}
 
 		return $response;
 	}
