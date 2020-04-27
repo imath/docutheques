@@ -24,6 +24,84 @@ class DocuTheques_REST_Documents_Controller extends WP_REST_Attachments_Controll
 	protected $updated_document;
 
 	/**
+	 * Is this REST request a DocuThèques one?
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request The REST request used.
+	 * @param string          $type    The context to check (`'widget'`, `'admin'` or any of these `''`).
+	 * @return boolean                 True if the REST request is a DocuThèques one. False otherwise.
+	 */
+	public function is_docutheques( $request, $type = '' ) {
+		$headers = $request->get_headers();
+		$referer = '';
+		if ( isset( $headers['referer'] ) ) {
+			$referer = reset( $headers['referer'] );
+		}
+
+		$is_docutheque_admin  = add_query_arg( 'page', 'docutheques', admin_url( 'admin.php' ) ) === $referer;
+		$is_docutheque_widget = 1 === (int) $request->get_param( 'docutheques_widget' );
+
+		if ( 'admin' === $type ) {
+			return $is_docutheque_admin;
+		} elseif ( 'widget' === $type ) {
+			return $is_docutheque_widget;
+		}
+
+		return $is_docutheque_admin || $is_docutheque_widget;
+	}
+
+	/**
+	 * Filters the attachment query arguments for a `get_items` request.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array           $args    Key value array of query var to query value.
+	 * @param WP_REST_Request $request The request used.
+	 * @return array                   Unchanged arguments.
+	 */
+	public function documents_set_args( $args = array(), $request ) {
+		$has_dossiers_param = $request->get_param( 'dossiers' );
+
+		if ( ! $has_dossiers_param ) {
+			return $args;
+		}
+
+		if ( ! array_filter( $has_dossiers_param ) ) {
+			// Ordering by date can generate errors due to attachments batch uploads.
+			$args['orderby'] = 'ID';
+
+			add_action( 'parse_query', 'docutheques_documents_reset_querried_dossiers' );
+		}
+
+		return $args;
+	}
+
+	/**
+	 * Retrieves a collection of attachments or documents.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function get_items( $request ) {
+		$is_docutheques = $this->is_docutheques( $request );
+
+		if ( $is_docutheques ) {
+			add_filter( 'rest_attachment_query', array( $this, 'documents_set_args' ), 10, 2 );
+		}
+
+		$response = parent::get_items( $request );
+
+		if ( $is_docutheques ) {
+			remove_filter( 'rest_attachment_query', array( $this, 'documents_set_args' ), 10, 2 );
+		}
+
+		return $response;
+	}
+
+	/**
 	 * Updates the attachment guid field.
 	 *
 	 * @since 1.0.0

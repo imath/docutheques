@@ -318,33 +318,6 @@ function docutheques_documents_reset_querried_dossiers( $wp_query ) {
 }
 
 /**
- * Filters the attachment query arguments for a `get_items` request.
- *
- * @since 1.0.0
- *
- * @param array           $args    Key value array of query var to query value.
- * @param WP_REST_Request $request The request used.
- * @return array                   Unchanged arguments.
- */
-function docutheques_documents_rest_get_args( $args = array(), $request ) {
-	$has_dossiers_param = $request->get_param( 'dossiers' );
-
-	if ( ! $has_dossiers_param ) {
-		return $args;
-	}
-
-	if ( ! array_filter( $has_dossiers_param ) ) {
-		// Ordering by date can generate errors due to attachments batch uploads.
-		$args['orderby'] = 'ID';
-
-		add_action( 'parse_query', 'docutheques_documents_reset_querried_dossiers' );
-	}
-
-	return $args;
-}
-add_filter( 'rest_attachment_query', 'docutheques_documents_rest_get_args', 10, 2 );
-
-/**
  * Sets the dossier the document is attached to.
  *
  * @since 1.0.0
