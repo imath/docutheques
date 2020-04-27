@@ -376,6 +376,31 @@ function docutheques_buffer_template( $name = 'docutheques-document' ) {
  */
 function docutheques_templates() {
 	?>
+	<script type="html/template" id="tmpl-docutheque-breadcrumbs">
+		<ol>
+			<# if ( data.link ) { #>
+				<li>
+					<a href="#dossier-{{ data.id }}" title="<?php esc_attr_e( 'Ouvrir le dossier', 'docutheques' ); ?>" class="ouvre-dossier">
+						<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="docutheque-icon" role="img" aria-hidden="true" focusable="false">
+							<path d="M5 7h13v10H2V4h7l2 2H4v9h1V7z" style="fill-rule: nonzero;"></path>
+						</svg>
+					</a>
+					<a href="#dossier-{{ data.id }}" title="<?php esc_attr_e( 'Ouvrir le dossier', 'docutheques' ); ?>" class="ouvre-dossier">
+						{{{ data.name }}}
+					</a>
+				</li>
+				<li class="fil-ariane-docutheque-items" id="sous-dossier-{{ data.id }}"></li>
+			<# } else { #>
+				<li>
+					<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="docutheque-icon" role="img" aria-hidden="true" focusable="false">
+						<path d="M5 7h13v10H2V4h7l2 2H4v9h1V7z" style="fill-rule: nonzero;"></path>
+					</svg>
+					{{{ data.name }}}
+				</li>
+			<# } #>
+		</ol>
+	</script>
+
 	<script type="html/template" id="tmpl-docutheque-element">
 		<li>
 			<# if ( data.noItems ) { #>
@@ -529,6 +554,7 @@ function docutheques_render_block( $attributes = array() ) {
 								<a href="#docutheque-%1$d" class="racine-docutheque">
 									%2$s
 								</a>
+								<li class="fil-ariane-docutheque-items" id="fil-ariane-docutheque-%1$s"></li>
 							</li>
 						</ol>
 						<ul class="docutheque-elements" id="docutheque-elements-%1$d">%3$s</ul>

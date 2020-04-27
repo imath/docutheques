@@ -5,6 +5,14 @@
 	padding-left: 0;
 }
 
+.docutheque .fil-ariane-docutheque .fil-ariane-docutheque-items:empty {
+	display: none;
+}
+
+.docutheque .fil-ariane-docutheque .fil-ariane-docutheque-items ol {
+	list-style: none;
+}
+
 .editor-styles-wrapper .docutheque .racine-docutheque,
 .docutheque .racine-docutheque {
 	font-size: 140%;
