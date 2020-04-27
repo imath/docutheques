@@ -280,31 +280,36 @@ class DocuTheques_REST_Documents_Controller extends WP_REST_Attachments_Controll
 	 * @return WP_REST_Response Response object.
 	 */
 	public function prepare_item_for_response( $post, $request ) {
-		$is_docutheque_widget = 1 === (int) $request->get_param( 'docutheques_widget' );
-		$response             = parent::prepare_item_for_response( $post, $request );
+		$is_docutheques = $this->is_docutheques( $request );
+		$response       = parent::prepare_item_for_response( $post, $request );
 
-		if ( ! $is_docutheque_widget ) {
+		if ( ! $is_docutheques ) {
 			return $response;
 		}
 
 		$data = $response->get_data();
-		if ( 'image' !== $data['media_type'] ) {
-			$icon_data = wp_get_attachment_image_src( $post->ID, 'thumbnail', true );
-			if ( $icon_data ) {
-				$icon_url = reset( $icon_data );
-				$data['docutheques_icon_url'] = $icon_url;
+
+		if ( $this->is_docutheques( $request, 'widget' ) ) {
+			if ( 'image' !== $data['media_type'] ) {
+				$icon_data = wp_get_attachment_image_src( $post->ID, 'thumbnail', true );
+				if ( $icon_data ) {
+					$icon_url = reset( $icon_data );
+					$data['docutheques_icon_url'] = $icon_url;
+				}
+
+			} else {
+				$data['docutheques_icon_url'] = docutheques_get_default_image_src();
 			}
 
-		} else {
-			$data['docutheques_icon_url'] = docutheques_get_default_image_src();
+			$data['docutheques_download'] = sprintf(
+				/* translators: %s is the placeholder for the document title */
+				__( 'Télécharger %s', 'docutheques' ),
+				reset( $data['title'] )
+			);
 		}
 
 		$data['docutheques_pub_date'] = date_i18n( get_option( 'date_format' ), strtotime( $data['date'] ) );
-		$data['docutheques_download'] = sprintf(
-			/* translators: %s is the placeholder for the document title */
-			__( 'Télécharger %s', 'docutheques' ),
-			reset( $data['title'] )
-		);
+		$data['docutheques_mod_date'] = date_i18n( get_option( 'date_format' ), strtotime( $data['modified'] ) );
 
 		// Wrap the data in a response object.
 		$response = rest_ensure_response( $data );

@@ -7,8 +7,6 @@ const { withDispatch } = wp.data;
 const { compose } = wp.compose;
 const { __ } = wp.i18n;
 
-import { dateI18n } from '@wordpress/date';
-
 /**
  * Internal dependencies.
  */
@@ -115,8 +113,8 @@ class DocuthequesDocument extends Component {
 			>
 				{ popoverIsVisible && (
 					<Popover focusOnMount="container" position="bottom center" onClick={ this.catchClick } onFocusOutside={ this.doClose }>
-						<p><strong>{ __( 'Date de publication :', 'docutheques' ) }</strong> { dateI18n( 'd/m/Y', createdDate ) }</p>
-						<p><strong>{ __( 'Date de modification :', 'docutheques' ) }</strong> { dateI18n( 'd/m/Y', modifiedDate ) }</p>
+						<p><strong>{ __( 'Date de publication :', 'docutheques' ) }</strong> { createdDate }</p>
+						<p><strong>{ __( 'Date de modification :', 'docutheques' ) }</strong> { modifiedDate }</p>
 						<p><strong>{ __( 'Fichier source :', 'docutheques' ) }</strong><a href={ link } className="fichier-source">{ title }</a></p>
 					</Popover>
 				) }

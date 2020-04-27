@@ -61,8 +61,8 @@ class DocuthequesDocuments extends Component {
 						key={ 'media-item-' + document.id }
 						id={ document.id }
 						title={ document.title.rendered }
-						createdDate={ document.date }
-						modifiedDate={ document.modified }
+						createdDate={ document.docutheques_pub_date }
+						modifiedDate={ document.docutheques_mod_date }
 						link={ document.source_url }
 						type={ 'image' === document.media_type ? document.media_type : document.mime_type }
 						isSelected= { document.selected || false }
