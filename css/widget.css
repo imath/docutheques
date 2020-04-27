@@ -59,3 +59,18 @@
 	width: calc( 100% - 60px );
 	padding: 0 1em;
 }
+
+.docutheque .docutheque-feedback {
+    background-color: #e5f5fa;
+	border: 1px solid #e5f5fa;
+	border-left-width: 4px;
+	border-left-color: #00a0d2;
+	box-shadow: 0 1px 1px rgba(0,0,0,.04);
+	margin: 15px 2px;
+	padding: 1px 12px;
+}
+
+.docutheque .docutheque-feedback p {
+	margin: 0.5em 0;
+	padding: 2px;
+}
