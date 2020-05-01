@@ -1,7 +1,7 @@
 {
-	"name": "buddypress/bp-blocks",
-	"description": "BuddyPress Blocks development plugin.",
-	"type": "buddypress-plugin",
+	"name": "imath/docutheques",
+	"description": "Document libraries for your WordPress.",
+	"type": "wordpress-plugin",
 	"require": {
 	  "squizlabs/php_codesniffer" : "^3.3.1"
 	},
