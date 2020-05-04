@@ -306,6 +306,7 @@ class DocuTheques_REST_Documents_Controller extends WP_REST_Attachments_Controll
 				__( 'Télécharger %s', 'docutheques' ),
 				reset( $data['title'] )
 			);
+			$data['docutheques_download_url'] = docutheques_get_download_url( $post );
 		}
 
 		$data['docutheques_pub_date'] = date_i18n( get_option( 'date_format' ), strtotime( $data['date'] ) );

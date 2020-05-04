@@ -146,6 +146,23 @@ function docutheques_init() {
 	if ( isset( $attachment_post_type->rest_controller_class ) && 'DocuTheques_REST_Documents_Controller' !== $attachment_post_type->rest_controller_class ) {
 		$attachment_post_type->rest_controller_class = 'DocuTheques_REST_Documents_Controller';
 	}
+
+	// Download Rewrite rule.
+	add_rewrite_tag( '%docutheques%', '([^/]+)' );
+	add_rewrite_rule( 'docutheques/([^/]+)/?$', 'index.php?docutheques=$matches[1]', 'top' );
+	add_permastruct(
+		'docutheques',
+		'docutheques/%docutheques%',
+		array(
+			'with_front'  => false,
+			'ep_mask'     => EP_NONE,
+			'paged'       => false,
+			'feed'        => false,
+			'forcomments' => false,
+			'walk_dirs'   => false,
+			'endpoints'   => false,
+		)
+	);
 }
 add_action( 'init', 'docutheques_init', 20 );
 
@@ -477,7 +494,7 @@ function docutheques_render_block( $attributes = array() ) {
 
 						$documents[] = str_replace(
 							array(
-								'{{ data.link }}',
+								'{{ data.docutheques_download_url }}',
 								'{{ data.docutheques_download }}',
 								'{{ data.docutheques_icon_url }}',
 								'{{{ data.title.rendered }}}',
@@ -485,7 +502,7 @@ function docutheques_render_block( $attributes = array() ) {
 								'{{ data.docutheques_pub_date }}',
 							),
 							array(
-								esc_url( $document['link'] ),
+								esc_url( $document['docutheques_download_url'] ),
 								esc_attr( $document['docutheques_download'] ),
 								esc_url( $icon_url ),
 								reset( $document['title'] ),
@@ -596,3 +613,139 @@ function docutheques_render_block( $attributes = array() ) {
 	 */
 	return apply_filters( 'docutheques_render_block_output', $output, $docutheque_id, $preload_data );
 }
+
+/**
+ * Returns the download URL for a DocuThèques Item.
+ *
+ * @since 1.0.0
+ *
+ * @param WP_Post $document The DocuThèques Item object.
+ * @return string The download URL for the DocuThèques Item.
+ */
+function docutheques_get_download_url( $document = null ) {
+	$document = get_post( $document );
+
+	if ( ! isset( $document->post_name ) || ! $document->post_name ) {
+		return '';
+	}
+
+	global $wp_rewrite;
+
+	// Pretty permalinks.
+	if ( $wp_rewrite->using_permalinks() ) {
+		$url = $wp_rewrite->root . 'docutheques/%docutheques%';
+		$url = str_replace( '%docutheques%', $document->post_name, $url );
+		$url = home_url( user_trailingslashit( $url ) );
+	} else {
+		// Unpretty permalinks.
+		$url = add_query_arg( array( wct_user_rewrite_id() => $document->post_name ), home_url( '/' ) );
+	}
+
+	return $url;
+}
+
+/**
+ * Downloads a given The DocuThèques Item's attached file.
+ *
+ * @since 1.0.0
+ *
+ * @param WP_Post $document The DocuThèques Item object.
+ */
+function docutheque_download( $document = null ) {
+	if ( empty( $document->attached_file ) || ! file_exists( $document->attached_file ) ) {
+		return false;
+	}
+
+	$filesize = filesize( $document->attached_file );
+	$filedata = wp_check_filetype( $document->attached_file );
+
+	if ( empty( $filedata['ext'] ) || empty( $filedata['type'] ) ) {
+		return false;
+	}
+
+	$filename = sprintf( '%1$s.%2$s', $document->post_name, $filedata['ext'] );
+	$filetype = $filedata['type'];
+
+	/**
+	 * Hook here to run custom actions before download.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post $document The DocuThèques Item object.
+	 * @param integer $filesize  The file size.
+	 * @param string $filename  The file name.
+	 */
+	do_action( 'docutheques_before_download', $document, $filesize, $filename );
+
+	status_header( 200 );
+	header( 'Cache-Control: cache, must-revalidate' );
+	header( 'Pragma: public' );
+	header( 'Content-Description: File Transfer' );
+	header( 'Content-Length: ' . $filesize );
+	header( 'Content-Disposition: attachment; filename=' . $filename );
+	header( 'Content-Type: ' . $filetype );
+
+	while ( ob_get_level() > 0 ) {
+		ob_end_flush();
+	}
+
+	readfile( $document->attached_file ); // phpcs:ignore
+	die();
+}
+
+/**
+ * Checks whether the current URL is a DocuThèque download one.
+ * If so download the document attached file.
+ *
+ * @since  1.0.0
+ *
+ * @param WP_Query $query The WordPress Main Query.
+ */
+function docutheque_parse_query( WP_Query $query ) {
+	$bail = false;
+
+	if ( ! $query->is_main_query() || true === $query->get( 'suppress_filters' ) ) {
+		$bail = true;
+	}
+
+	if ( ! $bail && is_admin() ) {
+		$bail = ! wp_doing_ajax();
+	}
+
+	if ( $bail ) {
+		return;
+	}
+
+	$document_name = $query->get( 'docutheques' );
+	if ( ! $document_name || true === $query->is_embed ) {
+		return;
+	}
+
+	// Set the document being requested.
+	$document = get_posts(
+		array(
+			'name'      => $document_name,
+			'post_type' => 'attachment',
+		)
+	);
+
+	if ( $document && is_array( $document ) && 1 === count( $document ) ) {
+		$document_object = get_post( $document[0] );
+
+		$attached_file = get_attached_file( $document_object->ID );
+		if ( ! $attached_file ) {
+			$query->set_404();
+			return;
+		} else {
+			$document_object->attached_file = $attached_file;
+			if ( ! docutheque_download( $document_object ) ) {
+				$query->set_404();
+				return;
+			}
+		}
+	} else {
+		$query->set_404();
+		return;
+	}
+}
+add_action( 'parse_query', 'docutheque_parse_query' );

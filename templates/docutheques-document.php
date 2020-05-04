@@ -14,13 +14,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <div class="docutheque-document">
 	<div class="docutheque-vignette">
-		<a href="{{ data.link }}" title="{{ data.docutheques_download }}">
+		<a href="{{ data.docutheques_download_url }}" title="{{ data.docutheques_download }}">
 			<img width="48" height="64" src="{{ data.docutheques_icon_url }}" class="attachment-thumbnail size-thumbnail" alt="" loading="lazy">
 		</a>
 	</div>
 	<div class="docutheque-description">
 		<div class="docutheque-title">
-			<a href="{{ data.link }}" title="{{ data.docutheques_download }}">
+			<a href="{{ data.docutheques_download_url }}" title="{{ data.docutheques_download }}">
 				{{{ data.title.rendered }}}
 			</a>
 		</div>
