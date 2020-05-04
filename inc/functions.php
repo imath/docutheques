@@ -576,6 +576,7 @@ function docutheques_render_block( $attributes = array() ) {
 				'restRoot'          => esc_url_raw( get_rest_url() ),
 				'restNonce'         => wp_create_nonce( 'wp_rest' ),
 				'hierarchy'         => wp_json_encode( $docutheque_hierarchy ),
+				'documentsTotal'    => wp_json_encode( $document_headers ),
 				'currentParentId'   => $docutheque_id,
 				'dossierHasNoItems' => __( 'Ce dossier ne contient aucun élément pour le moment.', 'docutheques' ),
 			),

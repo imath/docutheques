@@ -7,7 +7,7 @@ const { filter, find, reject, eachRight, concat, template, omit } = lodash;
  * Widget.
  */
 class Widget {
-	constructor( { restRoot, restNonce, hierarchy, currentParentId, dossierHasNoItems } ) {
+	constructor( { restRoot, restNonce, hierarchy, documentsTotal, currentParentId, dossierHasNoItems } ) {
 		this.dossiers = JSON.parse( hierarchy );
 		this.root = restRoot;
 		this.nonce = restNonce;
@@ -17,6 +17,14 @@ class Widget {
 		this.itemsContainer = document.querySelector( '.docutheque-elements' );
 		this.docuTheque = document.querySelector( '.docutheque' );
 		this.breadCrumbs = document.querySelector( '#fil-ariane-docutheque-' + this.docuThequeId );
+
+		const initialHeaders = JSON.parse( documentsTotal );
+		this.pagination = [ {
+			parent: currentParentId,
+			displayedPages: 1,
+			totalItems: initialHeaders['X-WP-Total'],
+			totalPages: initialHeaders['X-WP-TotalPages']
+		} ];
 	}
 
 	getTemplate( tmpl ) {
@@ -45,14 +53,36 @@ class Widget {
 		return reject( parents, [ 'id', this.docuThequeId ] );
 	}
 
+	updatePagination( parent, displayedPages, totalItems, totalPages ) {
+		this.pagination = [
+			...reject( this.paginaiton, [ 'parent', parent ] ),
+			{
+				parent: parent,
+				displayedPages: displayedPages,
+				totalItems: totalItems,
+				totalPages: totalPages
+			}
+		];
+	}
+
 	openDossier( element ) {
 		const dossierId = parseInt( element.getAttribute( 'href' ).replace( '#dossier-', '' ), 10 );
+		const dossierPagination = find( this.pagination, { parent: dossierId } );
+
+		if ( dossierPagination && dossierPagination.parent ) {
+			this.updatePagination( dossierPagination.parent, 1, dossierPagination.totalItems, dossierPagination.totalPages );
+		}
 
 		return this.fetchItems( dossierId )
 	}
 
 	openDocutheque( element ) {
 		const docuthequeId = parseInt( element.getAttribute( 'href' ).replace( '#docutheque-', '' ), 10 );
+		const docuthequePagination = find( this.pagination, { parent: docuthequeId } );
+
+		if ( docuthequePagination && docuthequePagination.parent ) {
+			this.updatePagination( docuthequePagination.parent, 1, docuthequePagination.totalItems, docuthequePagination.totalPages );
+		}
 
 		return this.fetchItems( docuthequeId )
 	}
@@ -91,6 +121,19 @@ class Widget {
 				'X-WP-Nonce' : this.nonce,
 			}
 		} ).then(
+			( response ) => {
+				if ( ! find( this.pagination, { parent: this.current } ) ) {
+					this.pagination = [ {
+						parent: this.current,
+						displayedPages: 1,
+						totalItems: parseInt( response.headers.get( 'X-WP-Total' ), 10 ),
+						totalPages: parseInt( response.headers.get( 'X-WP-TotalPages' ), 10 )
+					}, ...this.pagination ];
+				}
+
+				return response;
+			}
+		).then(
 			( response ) => response.json()
 		).then(
 			( data ) => {
@@ -104,6 +147,28 @@ class Widget {
 					} );
 				} else {
 					this.itemsContainer.innerHTML = ItemTemplate( { noItems: this.noItems } );
+				}
+		} );
+	}
+
+	fetchMoreItems( parent, displayedPages, totalItems, totalPages ) {
+		this.updatePagination( parent, displayedPages, totalItems, totalPages );
+
+		fetch( this.root + 'wp/v2/media?dossiers[]=' + parent + '&per_page=20&page=' + displayedPages + '&docutheques_widget=1&context=view', {
+			method: 'GET',
+			headers: {
+				'X-WP-Nonce' : this.nonce,
+			}
+		} ).then(
+			( response ) => response.json()
+		).then(
+			( data ) => {
+				const ItemTemplate = this.getTemplate( 'docutheque-element' );
+
+				if ( data.length ) {
+					data.forEach( ( result ) => {
+						this.itemsContainer.innerHTML += ItemTemplate( result );
+					} );
 				}
 		} );
 	}
@@ -124,6 +189,19 @@ class Widget {
 				e.preventDefault();
 
 				this.openDocutheque( element );
+			}
+		} );
+
+		this.itemsContainer.addEventListener( 'scroll', ( e ) => {
+			const list = e.target;
+			const listedDocuments = list.querySelectorAll( '.docutheque-document' );
+
+			if ( list.scrollHeight - list.scrollTop === list.clientHeight ) {
+				const { parent, displayedPages, totalItems, totalPages } = find( this.pagination, { parent: this.current } );
+
+				if ( parent && listedDocuments.length !== totalItems ) {
+					this.fetchMoreItems( parent, displayedPages + 1, totalItems, totalPages );
+				}
 			}
 		} );
 	}

@@ -33,6 +33,11 @@
 	vertical-align: bottom;
 }
 
+.docutheque-elements {
+	max-height: 500px;
+	overflow-y: auto;
+}
+
 .editor-styles-wrapper .docutheque ul.docutheque-elements,
 .docutheque ul.docutheque-elements {
 	list-style: none;
