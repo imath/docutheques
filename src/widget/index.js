@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-const { filter, find, reject, eachRight, concat, template } = lodash;
+const { filter, find, reject, eachRight, concat, template, omit } = lodash;
 
 /**
  * Widget.
@@ -73,7 +73,7 @@ class Widget {
 				ancestors = [ ...ancestors, parent ];
 			} );
 
-			ancestors = [ ...ancestors, current ];
+			ancestors = [ ...ancestors, omit( current, ['link'] ) ];
 
 			ancestors.forEach( ( ancestor, index ) => {
 				if ( 0 === index ) {
