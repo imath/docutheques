@@ -46,7 +46,7 @@ const editDocuThequesBrowser = ( { attributes, setAttributes } ) => {
 			<InspectorControls>
 				<PanelBody title={ __( 'Réglages', 'docutheques' ) } initialOpen={ true }>
 					<SelectControl
-						label={ __( 'Classer les documents et dossiers selon leur :', 'reception' ) }
+						label={ __( 'Classer les documents et dossiers selon leur :', 'docutheques' ) }
 						value={ orderBy }
 						onChange={ ( order ) => {
 							setAttributes( { orderBy: order } );
@@ -73,7 +73,7 @@ registerBlockType( 'docutheques/browser', {
 		reusable: false,
 	},
 
-	title: __( 'DocuTheques', 'docutheques' ),
+	title: __( 'DocuThèques', 'docutheques' ),
 
 	description: __( 'Explorateur de documents.', 'docutheques' ),
 

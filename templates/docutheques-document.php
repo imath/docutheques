@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<time datetime="{{ data.date }}">{{ data.docutheques_pub_date }}</time>
 			</div>
 			<div class="docutheque-update">
-				<span><?php esc_html_e( 'Mis à jour le :', 'deocutheques' ); ?></span>
+				<span><?php esc_html_e( 'Mis à jour le :', 'docutheques' ); ?></span>
 				<time datetime="{{ data.modified }}">{{ data.docutheques_mod_date }}</time>
 			</div>
 		</div>

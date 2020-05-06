@@ -5,7 +5,7 @@ const { Component, createElement } = wp.element;
 const { Dashicon, Popover } = wp.components;
 const { withDispatch } = wp.data;
 const { compose } = wp.compose;
-const { __, sprintf, _n } = wp.i18n;
+const { __, sprintf } = wp.i18n;
 
 /**
  * Internal dependencies.
@@ -106,6 +106,15 @@ class DocuthequesDocument extends Component {
 			}
 		}
 
+		// Looks like WP CLI can't find _n() usage.
+
+		/* translators: %d: is the number of times the file was downloaded. */
+		let downloadsCount = sprintf( __( 'Nombre de téléchargement : %d', 'docutheques' ), downloads );
+		if ( parseInt( downloads, 10 ) > 1 ) {
+			/* translators: %d: is the number of times the file was downloaded. */
+			downloadsCount = sprintf( __( 'Nombre de téléchargements : %d', 'docutheques' ), downloads );
+		}
+
 		return (
 			<div
 				className={ classes }
@@ -118,16 +127,7 @@ class DocuthequesDocument extends Component {
 						<p><strong>{ __( 'Date de modification :', 'docutheques' ) }</strong> { modifiedDate }</p>
 						<p><strong>{ __( 'Fichier source :', 'docutheques' ) }</strong><a href={ link } className="fichier-source">{ title }</a></p>
 						<p>
-						{ sprintf(
-							/* translators: %d: is the number of times the file was downloaded. */
-							_n(
-								'Nombre de téléchargement : %d',
-								'Nombre de téléchargements : %d',
-								parseInt( downloads, 10 ),
-								'docutheques'
-							),
-							downloads
-						) }
+						{ downloadsCount }
 						</p>
 					</Popover>
 				) }

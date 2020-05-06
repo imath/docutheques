@@ -27,6 +27,9 @@ function docutheques_globals() {
 	// Templates dir.
 	$docutheques->tmpl = trailingslashit( $docutheques->dir ) . 'templates';
 
+	// Languages path.
+	$docutheques->lang_path = trailingslashit( dirname( dirname( __FILE__ ) ) ) . 'languages';
+
 	// URL.
 	$docutheques->url = plugin_dir_url( dirname( __FILE__ ) );
 

@@ -12,6 +12,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Loads translations.
+ *
+ * @since 1.0.0
+ */
+function docutheques_translate() {
+	load_plugin_textdomain( 'docutheques', false, trailingslashit( basename( docutheques()->dir ) ) . 'languages' );
+}
+add_action( 'plugins_loaded', 'docutheques_translate', 20 );
+
+/**
  * Returns the plugin's current version.
  *
  * @since 1.0.0
@@ -148,7 +158,7 @@ function docutheques_init() {
 				'items_list_navigation' => _x( 'Navigation de la liste des dossiers', 'Taxonomy items list navigation label', 'docutheques' ),
 				'items_list'            => _x( 'Liste des dossiers', 'Taxonomy items list label', 'docutheques' ),
 				'most_used'             => _x( 'Les plus affectés', 'Taxonomy most used label', 'docutheques' ),
-				'back_to_items'         => _x( 'Revenir sur tous les dossiers', 'Taxonomy most used label', 'docutheques' ),
+				'back_to_items'         => _x( 'Revenir sur tous les dossiers', 'Back to all Taxonomy terms', 'docutheques' ),
 			),
 			'description'        => __( 'Catégorie permettant de référencer et de hiérarchiser les documents dans des dossiers.', 'docutheques' ),
 			'public'             => true,
@@ -675,6 +685,9 @@ function docutheques_render_block( $attributes = array() ) {
 			),
 		)
 	);
+
+	// Set JS translations.
+	wp_set_script_translations( 'docutheques-widget', 'docutheques', docutheques()->lang_path );
 
 	add_action( 'wp_footer', 'docutheques_templates' );
 

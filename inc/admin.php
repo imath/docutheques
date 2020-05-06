@@ -20,6 +20,9 @@ function docutheques_admin() {
 	wp_enqueue_script( 'docutheques-app' );
 	wp_enqueue_style( 'docutheques-app' );
 
+	// Set JS translations.
+	wp_set_script_translations( 'docutheques-app', 'docutheques', docutheques()->lang_path );
+
 	// Preloads Plugin's data.
 	$preload_data = array_reduce(
 		array(

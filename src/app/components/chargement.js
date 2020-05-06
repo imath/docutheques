@@ -3,7 +3,7 @@
  */
 const { Component, createElement } = wp.element;
 const { Dashicon, Animate } = wp.components;
-const { sprintf, _n } = wp.i18n;
+const { sprintf, __ } = wp.i18n;
 
 class DocuthequesChargement extends Component {
 	constructor() {
@@ -18,6 +18,13 @@ class DocuthequesChargement extends Component {
 			return null;
 		}
 
+		// Looks like WP CLI can't find _n() usage.
+		let uploadingDocuments = __( 'Chargement d’un document en cours, merci de patienter.', 'docutheques' );
+		if ( numberChargements > 1 ) {
+			/* translators: %d: number of documents being uploaded. */
+			uploadingDocuments = sprintf( __( 'Chargement de %d documents en cours, merci de patienter.', 'docutheques' ), numberChargements );
+		}
+
 		return (
 			<div className="chargement-de-documents">
 				<Animate
@@ -26,16 +33,7 @@ class DocuthequesChargement extends Component {
 					{ ( { className } ) => (
 						<p className={ className }>
 							<Dashicon icon="update" />
-							{ sprintf(
-								/* translators: %s: number of documents being uploaded. */
-								_n(
-									'Chargement de %d document en cours, merci de patienter.',
-									'Chargement de %d documents en cours, merci de patienter.',
-									numberChargements,
-									'docutheques'
-								),
-								numberChargements
-							) }
+							{ uploadingDocuments }
 						</p>
 					) }
 				</Animate>

@@ -56,8 +56,8 @@ class DocuThequesAutoCompleter extends Component {
 
 	render() {
 		const { search, dossiers } = this.state;
-		const ariaLabel = __( 'Nom du dossier', 'docutheques' );
-		const placeholder = __( 'Entrer le nom du dossier ici…', 'docutheques' );
+		const ariaLabel = __( 'Nom de la DocuThèque', 'docutheques' );
+		const placeholder = __( 'Entrer le nom de la DocuThèque ici…', 'docutheques' );
 		let dossiersList;
 
 		if ( dossiers.length ) {

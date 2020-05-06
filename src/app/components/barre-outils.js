@@ -5,7 +5,7 @@ const { Component, Fragment, createElement } = wp.element;
 const { Button, Modal, CheckboxControl, TextControl } = wp.components;
 const { withSelect, withDispatch, dispatch } = wp.data;
 const { compose } = wp.compose;
-const { __, _n, sprintf } = wp.i18n;
+const { __, sprintf } = wp.i18n;
 
 class DocuthequesToolbar extends Component {
 	constructor() {
@@ -110,6 +110,13 @@ class DocuthequesToolbar extends Component {
 			avancedEditClass += ' current';
 		}
 
+		// Looks like WP CLI can't find _n() usage.
+		let confirmMessage = __( 'Cette action est irréversible, merci de confirmer que vous souhaitez supprimer un document.', 'docutheques' );
+		if ( selectedDocuments.length && selectedDocuments.length > 1 ) {
+			/* translators: %d: number of documents to delete. */
+			confirmMessage = sprintf( __( 'Cette action est irréversible, merci de confirmer que vous souhaitez supprimer %d documents.', 'docutheques' ), selectedDocuments.length );
+		}
+
 		return (
 			<div className="media-toolbar wp-filter">
 				<div className="media-toolbar-secondary">
@@ -178,18 +185,7 @@ class DocuthequesToolbar extends Component {
 									className="delete-document-confirmation"
 								>
 
-									<p>
-										{ sprintf(
-											/* translators: %d: number of documents to delete. */
-											_n(
-												'Cette action est irréversible, merci de confirmer que vous souhaitez supprimer un document.',
-												'Cette action est irréversible, merci de confirmer que vous souhaitez supprimer %d documents.',
-												selectedDocuments.length,
-												'docutheques'
-											),
-											selectedDocuments.length
-										) }
-									</p>
+									<p>{ confirmMessage }</p>
 
 									<div className="confirmation-buttons">
 										<Button isLarge={ false } isPrimary={ true } onClick={ this.deleteDocument }>
@@ -214,7 +210,7 @@ class DocuthequesToolbar extends Component {
 				{ ! isAdvancedEditMode && (
 					<div className="media-toolbar-primary search-form">
 						<TextControl
-							label={ __( 'Rechercher un document', 'docutheque' ) }
+							label={ __( 'Rechercher un document', 'docutheques' ) }
 							value={ search }
 							onChange={ ( search ) => this.setSearchTerms( search ) }
 							className="search"

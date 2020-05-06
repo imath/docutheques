@@ -5,7 +5,7 @@ const { Component, createElement } = wp.element;
 const { TextControl, TextareaControl, Button, DatePicker, ExternalLink, Dashicon, FormFileUpload } = wp.components;
 const { withSelect, dispatch, withDispatch } = wp.data;
 const { compose } = wp.compose;
-const { sprintf, __, _n } = wp.i18n;
+const { sprintf, __ } = wp.i18n;
 
 /**
  * External dependencies.
@@ -128,6 +128,23 @@ class DocuthequesDocumentsEditForm extends Component {
 			return null;
 		}
 
+		// Looks like WP CLI can't find _n() usage.
+		const docList = join( documentNames, ', ' );
+
+		/* translators: %s: the comma separated list of document names. */
+		let howToMove = sprintf( __( 'Utiliser la barre latérale de gauche pour déplacer le document « %s » dans une nouvelle DocuThèque.', 'docutheques' ), docList );
+
+		/* translators: 1: the comma separated list of document names. 2: the name of the destination folder. */
+		let informMove = sprintf( __( 'Le document « %1$s » sera déplacé dans « %2$s ».', 'docutheques' ), docList, newParentName );
+
+		if ( documents.length && documents.length > 1 ) {
+			/* translators: %s: the comma separated list of document names. */
+			howToMove = sprintf( __( 'Utiliser la barre latérale de gauche pour déplacer les documents « %s » dans une nouvelle DocuThèque.', 'docutheques' ), docList );
+
+			/* translators: 1: the comma separated list of document names. 2: the name of the destination folder. */
+			informMove = sprintf( __( 'Les documents « %1$s » seront déplacés dans « %2$s ».', 'docutheques' ), docList, newParentName );
+		}
+
 		return (
 			<div className="formulaire-modification-document">
 				<button className="close dashicons dashicons-no" onClick={ ( e ) => this.closeForm( e ) }>
@@ -209,32 +226,13 @@ class DocuthequesDocumentsEditForm extends Component {
 
 				{ ( '' === newParentName || newParent.id === currentParent ) && (
 					<DocuthequesInfos>
-						{ sprintf(
-							/* translators: %s: the comma separated list of document names. */
-							_n(
-								'Utiliser la barre latérale de gauche pour déplacer le document « %s » dans une nouvelle DocuThèque.',
-								'Utiliser la barre latérale de gauche pour déplacer les documents « %s » dans une nouvelle DocuThèque.',
-								documents.length,
-								'docutheques'
-							),
-							join( documentNames, ', ' )
-						) }
+						{ howToMove }
 					</DocuthequesInfos>
 				) }
 
 				{ '' !== newParentName && newParent.id !== currentParent && (
 					<DocuthequesInfos>
-						{ sprintf(
-							/* translators: 1: the comma separated list of document names. 2: the name of the destination folder. */
-							_n(
-								'Le document « %1$s » sera déplacé dans « %2$s ».',
-								'Les documents « %1$s » seront déplacés dans « %2$s ».',
-								documents.length,
-								'docutheques'
-							),
-							join( documentNames, ', ' ),
-							newParentName
-						) }
+						{ informMove }
 					</DocuthequesInfos>
 				) }
 
