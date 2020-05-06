@@ -7,7 +7,7 @@ const { filter, find, reject, eachRight, concat, template, omit } = lodash;
  * Widget.
  */
 class Widget {
-	constructor( { restRoot, restNonce, hierarchy, documentsTotal, currentParentId, dossierHasNoItems } ) {
+	constructor( { restRoot, restNonce, hierarchy, documentsTotal, currentParentId, dossierHasNoItems, orderBy } ) {
 		this.dossiers = JSON.parse( hierarchy );
 		this.root = restRoot;
 		this.nonce = restNonce;
@@ -25,6 +25,8 @@ class Widget {
 			totalItems: initialHeaders['X-WP-Total'],
 			totalPages: initialHeaders['X-WP-TotalPages']
 		} ];
+
+		this.orderBy = JSON.parse( orderBy );
 	}
 
 	getTemplate( tmpl ) {
@@ -89,6 +91,7 @@ class Widget {
 
 	fetchItems( parentID ) {
 		const children = filter( this.dossiers, { parent: parentID } );
+		const { by, order } = this.orderBy;
 		this.current = parentID;
 		let ancestors = [];
 		this.breadCrumbs.innerHTML = '';
@@ -115,7 +118,7 @@ class Widget {
 			} );
 		}
 
-		fetch( this.root + 'wp/v2/media?dossiers[]=' + parentID + '&per_page=20&docutheques_widget=1&context=view', {
+		fetch( this.root + 'wp/v2/media?dossiers[]=' + parentID + '&per_page=20&docutheques_widget=1&context=view&orderby=' + by + '&order=' + order, {
 			method: 'GET',
 			headers: {
 				'X-WP-Nonce' : this.nonce,
@@ -152,9 +155,10 @@ class Widget {
 	}
 
 	fetchMoreItems( parent, displayedPages, totalItems, totalPages ) {
+		const { by, order } = this.orderBy;
 		this.updatePagination( parent, displayedPages, totalItems, totalPages );
 
-		fetch( this.root + 'wp/v2/media?dossiers[]=' + parent + '&per_page=20&page=' + displayedPages + '&docutheques_widget=1&context=view', {
+		fetch( this.root + 'wp/v2/media?dossiers[]=' + parent + '&per_page=20&page=' + displayedPages + '&docutheques_widget=1&context=view&orderby=' + by + '&order=' + order, {
 			method: 'GET',
 			headers: {
 				'X-WP-Nonce' : this.nonce,

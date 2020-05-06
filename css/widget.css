@@ -73,6 +73,23 @@
 	padding: 0 1em;
 }
 
+.docutheque .docutheque-document .docutheque-dates {
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 80%;
+}
+
+.docutheque .docutheque-document .docutheque-dates .docutheque-date {
+	width: 50%;
+	text-align: left;
+}
+
+.docutheque .docutheque-document .docutheque-dates .docutheque-update {
+	width: 50%;
+	color: #878787;
+	text-align: right;
+}
+
 .docutheque .docutheque-feedback {
     background-color: #e5f5fa;
 	border: 1px solid #e5f5fa;

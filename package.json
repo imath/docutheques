@@ -10,7 +10,9 @@
     "start": "parcel watch src/*/index.js --out-dir js --no-source-maps",
     "dev": "parcel build src/*/index.js --out-dir js --no-source-maps --no-minify",
     "build": "parcel build src/*/index.js --out-dir js --no-source-maps",
-    "wpcs": "./vendor/bin/phpcs class-docutheques.php inc/*.php templates/*.php --standard=WordPress"
+		"wpcs": "./vendor/bin/phpcs class-docutheques.php inc/*.php templates/*.php --standard=WordPress",
+		"app:cssmin": "uglifycss ./css/app.css > ./css/app.min.css",
+		"widget:cssmin": "uglifycss ./css/widget.css > ./css/widget.min.css"
   },
   "repository": {
     "type": "git",
@@ -30,5 +32,8 @@
     "@babel/core": "^7.9.0",
     "@wordpress/babel-preset-default": "^4.11.0",
     "parcel-bundler": "^1.12.4"
+  },
+  "dependencies": {
+    "uglifycss": "0.0.29"
   }
 }

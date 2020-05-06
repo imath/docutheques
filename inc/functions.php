@@ -21,12 +21,37 @@ function docutheques_version() {
 }
 
 /**
+ * Get the JS minified suffix.
+ *
+ * @since  1.0.0
+ *
+ * @return string the JS minified suffix.
+ */
+function docutheques_min_suffix() {
+	$min = '.min';
+
+	if ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG )  {
+		$min = '';
+	}
+
+	/**
+	 * Filter here to edit the minified suffix.
+	 *
+	 * @since  1.0.0
+	 *
+	 * @param  string $min The minified suffix.
+	 */
+	return apply_filters( 'docutheques_min_suffix', $min );
+}
+
+/**
  * Registers DocuThèques taxonomy, scripts and styles.
  *
  * @since 1.0.0
  */
 function docutheques_init() {
 	$docutheques = docutheques();
+	$min         = docutheques_min_suffix();
 
 	// Registers the App's JavaScript file.
 	wp_register_script(
@@ -48,7 +73,7 @@ function docutheques_init() {
 	// Registers the App's style.
 	wp_register_style(
 		'docutheques-app',
-		trailingslashit( $docutheques->url ) . 'css/app.css',
+		trailingslashit( $docutheques->url ) . "css/app{$min}.css",
 		array(
 			'wp-components',
 		),
@@ -75,7 +100,7 @@ function docutheques_init() {
 	// Registers the the Browser Block's style.
 	wp_register_style(
 		'docutheques-widget',
-		trailingslashit( $docutheques->url ) . 'css/widget.css',
+		trailingslashit( $docutheques->url ) . "css/widget{$min}.css",
 		array(),
 		$docutheques->version
 	);
@@ -91,6 +116,11 @@ function docutheques_init() {
 				'dossierID' => array(
 					'type'    => 'integer',
 					'default' => 0,
+				),
+				'orderBy' => array(
+					'type'    => 'string',
+					'default' => 'date',
+					'enum'    => array( 'date', 'name' ),
 				),
 			),
 		)
@@ -447,10 +477,29 @@ function docutheques_render_block( $attributes = array() ) {
 		$attributes,
 		array(
 			'dossierID' => 0,
+			'orderBy'   => 'date',
 		)
 	);
 
-	$docutheque_id        = (int) $block_args['dossierID'];
+	$docutheque_id = (int) $block_args['dossierID'];
+	$orderby       = $block_args['orderBy'];
+	$order         = 'desc';
+
+	// Validate the sort order.
+	if ( ! in_array( $orderby, array( 'date', 'name' ), true ) ) {
+		$orderby = 'date';
+	}
+
+	if ( 'name' === $orderby ) {
+		$order              = 'asc';
+		$order_dossiers_by  = $orderby;
+		$order_documents_by = 'title';
+	} else {
+		$order_dossiers_by = 'id';
+		$order_documents_by = 'modified';
+	}
+
+	// Init variables.
 	$docutheque_name      = __( 'Docuthèque', 'docutheques' );
 	$docutheque_hierarchy = array();
 	$dossiers             = array();
@@ -466,8 +515,8 @@ function docutheques_render_block( $attributes = array() ) {
 			$dossier_includes = array_merge( $dossier_includes, $docutheque_children );
 		}
 
-		$dossiers_path  = sprintf( '/wp/v2/dossiers?context=view&include[]=%s', implode( '&include[]=', $dossier_includes ) );
-		$documents_path = sprintf( '/wp/v2/media?dossiers[]=%d&per_page=20&docutheques_widget=1&context=view', $docutheque_id );
+		$dossiers_path  = sprintf( '/wp/v2/dossiers?context=view&orderby=%1$s&order=%2$s&include[]=%3$s', $order_dossiers_by, $order, implode( '&include[]=', $dossier_includes ) );
+		$documents_path = sprintf( '/wp/v2/media?dossiers[]=%1$d&per_page=20&docutheques_widget=1&context=view&orderby=%2$s&order=%3$s', $docutheque_id, $order_documents_by, $order );
 
 		// Preloads Plugin's data.
 		$preload_data = array_reduce(
@@ -500,6 +549,8 @@ function docutheques_render_block( $attributes = array() ) {
 								'{{{ data.title.rendered }}}',
 								'{{ data.date }}',
 								'{{ data.docutheques_pub_date }}',
+								'{{ data.modified }}',
+								'{{ data.docutheques_mod_date }}',
 							),
 							array(
 								esc_url( $document['docutheques_download_url'] ),
@@ -508,6 +559,8 @@ function docutheques_render_block( $attributes = array() ) {
 								reset( $document['title'] ),
 								esc_attr( $document['date'] ),
 								esc_html( $document['docutheques_pub_date'] ),
+								esc_attr( $document['modified'] ),
+								esc_html( $document['docutheques_mod_date'] ),
 							),
 							$document_template
 						);
@@ -596,6 +649,12 @@ function docutheques_render_block( $attributes = array() ) {
 				'documentsTotal'    => wp_json_encode( $document_headers ),
 				'currentParentId'   => $docutheque_id,
 				'dossierHasNoItems' => __( 'Ce dossier ne contient aucun élément pour le moment.', 'docutheques' ),
+				'orderBy'           => wp_json_encode(
+					array(
+						'by'    => $order_documents_by,
+						'order' => $order,
+					)
+				),
 			),
 		)
 	);

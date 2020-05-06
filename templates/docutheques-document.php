@@ -24,9 +24,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 				{{{ data.title.rendered }}}
 			</a>
 		</div>
-		<div class="docutheque-pubdate">
-			<strong class="docutheques-label"><?php esc_html_e( 'Publié le :', 'docutheques' ); ?></strong>
-			<time datetime="{{ data.date }}">{{ data.docutheques_pub_date }}</time>
+		<div class="docutheque-dates">
+			<div class="docutheque-date">
+				<strong class="docutheque-label"><?php esc_html_e( 'Publié le :', 'docutheques' ); ?></strong>
+				<time datetime="{{ data.date }}">{{ data.docutheques_pub_date }}</time>
+			</div>
+			<div class="docutheque-update">
+				<span><?php esc_html_e( 'Mis à jour le :', 'deocutheques' ); ?></span>
+				<time datetime="{{ data.modified }}">{{ data.docutheques_mod_date }}</time>
+			</div>
 		</div>
 	</div>
 </div>

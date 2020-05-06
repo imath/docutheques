@@ -3,8 +3,8 @@
  */
 const { registerBlockType } = wp.blocks;
 const { createElement, Fragment } = wp.element;
-const { Placeholder, Disabled, Toolbar, ToolbarButton } = wp.components;
-const { BlockControls } = wp.blockEditor;
+const { Placeholder, Disabled, Toolbar, ToolbarButton, PanelBody, SelectControl } = wp.components;
+const { BlockControls, InspectorControls } = wp.blockEditor;
 const { ServerSideRender } = wp.editor;
 const { __ } = wp.i18n;
 
@@ -14,6 +14,8 @@ const { __ } = wp.i18n;
 import DocuThequesAutoCompleter from './components/autocompleter';
 
 const editDocuThequesBrowser = ( { attributes, setAttributes } ) => {
+	const { orderBy } = attributes;
+
 	if ( ! attributes.dossierID ) {
 		return (
 			<Placeholder
@@ -41,6 +43,21 @@ const editDocuThequesBrowser = ( { attributes, setAttributes } ) => {
 					/>
 				</Toolbar>
 			</BlockControls>
+			<InspectorControls>
+				<PanelBody title={ __( 'Réglages', 'docutheques' ) } initialOpen={ true }>
+					<SelectControl
+						label={ __( 'Classer les documents et dossiers selon leur :', 'reception' ) }
+						value={ orderBy }
+						onChange={ ( order ) => {
+							setAttributes( { orderBy: order } );
+						} }
+						options={ [
+							{ label: __( 'date de modification (31 - 1)', 'docutheques' ), value: 'date' },
+							{ label: __( 'nom (A - Z)', 'docutheques' ), value: 'name' },
+						] }
+					/>
+				</PanelBody>
+			</InspectorControls>
 			<Disabled>
 				<ServerSideRender block="docutheques/browser" attributes={ attributes } />
 			</Disabled>
@@ -68,6 +85,11 @@ registerBlockType( 'docutheques/browser', {
 		dossierID: {
 			type: 'integer',
 			default: 0,
+		},
+		orderBy: {
+			type: 'string',
+			default: 'date',
+			enum: ['date', 'name'],
 		},
 	},
 
