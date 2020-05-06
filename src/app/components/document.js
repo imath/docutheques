@@ -5,7 +5,7 @@ const { Component, createElement } = wp.element;
 const { Dashicon, Popover } = wp.components;
 const { withDispatch } = wp.data;
 const { compose } = wp.compose;
-const { __ } = wp.i18n;
+const { __, sprintf, _n } = wp.i18n;
 
 /**
  * Internal dependencies.
@@ -93,6 +93,7 @@ class DocuthequesDocument extends Component {
 			type,
 			isSelected,
 			isAdvancedEditMode,
+			downloads,
 		} = this.props;
 		const { popoverIsVisible } = this.state;
 		let classes = 'media-item unselectable';
@@ -116,6 +117,18 @@ class DocuthequesDocument extends Component {
 						<p><strong>{ __( 'Date de publication :', 'docutheques' ) }</strong> { createdDate }</p>
 						<p><strong>{ __( 'Date de modification :', 'docutheques' ) }</strong> { modifiedDate }</p>
 						<p><strong>{ __( 'Fichier source :', 'docutheques' ) }</strong><a href={ link } className="fichier-source">{ title }</a></p>
+						<p>
+						{ sprintf(
+							/* translators: %d: is the number of times the file was downloaded. */
+							_n(
+								'Nombre de téléchargement : %d',
+								'Nombre de téléchargements : %d',
+								parseInt( downloads, 10 ),
+								'docutheques'
+							),
+							downloads
+						) }
+						</p>
 					</Popover>
 				) }
 				<div className="item-preview">

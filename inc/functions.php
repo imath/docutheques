@@ -30,7 +30,7 @@ function docutheques_version() {
 function docutheques_min_suffix() {
 	$min = '.min';
 
-	if ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG )  {
+	if ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG ) {
 		$min = '';
 	}
 
@@ -117,7 +117,7 @@ function docutheques_init() {
 					'type'    => 'integer',
 					'default' => 0,
 				),
-				'orderBy' => array(
+				'orderBy'   => array(
 					'type'    => 'string',
 					'default' => 'date',
 					'enum'    => array( 'date', 'name' ),
@@ -176,6 +176,23 @@ function docutheques_init() {
 	if ( isset( $attachment_post_type->rest_controller_class ) && 'DocuTheques_REST_Documents_Controller' !== $attachment_post_type->rest_controller_class ) {
 		$attachment_post_type->rest_controller_class = 'DocuTheques_REST_Documents_Controller';
 	}
+
+	// Add a postmeta to track downloads count.
+	register_post_meta(
+		'attachment',
+		'_docutheques_downloads_count',
+		array(
+			'single'       => true,
+			'type'         => 'boolean',
+			'show_in_rest' => array(
+				'name'   => 'docutheques_downloads_count',
+				'schema' => array(
+					'type'    => 'integer',
+					'default' => 0,
+				),
+			),
+		)
+	);
 
 	// Download Rewrite rule.
 	add_rewrite_tag( '%docutheques%', '([^/]+)' );
@@ -495,7 +512,7 @@ function docutheques_render_block( $attributes = array() ) {
 		$order_dossiers_by  = $orderby;
 		$order_documents_by = 'title';
 	} else {
-		$order_dossiers_by = 'id';
+		$order_dossiers_by  = 'id';
 		$order_documents_by = 'modified';
 	}
 
@@ -724,6 +741,14 @@ function docutheque_download( $document = null ) {
 
 	$filename = sprintf( '%1$s.%2$s', $document->post_name, $filedata['ext'] );
 	$filetype = $filedata['type'];
+
+	$downloads = (int) get_post_meta( $document->ID, '_docutheques_downloads_count', true );
+	if ( ! $downloads ) {
+		$downloads = 0;
+	}
+
+	// Update the downloads count.
+	update_post_meta( $document->ID, '_docutheques_downloads_count', ++$downloads );
 
 	/**
 	 * Hook here to run custom actions before download.

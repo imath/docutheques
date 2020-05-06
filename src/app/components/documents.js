@@ -67,6 +67,7 @@ class DocuthequesDocuments extends Component {
 						type={ 'image' === document.media_type ? document.media_type : document.mime_type }
 						isSelected= { document.selected || false }
 						isAdvancedEditMode={ isAdvancedEditMode }
+						downloads={ document.meta && document.meta.docutheques_downloads_count ? document.meta.docutheques_downloads_count : 0 }
 					/>
 				);
 			} );
