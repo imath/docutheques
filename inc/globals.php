@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function docutheques_globals() {
 	$docutheques = docutheques();
 
-	$docutheques->version = '1.0.0-alpha';
+	$docutheques->version = '1.0.0';
 
 	// Path.
 	$docutheques->dir = plugin_dir_path( dirname( __FILE__ ) );

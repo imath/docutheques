@@ -11,7 +11,7 @@
  * Plugin Name:       DocuThèques
  * Plugin URI:        https://github.com/imath/docutheques
  * Description:       DocuThèques: des bibliothèques de documents dans votre WordPress.
- * Version:           1.0.0-alpha
+ * Version:           1.0.0
  * Author:            imath
  * Author URI:        https://imathi.eu
  * License:           GPL-2.0+
@@ -103,7 +103,7 @@ final class Docutheques {
 /**
  * Starts the plugin.
  *
- * @since 6.0.0
+ * @since 1.0.0
  *
  * @return Docutheques The main instance of the plugin.
  */

@@ -41,32 +41,11 @@ function docutheques_admin() {
 }
 
 /**
- * Outputs plugin's options page.
- *
- * @since 1.0.0
- */
-function docutheques_admin_options() {
-	printf(
-		'<div class="wrap"><h1 class="wp-heading-inline">%s</h1><hr class="wp-header-end"></div>',
-		esc_html__( 'Réglages des DocuThèques', 'docutheques' )
-	);
-}
-
-/**
- * Adds menu items for the plugin.
+ * Adds an Administration menu item for the plugin.
  *
  * @since 1.0.0
  */
 function docutheques_admin_menu() {
-	add_options_page(
-		__( 'Réglages des DocuThèques', 'docutheques' ),
-		__( 'DocuThèques', 'docutheques' ),
-		'manage_options',
-		'docutheques-options',
-		'docutheques_admin_options',
-		5
-	);
-
 	add_menu_page(
 		__( 'Administration des DocuThèques', 'docutheques' ),
 		__( 'DocuThèques', 'docutheques' ),
@@ -97,3 +76,38 @@ function docutheques_browser_block_is_allowed( $allowed_block_types, $post ) {
 	return $allowed_block_types;
 }
 add_filter( 'allowed_block_types', 'docutheques_browser_block_is_allowed', 10, 2 );
+
+/**
+ * Installs the plugin.
+ *
+ * @since 1.0.0
+ */
+function docutheques_admin_install() {
+	// Simply make sure permalinks will be refreshed at next page load.
+	delete_option( 'rewrite_rules' );
+}
+
+/**
+ * Checks whether the plugin needs to be updated.
+ *
+ * @since 1.0.0
+ */
+function docutheques_admin_updater() {
+	$db_version      = get_option( '_docutheques_version', '' );
+	$current_version = docutheques_version();
+
+	// DocuThèques is up to date.
+	if ( $db_version && version_compare( $db_version, $current_version, '=' ) ) {
+		return;
+	}
+
+	if ( ! $db_version ) {
+		docutheques_admin_install();
+	} elseif ( version_compare( $db_version, $current_version, '<' ) ) {
+		wp_die( esc_html__( 'Il n’y a qu’une seule version stable de pour l’extension DocuThèques', 'docutheques' ) );
+	}
+
+	// Bump DocuThèques version.
+	update_option( '_docutheques_version', $current_version );
+}
+add_action( 'admin_init', 'docutheques_admin_updater', 1999 );
