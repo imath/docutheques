@@ -75,6 +75,8 @@ class Widget {
 			this.updatePagination( dossierPagination.parent, 1, dossierPagination.totalItems, dossierPagination.totalPages );
 		}
 
+		this.itemsContainer.innerHTML = '<li class="loading"></li>';
+
 		return this.fetchItems( dossierId )
 	}
 
@@ -85,6 +87,8 @@ class Widget {
 		if ( docuthequePagination && docuthequePagination.parent ) {
 			this.updatePagination( docuthequePagination.parent, 1, docuthequePagination.totalItems, docuthequePagination.totalPages );
 		}
+
+		this.itemsContainer.innerHTML = '<li class="loading"</li>';
 
 		return this.fetchItems( docuthequeId )
 	}

@@ -115,6 +115,19 @@ function docutheques_init() {
 		$docutheques->version
 	);
 
+	wp_add_inline_style(
+		'docutheques-widget',
+		sprintf(
+			'.docutheque ul.docutheque-elements li.loading {
+				background-image: url(%1$s);
+				background-position: center;
+				height: 100px;
+				background-repeat: no-repeat;
+			}',
+			esc_url( admin_url( 'images/spinner-2x.gif' ) )
+		)
+	);
+
 	// Registers the Browser Block.
 	register_block_type(
 		'docutheques/browser',
