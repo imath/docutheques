@@ -252,6 +252,18 @@ function docutheques_register_widget_script() {
 		$docutheques->version,
 		true
 	);
+
+	$companion_style_path = get_theme_file_path( 'css/docutheques.css ' );
+
+	// Registers the Widget's companion styles if available.
+	if ( file_exists( $companion_style_path ) ) {
+		wp_register_style(
+			'docutheques-widget-companion',
+			esc_url_raw( get_theme_file_uri( 'css/docutheques.css' ) ),
+			array(),
+			$docutheques->version
+		);
+	}
 }
 add_action( 'wp_enqueue_scripts', 'docutheques_register_widget_script', 1 );
 
@@ -698,6 +710,9 @@ function docutheques_render_block( $attributes = array() ) {
 			),
 		)
 	);
+
+	// Enqueue the Widget companion styles if available.
+	wp_enqueue_style( 'docutheques-widget-companion' );
 
 	// Set JS translations.
 	wp_set_script_translations( 'docutheques-widget', 'docutheques', docutheques()->lang_path );
