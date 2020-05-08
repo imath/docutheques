@@ -411,3 +411,7 @@ li.choix-dossiers a {
 #docutheques .media-items.mode-select .selected .check .media-modal-icon:hover {
 	background-position: -60px 0;
 }
+
+svg.docuthequesAnimation {
+	background-color: #f1f1f1;
+}

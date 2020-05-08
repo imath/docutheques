@@ -36,6 +36,13 @@ class DocuthequesToolbar extends Component {
 
 		if ( false === mode ) {
 			this.cancelDocumentsSelection();
+
+			const { currentState } = this.props;
+			const isEditForm = -1 !== ['documentsEditForm', 'dossierEditForm'].indexOf( currentState );
+
+			if ( isEditForm ) {
+				this.setCurrentState( 'documentsBrowser' );
+			}
 		}
 	}
 
