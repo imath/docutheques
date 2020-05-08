@@ -558,6 +558,7 @@ function docutheques_render_block( $attributes = array() ) {
 	$documents            = array();
 	$document_headers     = array();
 	$output               = '';
+	$preload_data         = array();
 
 	if ( $docutheque_id ) {
 		$dossier_includes    = array( $docutheque_id );

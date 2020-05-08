@@ -101,7 +101,8 @@
 
 #docutheques .corps-docutheques .formulaire-dossier .close,
 #docutheques .corps-docutheques .formulaire-document .close,
-#docutheques .corps-docutheques .formulaire-modification-document .close {
+#docutheques .corps-docutheques .formulaire-modification-document .close,
+#docutheques > button.open {
 	background-color: transparent;
 	border: 0;
 	cursor: pointer;
@@ -114,6 +115,16 @@
 	top: 2px;
 	width: 48px;
 	z-index: 1;
+}
+
+#docutheques > button.open {
+    background-color: #fff;
+    border-radius: 50%;
+    margin-top: 10px;
+    margin-right: 20px;
+    border: 1px solid #ccd0d4;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    color: #0073aa;
 }
 
 #docutheques .formulaire-dossier .docutheques-infos .components-notice,
