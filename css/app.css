@@ -56,17 +56,17 @@
 }
 
 #docutheques .media-toolbar-secondary {
-    max-width: 66%;
-    float: left;
+	max-width: 66%;
+	float: left;
 }
 
 #docutheques .media-toolbar-primary .components-base-control .components-base-control__field {
-    margin: 0;
+	margin: 0;
 }
 
 #docutheques .media-toolbar-primary .components-base-control .components-base-control__label {
-    position: static;
-    margin-right: 0.5em;
+	position: static;
+	margin-right: 0.5em;
 }
 
 .delete-dossier-confirmation .confirmation-buttons,
@@ -118,13 +118,13 @@
 }
 
 #docutheques > button.open {
-    background-color: #fff;
-    border-radius: 50%;
-    margin-top: 10px;
-    margin-right: 20px;
-    border: 1px solid #ccd0d4;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-    color: #0073aa;
+	background-color: #fff;
+	border-radius: 50%;
+	margin-top: 10px;
+	margin-right: 20px;
+	border: 1px solid #ccd0d4;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	color: #0073aa;
 }
 
 #docutheques .formulaire-dossier .docutheques-infos .components-notice,
@@ -412,6 +412,21 @@ li.choix-dossiers a {
 	background-position: -60px 0;
 }
 
-svg.docuthequesAnimation {
+.guide-docutheques svg.docuthequesAnimation {
 	background-color: #f1f1f1;
+}
+
+.guide-docutheques svg.docuthequesAnimation.portrait {
+	max-width: 48%;
+	margin-right: 1em;
+}
+
+.guide-docutheques strong.titre-guidepage {
+	font-size: 23px;
+	font-weight: 400;
+	text-align: center;
+	padding: 9px 0 4px 0;
+	line-height: 1.3;
+	display: block;
+	margin-bottom: 1em;
 }
