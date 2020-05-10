@@ -60,8 +60,15 @@ function docutheques_min_suffix() {
  * @since 1.0.0
  */
 function docutheques_init() {
-	$docutheques = docutheques();
-	$min         = docutheques_min_suffix();
+	$docutheques  = docutheques();
+	$min          = docutheques_min_suffix();
+	$spinner      = admin_url( 'images/spinner-2x.gif' );
+	$fetching_css = array(
+		sprintf( 'background-image: url(%s);', esc_url( $spinner ) ),
+		'background-position: center;',
+		'height: 100px;',
+		'background-repeat: no-repeat;',
+	);
 
 	// Registers the App's JavaScript file.
 	wp_register_script(
@@ -88,6 +95,16 @@ function docutheques_init() {
 			'wp-components',
 		),
 		$docutheques->version
+	);
+
+	wp_add_inline_style(
+		'docutheques-app',
+		sprintf(
+			'#docutheques .liste-documents div.docutheques-fetching {
+				%s
+			}',
+			join( "\n", $fetching_css )
+		)
 	);
 
 	// Registers the Browser Block's JavaScript file.
@@ -119,12 +136,9 @@ function docutheques_init() {
 		'docutheques-widget',
 		sprintf(
 			'.docutheque ul.docutheque-elements li.loading {
-				background-image: url(%1$s);
-				background-position: center;
-				height: 100px;
-				background-repeat: no-repeat;
+				%s
 			}',
-			esc_url( admin_url( 'images/spinner-2x.gif' ) )
+			join( "\n", $fetching_css )
 		)
 	);
 

@@ -2,7 +2,7 @@
  * WordPress dependencies.
  */
 const { Component, createElement } = wp.element;
-const { Notice, Dashicon } = wp.components;
+const { Notice, Dashicon, VisuallyHidden } = wp.components;
 const { withSelect } = wp.data;
 const { compose } = wp.compose;
 const { sprintf, __ } = wp.i18n;
@@ -13,7 +13,16 @@ class DocuthequesInfos extends Component {
 	}
 
 	render() {
-		const { dossier, children, searchTerms } = this.props;
+		const { dossier, children, searchTerms, fetching } = this.props;
+
+		if ( fetching ) {
+			return (
+				<div className="docutheques-fetching">
+					<VisuallyHidden>{ __( 'Chargement des documents en cours, merci de patienter', 'docutheques' ) }</VisuallyHidden>
+				</div>
+			)
+		}
+
 		let message = __( 'Il n’existe aucun document directement rattaché à la racine pour le moment.', 'docutheques' );
 
 		if ( !! dossier && 0 === dossier.parent ) {
@@ -50,8 +59,11 @@ class DocuthequesInfos extends Component {
 
 export default compose( [
 	withSelect( ( select ) => {
+		const store = select( 'docutheques' );
+
 		return {
-			dossier: select( 'docutheques' ).getCurrentDossier(),
+			dossier: store.getCurrentDossier(),
+			fetching: store.isFetching(),
 		};
 	} ),
 ] )( DocuthequesInfos );

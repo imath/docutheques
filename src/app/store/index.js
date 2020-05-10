@@ -25,6 +25,7 @@ const {
 const DEFAULT_STATE = {
 	user: {},
 	documents: [],
+	fetching: false,
 	uploaded: [],
 	dossiers: [],
 	created: [],
@@ -478,6 +479,12 @@ const store = registerStore( 'docutheques', {
 					dossiers: action.dossiers,
 				};
 
+			case 'SET_FETCHING':
+				return {
+					...state,
+					fetching: action.fetching,
+				};
+
 			case 'SET_TOTAL_DOCUMENTS':
 				let total = state.totalDocuments;
 
@@ -515,6 +522,7 @@ const store = registerStore( 'docutheques', {
 				return {
 					...state,
 					documents: documentsUniques,
+					fetching: false,
 				};
 
 			case 'SET_SEARCH_TERMS':
@@ -852,7 +860,12 @@ const store = registerStore( 'docutheques', {
 		isAdvancedEditMode( state ) {
 			const { isAdvancedEditMode } = state;
 			return isAdvancedEditMode;
-		}
+		},
+
+		isFetching( state ) {
+			const { fetching } = state;
+			return fetching;
+		},
 	},
 
 	controls: {
@@ -905,7 +918,11 @@ const store = registerStore( 'docutheques', {
 		},
 
 		* getDocuments( currentDossierId = 0 ) {
+			const fetching = true;
+			yield { type: 'SET_FETCHING', fetching };
+
 			const path = '/wp/v2/media?dossiers[]=' + currentDossierId + '&per_page=20&context=edit';
+
 			const response = yield actions.fetchFromAPI( path, false );
 			let total;
 
