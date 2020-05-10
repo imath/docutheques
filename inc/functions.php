@@ -150,14 +150,19 @@ function docutheques_init() {
 			'style'           => 'docutheques-widget',
 			'render_callback' => 'docutheques_render_block',
 			'attributes'      => array(
-				'dossierID' => array(
+				'dossierID'        => array(
 					'type'    => 'integer',
 					'default' => 0,
 				),
-				'orderBy'   => array(
+				'orderDocumentsBy' => array(
 					'type'    => 'string',
 					'default' => 'date',
-					'enum'    => array( 'date', 'name' ),
+					'enum'    => array( 'date', 'modified', 'title' ),
+				),
+				'orderDossiersBy'  => array(
+					'type'    => 'string',
+					'default' => 'name',
+					'enum'    => array( 'newer', 'older', 'name' ),
 				),
 			),
 		)
@@ -542,27 +547,38 @@ function docutheques_render_block( $attributes = array() ) {
 	$block_args = wp_parse_args(
 		$attributes,
 		array(
-			'dossierID' => 0,
-			'orderBy'   => 'date',
+			'dossierID'        => 0,
+			'orderDocumentsBy' => 'date',
+			'orderDossiersBy'  => 'name',
 		)
 	);
 
-	$docutheque_id = (int) $block_args['dossierID'];
-	$orderby       = $block_args['orderBy'];
-	$order         = 'desc';
+	$docutheque_id      = (int) $block_args['dossierID'];
+	$order_documents_by = $block_args['orderDocumentsBy'];
+	$order_documents    = 'desc';
+	$order_dossiers_by  = $block_args['orderDossiersBy'];
+	$order_dossiers     = 'asc';
 
-	// Validate the sort order.
-	if ( ! in_array( $orderby, array( 'date', 'name' ), true ) ) {
-		$orderby = 'date';
+	// Validate the documents sort order.
+	if ( ! in_array( $order_documents_by, array( 'date', 'modified', 'title' ), true ) ) {
+		$order_documents_by = 'date';
 	}
 
-	if ( 'name' === $orderby ) {
-		$order              = 'asc';
-		$order_dossiers_by  = $orderby;
-		$order_documents_by = 'title';
-	} else {
-		$order_dossiers_by  = 'id';
-		$order_documents_by = 'modified';
+	// Validate the dossiers sort order.
+	if ( ! in_array( $order_dossiers_by, array( 'newer', 'older', 'name' ), true ) ) {
+		$order_dossiers_by = 'name';
+	}
+
+	if ( 'newer' === $order_dossiers_by || 'older' === $order_dossiers_by ) {
+		if ( 'newer' === $order_dossiers_by ) {
+			$order_dossiers = 'desc';
+		}
+
+		$order_dossiers_by = 'id';
+	}
+
+	if ( 'title' === $order_documents_by ) {
+		$order_documents = 'asc';
 	}
 
 	// Init variables.
@@ -582,8 +598,8 @@ function docutheques_render_block( $attributes = array() ) {
 			$dossier_includes = array_merge( $dossier_includes, $docutheque_children );
 		}
 
-		$dossiers_path  = sprintf( '/wp/v2/dossiers?context=view&orderby=%1$s&order=%2$s&include[]=%3$s', $order_dossiers_by, $order, implode( '&include[]=', $dossier_includes ) );
-		$documents_path = sprintf( '/wp/v2/media?dossiers[]=%1$d&per_page=20&docutheques_widget=1&context=view&orderby=%2$s&order=%3$s', $docutheque_id, $order_documents_by, $order );
+		$dossiers_path  = sprintf( '/wp/v2/dossiers?context=view&orderby=%1$s&order=%2$s&include[]=%3$s', $order_dossiers_by, $order_dossiers, implode( '&include[]=', $dossier_includes ) );
+		$documents_path = sprintf( '/wp/v2/media?dossiers[]=%1$d&per_page=20&docutheques_widget=1&context=view&orderby=%2$s&order=%3$s', $docutheque_id, $order_documents_by, $order_documents );
 
 		// Preloads Plugin's data.
 		$preload_data = array_reduce(
@@ -719,7 +735,7 @@ function docutheques_render_block( $attributes = array() ) {
 				'orderBy'           => wp_json_encode(
 					array(
 						'by'    => $order_documents_by,
-						'order' => $order,
+						'order' => $order_documents,
 					)
 				),
 			),

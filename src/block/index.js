@@ -14,7 +14,7 @@ const { __ } = wp.i18n;
 import DocuThequesAutoCompleter from './components/autocompleter';
 
 const editDocuThequesBrowser = ( { attributes, setAttributes } ) => {
-	const { orderBy } = attributes;
+	const { orderDocumentsBy, orderDossiersBy } = attributes;
 
 	if ( ! attributes.dossierID ) {
 		return (
@@ -46,14 +46,27 @@ const editDocuThequesBrowser = ( { attributes, setAttributes } ) => {
 			<InspectorControls>
 				<PanelBody title={ __( 'Réglages', 'docutheques' ) } initialOpen={ true }>
 					<SelectControl
-						label={ __( 'Classer les documents et dossiers selon leur :', 'docutheques' ) }
-						value={ orderBy }
+						label={ __( 'Classer les dossiers :', 'docutheques' ) }
+						value={ orderDossiersBy }
 						onChange={ ( order ) => {
-							setAttributes( { orderBy: order } );
+							setAttributes( { orderDossiersBy: order } );
 						} }
 						options={ [
-							{ label: __( 'date de modification (31 - 1)', 'docutheques' ), value: 'date' },
-							{ label: __( 'nom (A - Z)', 'docutheques' ), value: 'name' },
+							{ label: __( 'Alphabétiquement (A - Z)', 'docutheques' ), value: 'name' },
+							{ label: __( 'Les plus récents en premier (31 - 1)', 'docutheques' ), value: 'newer' },
+							{ label: __( 'Les moins récents en premier (1 - 31)', 'docutheques' ), value: 'older' },
+						] }
+					/>
+					<SelectControl
+						label={ __( 'Classer les documents selon leur :', 'docutheques' ) }
+						value={ orderDocumentsBy }
+						onChange={ ( order ) => {
+							setAttributes( { orderDocumentsBy: order } );
+						} }
+						options={ [
+							{ label: __( 'Date de publication (31 - 1)', 'docutheques' ), value: 'date' },
+							{ label: __( 'Date de modification (31 - 1)', 'docutheques' ), value: 'modified' },
+							{ label: __( 'Nom (A - Z)', 'docutheques' ), value: 'title' },
 						] }
 					/>
 				</PanelBody>
@@ -86,10 +99,15 @@ registerBlockType( 'docutheques/browser', {
 			type: 'integer',
 			default: 0,
 		},
-		orderBy: {
+		orderDocumentsBy: {
 			type: 'string',
 			default: 'date',
-			enum: ['date', 'name'],
+			enum: ['date', 'modified', 'title'],
+		},
+		orderDossiersBy: {
+			type: 'string',
+			default: 'name',
+			enum: ['newer', 'older', 'name'],
 		},
 	},
 
