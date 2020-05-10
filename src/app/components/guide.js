@@ -50,7 +50,7 @@ class DocuthequesGuide extends Component {
 					<p>{ __( 'Vous pouvez créer autant de DocuThèques que vous le souhaitez. Notez toutefois qu’une seule DocuThèque peut être insérée dans une même page de votre site.', 'docutheques' ) }</p>
 					<p>{ __( 'Cet espace est dédié à la gestion de vos DocuThèques. Pour les insérer dans des pages de votre site, il s’agit d’utilier le bloc DocuThèques de votre éditeur de contenus WordPress.', 'docutheques' ) }</p>
 					<p>{ __( 'Les documents ajoutés à une DocuThèque bénéficient d’un lien de téléchargement unique, invariable et ce jusqu’à leurs éventuelles suppressions définitives.', 'docutheques' ) }</p>
-					<p>{ __( 'La barre latérale de gauche de cet écran d’administration affiche l’arborescence de vos DocuThèques. L’élément actif de cette dernière (texte blanc sur fond bleu) vous indique l’emplacement dans lequel vous ajouterez vos nouveaux dossiers et documents.', 'docuthéques' ) }</p>
+					<p>{ __( 'La barre latérale de gauche de cet écran d’administration affiche l’arborescence de vos DocuThèques. L’élément actif de cette dernière (texte blanc sur fond bleu) vous indique l’emplacement dans lequel vous ajouterez vos nouveaux dossiers et documents.', 'docutheques' ) }</p>
 				</GuidePage>
 
 				<GuidePage>

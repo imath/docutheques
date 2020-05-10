@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-05-06T14:17:00+00:00\n"
+"POT-Creation-Date: 2020-05-10T10:34:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: docutheques\n"
@@ -17,7 +17,7 @@ msgstr ""
 #. Plugin Name of the plugin
 #: inc/admin.php:54
 #: js/block/index.js:228
-#: js/block/index.js:281
+#: js/block/index.js:294
 msgid "DocuThèques"
 msgstr ""
 
@@ -38,7 +38,7 @@ msgid "https://imathi.eu"
 msgstr ""
 
 #: inc/admin.php:53
-#: js/app/index.js:1916
+#: js/app/index.js:23704
 msgid "Administration des DocuThèques"
 msgstr ""
 
@@ -51,107 +51,107 @@ msgstr ""
 msgid "Télécharger %s"
 msgstr ""
 
-#: inc/functions.php:145
+#: inc/functions.php:177
 msgctxt "Taxonomy name"
 msgid "Dossiers"
 msgstr ""
 
-#: inc/functions.php:146
+#: inc/functions.php:178
 msgctxt "Taxonomy singular name"
 msgid "Dossier"
 msgstr ""
 
-#: inc/functions.php:147
+#: inc/functions.php:179
 msgctxt "Taxonomy search items label"
 msgid "Rechercher des dossiers"
 msgstr ""
 
-#: inc/functions.php:148
+#: inc/functions.php:180
 msgctxt "Taxonomy all items label"
 msgid "Tous les dossiers"
 msgstr ""
 
-#: inc/functions.php:149
+#: inc/functions.php:181
 msgctxt "Taxonomy parent item label"
 msgid "Dossier parent"
 msgstr ""
 
-#: inc/functions.php:150
+#: inc/functions.php:182
 msgctxt "Taxonomy parent item colon label"
 msgid "Dossier parent&nbsp;:"
 msgstr ""
 
-#: inc/functions.php:151
+#: inc/functions.php:183
 msgctxt "Taxonomy edit item label"
 msgid "Modifier le dossier"
 msgstr ""
 
-#: inc/functions.php:152
+#: inc/functions.php:184
 msgctxt "Taxonomy view item label"
 msgid "Afficher le dossier"
 msgstr ""
 
-#: inc/functions.php:153
+#: inc/functions.php:185
 msgctxt "Taxonomy update item label"
 msgid "Mettre à jour le dossier"
 msgstr ""
 
-#: inc/functions.php:154
+#: inc/functions.php:186
 msgctxt "Taxonomy add new item label"
 msgid "Ajouter un dossier"
 msgstr ""
 
-#: inc/functions.php:155
+#: inc/functions.php:187
 msgctxt "Taxonomy new item name label"
 msgid "Nom du dossier à ajouter"
 msgstr ""
 
-#: inc/functions.php:156
+#: inc/functions.php:188
 msgctxt "Taxonomy not found label"
 msgid "Aucun dossier trouvé"
 msgstr ""
 
-#: inc/functions.php:157
+#: inc/functions.php:189
 msgctxt "Taxonomy no terms label"
 msgid "Aucun dossier affecté"
 msgstr ""
 
-#: inc/functions.php:158
+#: inc/functions.php:190
 msgctxt "Taxonomy items list navigation label"
 msgid "Navigation de la liste des dossiers"
 msgstr ""
 
-#: inc/functions.php:159
+#: inc/functions.php:191
 msgctxt "Taxonomy items list label"
 msgid "Liste des dossiers"
 msgstr ""
 
-#: inc/functions.php:160
+#: inc/functions.php:192
 msgctxt "Taxonomy most used label"
 msgid "Les plus affectés"
 msgstr ""
 
-#: inc/functions.php:161
+#: inc/functions.php:193
 msgctxt "Back to all Taxonomy terms"
 msgid "Revenir sur tous les dossiers"
 msgstr ""
 
-#: inc/functions.php:163
+#: inc/functions.php:195
 msgid "Catégorie permettant de référencer et de hiérarchiser les documents dans des dossiers."
 msgstr ""
 
-#: inc/functions.php:457
-#: inc/functions.php:462
+#: inc/functions.php:501
+#: inc/functions.php:506
 #: templates/docutheques-dossier.php:17
 #: templates/docutheques-dossier.php:23
 msgid "Ouvrir le dossier"
 msgstr ""
 
-#: inc/functions.php:530
+#: inc/functions.php:585
 msgid "Docuthèque"
 msgstr ""
 
-#: inc/functions.php:678
+#: inc/functions.php:734
 msgid "Ce dossier ne contient aucun élément pour le moment."
 msgstr ""
 
@@ -163,343 +163,419 @@ msgstr ""
 msgid "Mis à jour le :"
 msgstr ""
 
-#: js/app/index.js:1896
+#: js/app/index.js:23591
+msgid "Ouvrir le guide d’utilisation"
+msgstr ""
+
+#: js/app/index.js:23597
+msgid "Guide d’utilisation"
+msgstr ""
+
+#: js/app/index.js:23599
+msgid "Découvrez DocuThèques"
+msgstr ""
+
+#: js/app/index.js:23601
+msgid "Une DocuThèque ressemble à un répertoire de fichiers pouvant contenir autant de dossiers qu’il vous semble nécessaires pour y organiser vos documents et les rendre disponibles en téléchargement aux visiteurs de votre site."
+msgstr ""
+
+#: js/app/index.js:23602
+msgid "Vous pouvez créer autant de DocuThèques que vous le souhaitez. Notez toutefois qu’une seule DocuThèque peut être insérée dans une même page de votre site."
+msgstr ""
+
+#: js/app/index.js:23603
+msgid "Cet espace est dédié à la gestion de vos DocuThèques. Pour les insérer dans des pages de votre site, il s’agit d’utilier le bloc DocuThèques de votre éditeur de contenus WordPress."
+msgstr ""
+
+#: js/app/index.js:23604
+msgid "Les documents ajoutés à une DocuThèque bénéficient d’un lien de téléchargement unique, invariable et ce jusqu’à leurs éventuelles suppressions définitives."
+msgstr ""
+
+#: js/app/index.js:23605
+msgid "La barre latérale de gauche de cet écran d’administration affiche l’arborescence de vos DocuThèques. L’élément actif de cette dernière (texte blanc sur fond bleu) vous indique l’emplacement dans lequel vous ajouterez vos nouveaux dossiers et documents."
+msgstr ""
+
+#: js/app/index.js:23609
+msgid "État initial de l’interface"
+msgstr ""
+
+#: js/app/index.js:23611
+msgid "Par défaut, l’écran d’administration des DocuThèques présente tous les media de WordPress qui ne sont pas attachés à une DocuThèque au niveau de la racine de l’arborescence affichée dans la barre latérale de gauche."
+msgstr ""
+
+#: js/app/index.js:23615
+msgid "Créer une DocuThèque"
+msgstr ""
+
+#: js/app/index.js:23617
+msgid "Pour ajouter une DocuThèque, cliquez sur le bouton en forme de « + », positionné juste après le titre de l’écran d’administration des DocuThèques. Un menu d’insertion de documents ou d’une DocuThèque vous sera alors proposé."
+msgstr ""
+
+#: js/app/index.js:23621
+msgid "Ajouter des éléments à une DocuThèque"
+msgstr ""
+
+#: js/app/index.js:23623
+msgid "Pour ajouter un dossier ou un document à votre DocuThèque, activez dans un premier temps votre DocuThèque en cliquant sur son titre depuis l’arborescence. Ensuite, cliquez sur le bouton en forme de « + » pour afficher le menu d’insertion de documents ou d’un dossier."
+msgstr ""
+
+#: js/app/index.js:23627
+msgid "Modifier une DocuThèque ou un de ses dossiers"
+msgstr ""
+
+#: js/app/index.js:23629
+msgid "Activez dans un premier temps l’élément de votre choix en cliquant sur son titre depuis l’arborescence. Ensuite, cliquez sur le bouton en forme d’écrou de la barre d’outils pour basculer en mode d’édition avancée. La barre d’outils vous proposera alors deux nouveaux boutons pour modifier ou supprimer votre élément."
+msgstr ""
+
+#: js/app/index.js:23633
+msgid "Modifier un ou plusieurs documents"
+msgstr ""
+
+#: js/app/index.js:23635
+msgid "En cliquant sur le bouton en forme d’écrou de la barre d’outils, vous basculez en mode d’édition avancée afin de pouvoir modifier, déplacer ou supprimer un ou plusieurs documents. Les boutons d’action apparaissent dans la barre d’outils lorsque vous cliquez sur la vignette des documents."
+msgstr ""
+
+#: js/app/index.js:23684
 msgid "Ajouter une DocuThèque"
 msgstr ""
 
-#: js/app/index.js:1896
+#: js/app/index.js:23684
 msgid "Ajouter un dossier"
 msgstr ""
 
-#: js/app/index.js:1904
+#: js/app/index.js:23692
 msgid "Ajouter un document"
 msgstr ""
 
-#: js/app/index.js:1921
-#: js/app/index.js:24209
+#: js/app/index.js:23709
+#: js/app/index.js:24771
 msgid "Ajouter"
 msgstr ""
 
-#: js/app/index.js:2047
+#: js/app/index.js:23844
 msgid "Cette action est irréversible, merci de confirmer que vous souhaitez supprimer un document."
 msgstr ""
 
 #. translators: %d: number of documents to delete.
-#: js/app/index.js:2050
+#: js/app/index.js:23847
 msgid "Cette action est irréversible, merci de confirmer que vous souhaitez supprimer %d documents."
 msgstr ""
 
-#: js/app/index.js:2058
+#: js/app/index.js:23855
 msgid "Afficher le mode d’édition simple"
 msgstr ""
 
-#: js/app/index.js:2063
+#: js/app/index.js:23860
 msgid "Afficher le mode d’édition avancée"
 msgstr ""
 
-#: js/app/index.js:2071
+#: js/app/index.js:23868
 msgid "Modifier la DocuThèque"
 msgstr ""
 
-#: js/app/index.js:2071
+#: js/app/index.js:23868
 msgid "Modifier le dossier"
 msgstr ""
 
-#: js/app/index.js:2074
+#: js/app/index.js:23871
 msgid "Supprimer la DocuThèque"
 msgstr ""
 
-#: js/app/index.js:2074
+#: js/app/index.js:23871
 msgid "Supprimer le dossier"
 msgstr ""
 
-#: js/app/index.js:2078
+#: js/app/index.js:23875
 msgid "Suppression de la DocuThèque"
 msgstr ""
 
-#: js/app/index.js:2078
+#: js/app/index.js:23875
 msgid "Suppression du dossier"
 msgstr ""
 
-#: js/app/index.js:2083
+#: js/app/index.js:23880
 msgid "Cette action supprimera tous les éventuels dossiers contenus dans cette DocuThèque."
 msgstr ""
 
-#: js/app/index.js:2083
+#: js/app/index.js:23880
 msgid "Cette action supprimera tous les éventuels dossiers contenus dans ce dossier."
 msgstr ""
 
-#: js/app/index.js:2086
+#: js/app/index.js:23883
 msgid "Supprimer tous les documents contenus dans cette DocuThèque."
 msgstr ""
 
-#: js/app/index.js:2086
+#: js/app/index.js:23883
 msgid "Supprimer tous les documents contenus dans ce dossier."
 msgstr ""
 
-#: js/app/index.js:2093
-#: js/app/index.js:2125
+#: js/app/index.js:23890
+#: js/app/index.js:23922
 msgid "Confirmer"
 msgstr ""
 
-#: js/app/index.js:2097
-#: js/app/index.js:2129
-#: js/app/index.js:24205
-#: js/app/index.js:24348
-#: js/app/index.js:24708
+#: js/app/index.js:23894
+#: js/app/index.js:23926
+#: js/app/index.js:24767
+#: js/app/index.js:24910
+#: js/app/index.js:25270
 msgid "Annuler"
 msgstr ""
 
-#: js/app/index.js:2109
+#: js/app/index.js:23906
 msgid "Modifier le document"
 msgstr ""
 
-#: js/app/index.js:2109
+#: js/app/index.js:23906
 msgid "Déplacer les documents"
 msgstr ""
 
-#: js/app/index.js:2112
+#: js/app/index.js:23909
 msgid "Supprimer le document"
 msgstr ""
 
-#: js/app/index.js:2112
+#: js/app/index.js:23909
 msgid "Supprimer les documents"
 msgstr ""
 
-#: js/app/index.js:2116
+#: js/app/index.js:23913
 msgid "Suppression d’un document"
 msgstr ""
 
-#: js/app/index.js:2116
+#: js/app/index.js:23913
 msgid "Suppression de documents"
 msgstr ""
 
-#: js/app/index.js:2137
+#: js/app/index.js:23934
 msgid "Annuler la sélection"
 msgstr ""
 
-#: js/app/index.js:2146
+#: js/app/index.js:23943
 msgid "Rechercher un document"
 msgstr ""
 
-#: js/app/index.js:2327
-#: js/app/index.js:24579
+#: js/app/index.js:24124
+#: js/app/index.js:25141
 msgid "Racine"
 msgstr ""
 
 #. translators: %d: is the number of times the file was downloaded.
-#: js/app/index.js:23732
+#: js/app/index.js:24277
 msgid "Nombre de téléchargement : %d"
 msgstr ""
 
 #. translators: %d: is the number of times the file was downloaded.
-#: js/app/index.js:23735
+#: js/app/index.js:24280
 msgid "Nombre de téléchargements : %d"
 msgstr ""
 
-#: js/app/index.js:23746
+#: js/app/index.js:24291
 msgid "Date de publication :"
 msgstr ""
 
-#: js/app/index.js:23747
+#: js/app/index.js:24292
 msgid "Date de modification :"
 msgstr ""
 
-#: js/app/index.js:23748
+#: js/app/index.js:24293
 msgid "Fichier source :"
 msgstr ""
 
-#: js/app/index.js:23767
+#: js/app/index.js:24312
 msgid "Retirer de la sélection."
 msgstr ""
 
-#: js/app/index.js:23804
-msgid "Chargement d’un document en cours, merci de patienter."
+#: js/app/index.js:24349
+msgid "Téléversement d’un document en cours, merci de patienter."
 msgstr ""
 
 #. translators: %d: number of documents being uploaded.
-#: js/app/index.js:23807
-msgid "Chargement de %d documents en cours, merci de patienter."
+#: js/app/index.js:24352
+msgid "Téléversement de %d documents en cours, merci de patienter."
 msgstr ""
 
 #. translators: 1: file name. 2: error message.
-#: js/app/index.js:23868
+#: js/app/index.js:24418
 msgid "Le document « %1$s » n‘a pas pu être créé en raison de cette erreur : %2$s"
 msgstr ""
 
 #. translators: 1: file name. 2: error message.
-#: js/app/index.js:23875
+#: js/app/index.js:24425
 msgid "Le document « %1$s » n‘a pas pu être modifié en raison de cette erreur : %2$s"
 msgstr ""
 
 #. translators: 1: file name. 2: error message.
-#: js/app/index.js:23882
+#: js/app/index.js:24432
 msgid "Le document « %1$s » n‘a pas pu être supprimé en raison de cette erreur : %2$s"
 msgstr ""
 
 #. translators: 1: file name. 2: error message.
-#: js/app/index.js:23905
+#: js/app/index.js:24455
 msgid "Le dossier « %1$s » n‘a pas pu être créé en raison de cette erreur : %2$s"
 msgstr ""
 
 #. translators: %s is the error message.
-#: js/app/index.js:23912
+#: js/app/index.js:24462
 msgid "Le dossier n‘a pas pu être modifié en raison de cette erreur : %s"
 msgstr ""
 
 #. translators: %s is the error message.
-#: js/app/index.js:23918
+#: js/app/index.js:24468
 msgid "Le dossier n‘a pas pu être supprimé en raison de cette erreur : %s"
 msgstr ""
 
-#: js/app/index.js:23960
+#: js/app/index.js:24514
+msgid "Chargement des documents en cours, merci de patienter"
+msgstr ""
+
+#: js/app/index.js:24519
 msgid "Il n’existe aucun document directement rattaché à la racine pour le moment."
 msgstr ""
 
-#: js/app/index.js:23963
+#: js/app/index.js:24522
 msgid "Cette DocuThèque ne contient aucun document directement rattaché pour le moment."
 msgstr ""
 
-#: js/app/index.js:23967
+#: js/app/index.js:24526
 msgid "Ce dossier ne contient aucun document directement rattaché pour le moment."
 msgstr ""
 
 #. translators: %s is the placeholder for the searched terms
-#: js/app/index.js:23973
+#: js/app/index.js:24532
 msgid "Aucun document dont le nom contient « %s » n‘a été trouvé à cet emplacement."
 msgstr ""
 
-#: js/app/index.js:24178
+#: js/app/index.js:24740
 msgid "Créer un nouveau dossier"
 msgstr ""
 
-#: js/app/index.js:24178
+#: js/app/index.js:24740
 msgid "Créer une nouvelle DocuThèque"
 msgstr ""
 
-#: js/app/index.js:24187
+#: js/app/index.js:24749
 msgid "Fermer le formulaire d’ajout de dossier"
 msgstr ""
 
-#: js/app/index.js:24193
-#: js/app/index.js:24320
+#: js/app/index.js:24755
+#: js/app/index.js:24882
 msgid "Nom du dossier (obligatoire)"
 msgstr ""
 
-#: js/app/index.js:24193
-#: js/app/index.js:24320
+#: js/app/index.js:24755
+#: js/app/index.js:24882
 msgid "Nom de la DocuThèque (obligatoire)"
 msgstr ""
 
-#: js/app/index.js:24199
-#: js/app/index.js:24326
-#: js/app/index.js:24636
+#: js/app/index.js:24761
+#: js/app/index.js:24888
+#: js/app/index.js:25198
 msgid "Description"
 msgstr ""
 
-#: js/app/index.js:24305
+#: js/app/index.js:24867
 msgid "Modifier un dossier"
 msgstr ""
 
-#: js/app/index.js:24305
+#: js/app/index.js:24867
 msgid "Modifier une DocuThèque"
 msgstr ""
 
-#: js/app/index.js:24314
+#: js/app/index.js:24876
 msgid "Fermer le formulaire de modification d’un dossier"
 msgstr ""
 
-#: js/app/index.js:24333
+#: js/app/index.js:24895
 msgid "Utiliser la barre latérale de gauche pour déplacer le dossier dans une nouvelle DocuThèque."
 msgstr ""
 
 #. translators: %s: the name of the destination folder.
-#: js/app/index.js:24341
+#: js/app/index.js:24903
 msgid "Le dossier sera déplacé dans « %s »."
 msgstr ""
 
-#: js/app/index.js:24352
-#: js/app/index.js:24712
+#: js/app/index.js:24914
+#: js/app/index.js:25274
 msgid "Modifier"
 msgstr ""
 
-#: js/app/index.js:24421
+#: js/app/index.js:24983
 msgid "Téléverser un ou plusieurs nouveau(x) document(s) dans le dossier actif"
 msgstr ""
 
-#: js/app/index.js:24421
+#: js/app/index.js:24983
 msgid "Téléverser un ou plusieurs nouveau(x) document(s)"
 msgstr ""
 
-#: js/app/index.js:24430
+#: js/app/index.js:24992
 msgid "Fermer le formulaire d’ajout de document(s)"
 msgstr ""
 
-#: js/app/index.js:24438
+#: js/app/index.js:25000
 msgid "Utiliser le bouton ci-dessous pour sélectionner votre ou vos documents ou déposer les directement dans la zone délimitée par des tirets pour les téléverser dans le dossier actif."
 msgstr ""
 
-#: js/app/index.js:24444
+#: js/app/index.js:25006
 msgid "Téléverser"
 msgstr ""
 
-#: js/app/index.js:24448
+#: js/app/index.js:25010
 msgid "Déposer votre ou vos document(s) ici."
 msgstr ""
 
-#: js/app/index.js:24575
+#: js/app/index.js:25137
 msgid "Modifier un document"
 msgstr ""
 
-#: js/app/index.js:24575
+#: js/app/index.js:25137
 msgid "Modifier des documents"
 msgstr ""
 
 #. translators: %s: the comma separated list of document names.
-#: js/app/index.js:24603
+#: js/app/index.js:25165
 msgid "Utiliser la barre latérale de gauche pour déplacer le document « %s » dans une nouvelle DocuThèque."
 msgstr ""
 
 #. translators: 1: the comma separated list of document names. 2: the name of the destination folder.
-#: js/app/index.js:24606
+#: js/app/index.js:25168
 msgid "Le document « %1$s » sera déplacé dans « %2$s »."
 msgstr ""
 
 #. translators: %s: the comma separated list of document names.
-#: js/app/index.js:24610
+#: js/app/index.js:25172
 msgid "Utiliser la barre latérale de gauche pour déplacer les documents « %s » dans une nouvelle DocuThèque."
 msgstr ""
 
 #. translators: 1: the comma separated list of document names. 2: the name of the destination folder.
-#: js/app/index.js:24613
+#: js/app/index.js:25175
 msgid "Les documents « %1$s » seront déplacés dans « %2$s »."
 msgstr ""
 
-#: js/app/index.js:24619
+#: js/app/index.js:25181
 msgid "Fermer le formulaire de modification de documents"
 msgstr ""
 
-#: js/app/index.js:24628
+#: js/app/index.js:25190
 msgid "Nom du document (obligatoire)"
 msgstr ""
 
-#: js/app/index.js:24646
+#: js/app/index.js:25208
 msgid "Télécharger le fichier associé"
 msgstr ""
 
-#: js/app/index.js:24652
+#: js/app/index.js:25214
 msgid "Nouvelle version du document"
 msgstr ""
 
-#: js/app/index.js:24662
+#: js/app/index.js:25224
 msgid "Remplacer le fichier associé"
 msgstr ""
 
-#: js/app/index.js:24677
+#: js/app/index.js:25239
 msgid "Téléverser la nouvelle version du document"
 msgstr ""
 
-#: js/app/index.js:24683
+#: js/app/index.js:25245
 msgid "Date de publication"
 msgstr ""
 
@@ -524,17 +600,37 @@ msgid "Réglages"
 msgstr ""
 
 #: js/block/index.js:254
-msgid "Classer les documents et dossiers selon leur :"
+msgid "Classer les dossiers :"
 msgstr ""
 
 #: js/block/index.js:260
-msgid "date de modification (31 - 1)"
+msgid "Alphabétiquement (A - Z)"
 msgstr ""
 
 #: js/block/index.js:261
-msgid "nom (A - Z)"
+msgid "Les plus récents en premier (31 - 1)"
 msgstr ""
 
-#: js/block/index.js:283
+#: js/block/index.js:262
+msgid "Les moins récents en premier (1 - 31)"
+msgstr ""
+
+#: js/block/index.js:266
+msgid "Classer les documents selon leur :"
+msgstr ""
+
+#: js/block/index.js:272
+msgid "Date de publication (31 - 1)"
+msgstr ""
+
+#: js/block/index.js:273
+msgid "Date de modification (31 - 1)"
+msgstr ""
+
+#: js/block/index.js:274
+msgid "Nom (A - Z)"
+msgstr ""
+
+#: js/block/index.js:296
 msgid "Explorateur de documents."
 msgstr ""

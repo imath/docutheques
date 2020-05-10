@@ -7,8 +7,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-05-06T14:17:00+00:00\n"
-"PO-Revision-Date: 2020-05-06 16:18+0200\n"
+"POT-Creation-Date: 2020-05-10T10:34:52+00:00\n"
+"PO-Revision-Date: 2020-05-10 12:36+0200\n"
 "Language: en_US\n"
 "X-Generator: Poedit 2.3\n"
 "X-Domain: docutheques\n"
@@ -17,7 +17,7 @@ msgstr ""
 #. Plugin Name of the plugin
 #: inc/admin.php:54
 #: js/block/index.js:228
-#: js/block/index.js:281
+#: js/block/index.js:294
 msgid "DocuThèques"
 msgstr "DocuThèques"
 
@@ -38,7 +38,7 @@ msgid "https://imathi.eu"
 msgstr "https://imathi.eu"
 
 #: inc/admin.php:53
-#: js/app/index.js:1916
+#: js/app/index.js:23704
 msgid "Administration des DocuThèques"
 msgstr "Manage DocuThèques"
 
@@ -51,107 +51,107 @@ msgstr "There’s only one stable version for the DocuThèques plugin"
 msgid "Télécharger %s"
 msgstr "Download %s"
 
-#: inc/functions.php:145
+#: inc/functions.php:177
 msgctxt "Taxonomy name"
 msgid "Dossiers"
 msgstr "Folders"
 
-#: inc/functions.php:146
+#: inc/functions.php:178
 msgctxt "Taxonomy singular name"
 msgid "Dossier"
 msgstr "Folder"
 
-#: inc/functions.php:147
+#: inc/functions.php:179
 msgctxt "Taxonomy search items label"
 msgid "Rechercher des dossiers"
 msgstr "Search in folders"
 
-#: inc/functions.php:148
+#: inc/functions.php:180
 msgctxt "Taxonomy all items label"
 msgid "Tous les dossiers"
 msgstr "All folders"
 
-#: inc/functions.php:149
+#: inc/functions.php:181
 msgctxt "Taxonomy parent item label"
 msgid "Dossier parent"
 msgstr "Parent folder"
 
-#: inc/functions.php:150
+#: inc/functions.php:182
 msgctxt "Taxonomy parent item colon label"
 msgid "Dossier parent&nbsp;:"
 msgstr "Parent folder:"
 
-#: inc/functions.php:151
+#: inc/functions.php:183
 msgctxt "Taxonomy edit item label"
 msgid "Modifier le dossier"
 msgstr "Edit folder"
 
-#: inc/functions.php:152
+#: inc/functions.php:184
 msgctxt "Taxonomy view item label"
 msgid "Afficher le dossier"
 msgstr "View folder"
 
-#: inc/functions.php:153
+#: inc/functions.php:185
 msgctxt "Taxonomy update item label"
 msgid "Mettre à jour le dossier"
 msgstr "Update folder"
 
-#: inc/functions.php:154
+#: inc/functions.php:186
 msgctxt "Taxonomy add new item label"
 msgid "Ajouter un dossier"
 msgstr "Add a new folder"
 
-#: inc/functions.php:155
+#: inc/functions.php:187
 msgctxt "Taxonomy new item name label"
 msgid "Nom du dossier à ajouter"
 msgstr "Name of the folder to add"
 
-#: inc/functions.php:156
+#: inc/functions.php:188
 msgctxt "Taxonomy not found label"
 msgid "Aucun dossier trouvé"
 msgstr "No folders found"
 
-#: inc/functions.php:157
+#: inc/functions.php:189
 msgctxt "Taxonomy no terms label"
 msgid "Aucun dossier affecté"
 msgstr "No folders assigned"
 
-#: inc/functions.php:158
+#: inc/functions.php:190
 msgctxt "Taxonomy items list navigation label"
 msgid "Navigation de la liste des dossiers"
 msgstr "Folders list navigation"
 
-#: inc/functions.php:159
+#: inc/functions.php:191
 msgctxt "Taxonomy items list label"
 msgid "Liste des dossiers"
 msgstr "Folders list"
 
-#: inc/functions.php:160
+#: inc/functions.php:192
 msgctxt "Taxonomy most used label"
 msgid "Les plus affectés"
 msgstr "Most used folders"
 
-#: inc/functions.php:161
+#: inc/functions.php:193
 msgctxt "Back to all Taxonomy terms"
 msgid "Revenir sur tous les dossiers"
 msgstr "Back to all folders"
 
-#: inc/functions.php:163
+#: inc/functions.php:195
 msgid "Catégorie permettant de référencer et de hiérarchiser les documents dans des dossiers."
 msgstr "Category used to organize documents into folders."
 
-#: inc/functions.php:457
-#: inc/functions.php:462
+#: inc/functions.php:501
+#: inc/functions.php:506
 #: templates/docutheques-dossier.php:17
 #: templates/docutheques-dossier.php:23
 msgid "Ouvrir le dossier"
 msgstr "Open the folder"
 
-#: inc/functions.php:530
+#: inc/functions.php:585
 msgid "Docuthèque"
 msgstr "Docuthèque"
 
-#: inc/functions.php:678
+#: inc/functions.php:734
 msgid "Ce dossier ne contient aucun élément pour le moment."
 msgstr "This folder contains no items for now."
 
@@ -162,9 +162,3 @@ msgstr "Published on :"
 #: templates/docutheques-document.php:33
 msgid "Mis à jour le :"
 msgstr "Updated on :"
-
-#~ msgid "Nom du dossier"
-#~ msgstr "Name of the folder"
-
-#~ msgid "DocuTheques"
-#~ msgstr "DocuThèques"
