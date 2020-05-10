@@ -2,7 +2,7 @@
  * WordPress dependencies.
  */
 const { Component, createElement } = wp.element;
-const { Dashicon, Animate } = wp.components;
+const { Dashicon, Notice, Animate } = wp.components;
 const { sprintf, __ } = wp.i18n;
 
 class DocuthequesChargement extends Component {
@@ -19,10 +19,10 @@ class DocuthequesChargement extends Component {
 		}
 
 		// Looks like WP CLI can't find _n() usage.
-		let uploadingDocuments = __( 'Chargement d’un document en cours, merci de patienter.', 'docutheques' );
+		let uploadingDocuments = __( 'Téléversement d’un document en cours, merci de patienter.', 'docutheques' );
 		if ( numberChargements > 1 ) {
 			/* translators: %d: number of documents being uploaded. */
-			uploadingDocuments = sprintf( __( 'Chargement de %d documents en cours, merci de patienter.', 'docutheques' ), numberChargements );
+			uploadingDocuments = sprintf( __( 'Téléversement de %d documents en cours, merci de patienter.', 'docutheques' ), numberChargements );
 		}
 
 		return (
@@ -31,10 +31,15 @@ class DocuthequesChargement extends Component {
 					type="loading"
 				>
 					{ ( { className } ) => (
-						<p className={ className }>
-							<Dashicon icon="update" />
-							{ uploadingDocuments }
-						</p>
+						<Notice
+							status="warning"
+							isDismissible={ false }
+						>
+							<p className={ className }>
+								<Dashicon icon="update" />
+								{ uploadingDocuments }
+							</p>
+						</Notice>
 					) }
 				</Animate>
 			</div>
