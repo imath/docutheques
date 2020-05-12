@@ -786,7 +786,7 @@ function docutheques_get_download_url( $document = null ) {
 		$url = home_url( user_trailingslashit( $url ) );
 	} else {
 		// Unpretty permalinks.
-		$url = add_query_arg( array( wct_user_rewrite_id() => $document->post_name ), home_url( '/' ) );
+		$url = add_query_arg( array( 'docutheques' => $document->post_name ), home_url( '/' ) );
 	}
 
 	return $url;
