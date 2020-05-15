@@ -139,6 +139,14 @@
 	margin-right: 1em;
 }
 
+.branch-5-3 #docutheques .components-form-file-upload .components-button {
+	display: inline-block;
+}
+
+.branch-5-3 #docutheques .components-form-file-upload .components-button svg {
+	vertical-align: bottom;
+}
+
 #docutheques .formulaire-modification-document .document-source .components-button {
 	margin-left: 1em;
 	vertical-align: middle;
@@ -179,12 +187,18 @@ li.choix-dossiers a {
 	display: block;
 }
 
-#docutheques .components-dropdown-menu .components-dropdown-menu__toggle.has-icon {
+#docutheques .components-dropdown-menu .components-dropdown-menu__toggle.has-icon,
+.branch-5-3 #docutheques .components-dropdown-menu .components-dropdown-menu__toggle.components-icon-button {
 	color: #0073aa;
 	display: inline-block;
 }
 
-#docutheques .components-dropdown-menu .components-dropdown-menu__toggle.has-icon svg {
+.branch-5-3 #docutheques > .components-dropdown-menu {
+	display: inline-block;
+}
+
+#docutheques .components-dropdown-menu .components-dropdown-menu__toggle.has-icon svg,
+.branch-5-3 #docutheques .components-dropdown-menu .components-dropdown-menu__toggle.components-icon-button svg {
 	vertical-align: sub;
 }
 

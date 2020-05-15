@@ -2,7 +2,7 @@
  * WordPress dependencies.
  */
 const { Component, createElement } = wp.element;
-const { Notice, Dashicon, VisuallyHidden } = wp.components;
+const { Notice, Dashicon } = wp.components;
 const { withSelect } = wp.data;
 const { compose } = wp.compose;
 const { sprintf, __ } = wp.i18n;
@@ -18,7 +18,7 @@ class DocuthequesInfos extends Component {
 		if ( fetching ) {
 			return (
 				<div className="docutheques-fetching">
-					<VisuallyHidden>{ __( 'Chargement des documents en cours, merci de patienter', 'docutheques' ) }</VisuallyHidden>
+					<span className="screen-reader-text">{ __( 'Chargement des documents en cours, merci de patienter', 'docutheques' ) }</span>
 				</div>
 			)
 		}

@@ -10,11 +10,11 @@
     "start": "parcel watch src/*/index.js --out-dir js --no-source-maps",
     "dev": "parcel build src/*/index.js --out-dir js --no-source-maps --no-minify",
     "build": "parcel build src/*/index.js --out-dir js",
-		"wpcs": "./vendor/bin/phpcs class-docutheques.php inc/*.php templates/*.php --standard=WordPress",
-		"app:cssmin": "uglifycss ./css/app.css > ./css/app.min.css",
-		"widget:cssmin": "uglifycss ./css/widget.css > ./css/widget.min.css",
-		"makepot": "wp i18n make-pot . languages/docutheques.pot --exclude=\".git,.cache,css,images,languages,node_modules,src,vendor\" --headers='{\"Project-Id-Version\": \"DocuThèques\", \"Report-Msgid-Bugs-To\": \"https://github.com/imath/docutheques/issues\", \"Last-Translator\": \"imath <contact@imathi.eu>\", \"Language-Team\": \"FRENCH <contact@imathi.eu>\"}'",
-		"makejson": "wp i18n make-json languages"
+    "wpcs": "./vendor/bin/phpcs class-docutheques.php inc/*.php templates/*.php --standard=WordPress",
+    "app:cssmin": "uglifycss ./css/app.css > ./css/app.min.css",
+    "widget:cssmin": "uglifycss ./css/widget.css > ./css/widget.min.css",
+    "makepot": "wp i18n make-pot . languages/docutheques.pot --exclude=\".git,.cache,css,images,languages,node_modules,src,vendor\" --headers='{\"Project-Id-Version\": \"DocuThèques\", \"Report-Msgid-Bugs-To\": \"https://github.com/imath/docutheques/issues\", \"Last-Translator\": \"imath <contact@imathi.eu>\", \"Language-Team\": \"FRENCH <contact@imathi.eu>\"}'",
+    "makejson": "wp i18n make-json languages"
   },
   "repository": {
     "type": "git",
@@ -31,8 +31,8 @@
   },
   "homepage": "https://github.com/imath/docutheques#readme",
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@wordpress/babel-preset-default": "^4.11.0",
+    "@babel/core": "^7.6.4",
+    "@wordpress/babel-preset-default": "^4.6.2",
     "parcel-bundler": "^1.12.4"
   },
   "dependencies": {

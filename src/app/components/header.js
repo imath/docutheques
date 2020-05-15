@@ -11,11 +11,6 @@ const { dispatch } = wp.data;
  */
 const { get } = lodash;
 
-/**
- * Internal dependencies.
- */
-import DocuthequesGuide from './guide';
-
 class DocuthequesHeader extends Component {
 	constructor() {
 		super( ...arguments );
@@ -66,8 +61,6 @@ class DocuthequesHeader extends Component {
 						controls={ docuthequesActions }
 					/>
 				) }
-
-				<DocuthequesGuide />
 
 				<hr className="wp-header-end" />
 			</Fragment>
