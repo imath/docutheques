@@ -272,7 +272,7 @@ function docutheques_register_widget_script() {
 		true
 	);
 
-	$companion_style_path = get_theme_file_path( 'css/docutheques.css ' );
+	$companion_style_path = get_theme_file_path( 'css/docutheques.css' );
 
 	// Registers the Widget's companion styles if available.
 	if ( file_exists( $companion_style_path ) ) {
