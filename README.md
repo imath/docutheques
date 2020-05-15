@@ -18,7 +18,7 @@ Pour mettre une DocuThèque à leur disposition, il suffit de créer ou de mettr
 
 ### Configuration requise
 
-- WordPress 5.4.0 ou toute version ultérieure.
+- WordPress 5.3.0 ou toute version ultérieure.
 - L'éditeur de blocs est nécessaire pour attacher une DocuThèque à une page du site WordPress.
 
 ## English
@@ -39,5 +39,5 @@ To make a DocuThèque available to them, simply create or update a WordPress pag
 
 ### Required configuration
 
-- WordPress 5.4.0 or newer.
+- WordPress 5.3.0 or newer.
 - The Block Editor is needed to insert a DocuThèque into a WordPress page.
