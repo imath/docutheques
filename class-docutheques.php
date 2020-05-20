@@ -1,6 +1,6 @@
 <?php
 /**
- * DocuThèques: des bibliothèques de documents dans votre WordPress.
+ * DocuThèques: an alternative & document oriented organization for your WordPress media.
  *
  * @package   docutheques
  * @author    imath
@@ -10,7 +10,7 @@
  * @wordpress-plugin
  * Plugin Name:       DocuThèques
  * Plugin URI:        https://github.com/imath/docutheques
- * Description:       DocuThèques : des bibliothèques de documents dans votre WordPress.
+ * Description:       DocuThèques : une organisation des media de WordPress plus orientée vers des besoins documentaires.
  * Version:           1.0.0
  * Author:            imath
  * Author URI:        https://imathi.eu

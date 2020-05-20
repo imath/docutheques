@@ -1,27 +1,10 @@
 # DocuThèques
 
-## Français
-
-### Présentation
-
-Grâce à DocuThèques, vous bénéficiez d'une organisation alternative pour vos media dans WordPress. L'extension s'inspire des fonctionnalités des logiciels d'exploration de fichiers proposés par les systèmes d'exploitation des ordinateurs en vous proposant de créer des arborescences de dossiers pour y organiser vos media comme des documents.
-
-DocuThèques équipe l'administration de votre site WordPress d'une nouvelle interface depuis laquelle vous pourrez créer la ou les DocuThèque(s) de votre site, y attacher des dossiers, y téléverser des documents ou y classer les media existants de votre site WordPress.
-
-Pour faciliter vos premiers pas, cette interface propose un guide d'utilisation intégré grâce auquel vous pourrez vous familiariser avec les opérations à réaliser pour créer, mettre à jour et supprimer vos DocuThèques, vos dossiers et vos documents.
-
-Chaque document de vos DocuThèques bénéficie d'un lien de téléchargement unique, permanent et indépendant de sa position dans l'arborescence de sa DocuThèque. Vous pouvez, à tout moment et en toute sérénité, mettre à jour le fichier associé à vos documents, changer le nom de chacun des dossiers qui forment leur arborescence : les visiteurs ou les membres de votre site retrouveront toujours la dernière version de votre document à l'aide de son lien de téléchargement unique et invariable.
-
-Chaque document fait également l'objet d'un suivi du nombre de ses téléchargements par les visiteurs ou les membres de votre site.
-
-Pour mettre une DocuThèque à leur disposition, il suffit de créer ou de mettre à jour une page WordPress pour l'y insérer grâce au bloc des DocuThèques. Notez qu'une page de votre site WordPress peut contenir une et une seule DocuThèque.
-
-### Configuration requise
-
-- WordPress 5.4.0 ou toute version ultérieure.
-- L'éditeur de blocs est nécessaire pour attacher une DocuThèque à une page du site WordPress.
-
 ## English
+
+_[Version Française](#français)_
+
+**An alternative & document oriented organization for your WordPress media.**
 
 ### Description
 
@@ -41,3 +24,26 @@ To make a DocuThèque available to them, simply create or update a WordPress pag
 
 - WordPress 5.4.0 or newer.
 - The Block Editor is needed to insert a DocuThèque into a WordPress page.
+
+## Français
+
+**Une organisation des media de WordPress plus orientée vers des besoins documentaires.**
+
+### Présentation
+
+Grâce à DocuThèques, vous bénéficiez d'une organisation alternative pour vos media dans WordPress. L'extension s'inspire des fonctionnalités des logiciels d'exploration de fichiers proposés par les systèmes d'exploitation des ordinateurs en vous proposant de créer des arborescences de dossiers pour y organiser vos media comme des documents.
+
+DocuThèques équipe l'administration de votre site WordPress d'une nouvelle interface depuis laquelle vous pourrez créer la ou les DocuThèque(s) de votre site, y attacher des dossiers, y téléverser des documents ou y classer les media existants de votre site WordPress.
+
+Pour faciliter vos premiers pas, cette interface propose un guide d'utilisation intégré grâce auquel vous pourrez vous familiariser avec les opérations à réaliser pour créer, mettre à jour et supprimer vos DocuThèques, vos dossiers et vos documents.
+
+Chaque document de vos DocuThèques bénéficie d'un lien de téléchargement unique, permanent et indépendant de sa position dans l'arborescence de sa DocuThèque. Vous pouvez, à tout moment et en toute sérénité, mettre à jour le fichier associé à vos documents, changer le nom de chacun des dossiers qui forment leur arborescence : les visiteurs ou les membres de votre site retrouveront toujours la dernière version de votre document à l'aide de son lien de téléchargement unique et invariable.
+
+Chaque document fait également l'objet d'un suivi du nombre de ses téléchargements par les visiteurs ou les membres de votre site.
+
+Pour mettre une DocuThèque à leur disposition, il suffit de créer ou de mettre à jour une page WordPress pour l'y insérer grâce au bloc des DocuThèques. Notez qu'une page de votre site WordPress peut contenir une et une seule DocuThèque.
+
+### Configuration requise
+
+- WordPress 5.4.0 ou toute version ultérieure.
+- L'éditeur de blocs est nécessaire pour attacher une DocuThèque à une page du site WordPress.

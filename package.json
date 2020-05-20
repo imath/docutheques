@@ -1,7 +1,7 @@
 {
   "name": "docutheques",
   "version": "1.0.0",
-  "description": "Document libraries for your WordPress.",
+  "description": "An alternative & document oriented organization for your WordPress media.",
   "engines": {
     "node": "10.13.0",
     "npm": "6.14.2"

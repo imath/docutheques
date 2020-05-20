@@ -1,6 +1,6 @@
 {
 	"name": "imath/docutheques",
-	"description": "Document libraries for your WordPress.",
+	"description": "An alternative & document oriented organization for your WordPress media.",
 	"type": "wordpress-plugin",
 	"require": {
 	  "squizlabs/php_codesniffer" : "^3.3.1"
