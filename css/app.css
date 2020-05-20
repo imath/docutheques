@@ -287,6 +287,27 @@ li.choix-dossiers a {
 	display: block;
 }
 
+#docutheques .media-item .components-popover__content p.document-action {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+#docutheques .media-item .components-popover__content p.document-action > button {
+	text-align: center;
+	display: block;
+	width: 48%;
+}
+
+#docutheques .media-item .components-popover__content p.document-action button.delete-document {
+	color: #bc0b0b;
+}
+
+#docutheques .media-item .components-popover__content p.document-action button.delete-document:hover,
+#docutheques .media-item .components-popover__content p.document-action button.delete-document:focus {
+	color: #dc3232;
+}
+
 #docutheques .liste-documents .media-item .media-name {
 	position: absolute;
 	left: 0;

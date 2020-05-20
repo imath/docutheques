@@ -7,6 +7,11 @@ const { withSelect, withDispatch, dispatch } = wp.data;
 const { compose } = wp.compose;
 const { __, sprintf } = wp.i18n;
 
+/**
+ * Internal dependencies.
+ */
+import DocuThequesConfirmerSuppression from './confirmer-suppression';
+
 class DocuthequesToolbar extends Component {
 	constructor() {
 		super( ...arguments );
@@ -82,7 +87,7 @@ class DocuthequesToolbar extends Component {
 
 		onDeleteDocuments( selectedDocuments );
 
-		this.setState( { isDeleteDocumentModalOpen: false } )
+		this.setState( { isDeleteDocumentModalOpen: false } );
 	}
 
 	setCurrentState( currentState ) {
@@ -182,32 +187,20 @@ class DocuthequesToolbar extends Component {
 							<Button isLarge={ true } className="button media-button select-mode-toggle-button" onClick={ () => this.setCurrentState( 'documentsEditForm' ) }>
 								{ 1 === selectedDocuments.length ? __( 'Modifier le document', 'docutheques' ) : __( 'Déplacer les documents', 'docutheques' ) }
 							</Button>
-							<Button isLarge={ true } disabled={ 'documentEditForm' === currentState } className="button media-button select-mode-toggle-button" onClick={ this.openDocumentModal }>
+							<Button isLarge={ true } disabled={ 'documentsEditForm' === currentState } className="button media-button select-mode-toggle-button" onClick={ this.openDocumentModal }>
 								{ 1 === selectedDocuments.length ? __( 'Supprimer le document', 'docutheques' ) : __( 'Supprimer les documents', 'docutheques' ) }
 							</Button>
 							{ isDeleteDocumentModalOpen && (
-								<Modal
+								<DocuThequesConfirmerSuppression
 									title={ 1 === selectedDocuments.length ? __( 'Suppression d’un document', 'docutheques' ) : __( 'Suppression de documents', 'docutheques' ) }
 									onRequestClose={ this.closeDocumentModal }
-									className="delete-document-confirmation"
-								>
-
-									<p>{ confirmMessage }</p>
-
-									<div className="confirmation-buttons">
-										<Button isLarge={ false } isPrimary={ true } onClick={ this.deleteDocument }>
-											{ __( 'Confirmer', 'docutheques' ) }
-										</Button>
-
-										<Button isLarge={ false } isSecondary={ true } onClick={ this.closeDocumentModal }>
-											{ __( 'Annuler', 'docutheques' ) }
-										</Button>
-									</div>
-
-								</Modal>
+									confirmMessage={ confirmMessage }
+									onConfirm={ this.deleteDocument }
+									onCancel={ this.closeDocumentModal }
+								/>
 							) }
 							{ selectedDocuments.length >= 1 && (
-								<Button isLarge={ true } className="button media-button select-mode-toggle-button" onClick={ () => this.cancelDocumentsSelection() }>
+								<Button isLarge={ true } disabled={ 'documentsEditForm' === currentState } className="button media-button select-mode-toggle-button" onClick={ () => this.cancelDocumentsSelection() }>
 									{ __( 'Annuler la sélection', 'docutheques' ) }
 								</Button>
 							) }
