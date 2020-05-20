@@ -94,9 +94,11 @@ class DocuthequesDocument extends Component {
 			isSelected,
 			isAdvancedEditMode,
 			downloads,
+			sourceName,
 		} = this.props;
 		const { popoverIsVisible } = this.state;
 		let classes = 'media-item unselectable';
+		let sourceFileName = sourceName ? sourceName : title;
 
 		if ( isAdvancedEditMode ) {
 			classes = 'media-item selectable';
@@ -125,7 +127,7 @@ class DocuthequesDocument extends Component {
 					<Popover focusOnMount="container" position="bottom center" onClick={ this.catchClick } onFocusOutside={ this.doClose }>
 						<p><strong>{ __( 'Date de publication :', 'docutheques' ) }</strong> { createdDate }</p>
 						<p><strong>{ __( 'Date de modification :', 'docutheques' ) }</strong> { modifiedDate }</p>
-						<p><strong>{ __( 'Fichier source :', 'docutheques' ) }</strong><a href={ link } className="fichier-source">{ title }</a></p>
+						<p><strong>{ __( 'Fichier source :', 'docutheques' ) }</strong><a href={ link } className="fichier-source">{ sourceFileName }</a></p>
 						<p>
 						{ downloadsCount }
 						</p>

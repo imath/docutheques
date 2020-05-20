@@ -68,6 +68,7 @@ class DocuthequesDocuments extends Component {
 						isSelected= { document.selected || false }
 						isAdvancedEditMode={ isAdvancedEditMode }
 						downloads={ document.meta && document.meta.docutheques_downloads_count ? document.meta.docutheques_downloads_count : 0 }
+						sourceName={ document.docutheques_source_name }
 					/>
 				);
 			} );

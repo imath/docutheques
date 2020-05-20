@@ -312,6 +312,11 @@ class DocuTheques_REST_Documents_Controller extends WP_REST_Attachments_Controll
 		$data['docutheques_pub_date'] = date_i18n( get_option( 'date_format' ), strtotime( $data['date'] ) );
 		$data['docutheques_mod_date'] = date_i18n( get_option( 'date_format' ), strtotime( $data['modified'] ) );
 
+		$data['docutheques_source_name'] = '';
+		if ( isset( $data['source_url'] ) && $data['source_url'] ) {
+			$data['docutheques_source_name'] = wp_basename( $data['source_url'] );
+		}
+
 		// Wrap the data in a response object.
 		$response = rest_ensure_response( $data );
 
@@ -325,5 +330,28 @@ class DocuTheques_REST_Documents_Controller extends WP_REST_Attachments_Controll
 		 * @param WP_REST_Request  $request  Request used to generate the response.
 		 */
 		return apply_filters( 'docutheques_rest_prepare_document', $response, $post, $request );
+	}
+
+	/**
+	 * Prepares a single document for create or update.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return stdClass|WP_Error Post object.
+	 */
+	protected function prepare_item_for_database( $request ) {
+		$prepared_attachment = parent::prepare_item_for_database( $request );
+		$files               = $request->get_file_params();
+
+		// Replace simple quotes to avoid HTML characters in Document names.
+		if ( isset( $files['file']['name'] ) ) {
+			$document_name                   = preg_replace( '/\.[^.]+$/', '', wp_basename( $files['file']['name'] ) );
+			$prepared_attachment->post_title = str_replace( '\'', '’', $document_name );
+		} else {
+			$prepared_attachment->post_title = str_replace( '\'', '’', $prepared_attachment->post_title );
+		}
+
+		return $prepared_attachment;
 	}
 }
