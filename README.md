@@ -1,5 +1,7 @@
 # DocuThèques
 
+![Screenshot](./screenshot.png)
+
 ## English
 
 _[Version Française](#français)_
