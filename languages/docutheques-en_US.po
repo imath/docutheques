@@ -7,10 +7,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-05-10T10:34:52+00:00\n"
-"PO-Revision-Date: 2020-05-10 12:36+0200\n"
+"POT-Creation-Date: 2020-05-20T11:56:11+00:00\n"
+"PO-Revision-Date: 2020-05-20 13:58+0200\n"
 "Language: en_US\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.3.1\n"
 "X-Domain: docutheques\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -26,8 +26,8 @@ msgid "https://github.com/imath/docutheques"
 msgstr "https://github.com/imath/docutheques"
 
 #. Description of the plugin
-msgid "DocuThèques : des bibliothèques de documents dans votre WordPress."
-msgstr "Docuthèques: document libraries for your WordPress."
+msgid "DocuThèques : une organisation des media de WordPress plus orientée vers des besoins documentaires."
+msgstr "DocuThèques: an alternative & document oriented organization for your WordPress media."
 
 #. Author of the plugin
 msgid "imath"
