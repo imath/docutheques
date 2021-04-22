@@ -106,8 +106,6 @@ function docutheques_admin_updater() {
 
 	if ( ! $db_version ) {
 		docutheques_admin_install();
-	} elseif ( version_compare( $db_version, $current_version, '<' ) ) {
-		wp_die( esc_html__( 'Il n’y a qu’une seule version stable de pour l’extension DocuThèques', 'docutheques' ) );
 	}
 
 	// Bump DocuThèques version.

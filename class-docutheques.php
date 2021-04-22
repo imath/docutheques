@@ -11,7 +11,7 @@
  * Plugin Name:       DocuThèques
  * Plugin URI:        https://github.com/imath/docutheques
  * Description:       DocuThèques : une organisation des media de WordPress plus orientée vers des besoins documentaires.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            imath
  * Author URI:        https://imathi.eu
  * License:           GPL-2.0+

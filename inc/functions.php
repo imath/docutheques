@@ -341,7 +341,7 @@ add_action( 'pre_delete_term', 'docutheques_is_deleting_dossier', 10, 2 );
  *                            by the parent function. WP_Error otherwise.
  * @param array $object_ids   List of term object IDs.
  */
-function docutheques_deleted_dossier_get_documents( $term = 0, $tt_id = 0, $deleted_term = null, $object_ids ) {
+function docutheques_deleted_dossier_get_documents( $term = 0, $tt_id = 0, $deleted_term = null, $object_ids = array() ) {
 	$docutheques = docutheques();
 	$dossier_key = 'term_id_' . $term;
 

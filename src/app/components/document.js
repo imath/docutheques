@@ -2,7 +2,7 @@
  * WordPress dependencies.
  */
 const { Component, Fragment, createElement } = wp.element;
-const { Dashicon, Popover } = wp.components;
+const { Popover } = wp.components;
 const { withDispatch, dispatch } = wp.data;
 const { compose } = wp.compose;
 const { __, sprintf } = wp.i18n;
@@ -10,7 +10,7 @@ const { __, sprintf } = wp.i18n;
 /**
  * Internal dependencies.
  */
-import MediaImage from './media-image';
+import DocuThequeVignette from './vignette';
 import DocuThequesConfirmerSuppression from './confirmer-suppression';
 
 const MIME_TYPES = {
@@ -32,16 +32,15 @@ const MIME_TYPES = {
 }
 
 const Icon = ( { type } ) => {
-	if ( 'image' === type ) {
-		return <MediaImage />;
-	}
-
 	let icon = 'default';
-	if ( MIME_TYPES[ type ] ) {
+
+	if ( 'image' === type ) {
+		icon = 'image';
+	} else if ( MIME_TYPES[ type ] ) {
 		icon = MIME_TYPES[ type ];
 	}
 
-	return <Dashicon icon={ 'media-' + icon } />;
+	return <DocuThequeVignette icon={ 'media-' + icon } />;
 }
 
 class DocuthequesDocument extends Component {

@@ -60,7 +60,7 @@ class DocuTheques_REST_Documents_Controller extends WP_REST_Attachments_Controll
 	 * @param WP_REST_Request $request The request used.
 	 * @return array                   Unchanged arguments.
 	 */
-	public function documents_set_args( $args = array(), $request ) {
+	public function documents_set_args( $args, $request ) {
 		$has_dossiers_param = $request->get_param( 'dossiers' );
 
 		if ( ! $has_dossiers_param ) {
