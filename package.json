@@ -1,6 +1,6 @@
 {
   "name": "docutheques",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "An alternative & document oriented organization for your WordPress media.",
   "engines": {
     "node": ">=14.15.0",

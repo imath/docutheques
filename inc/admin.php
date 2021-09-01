@@ -78,7 +78,7 @@ function docutheques_browser_block_is_allowed( $allowed_block_types, $post ) {
 
 	return $allowed_block_types;
 }
-add_filter( 'allowed_block_types', 'docutheques_browser_block_is_allowed', 10, 2 );
+add_filter( 'allowed_block_types_all', 'docutheques_browser_block_is_allowed', 10, 2 );
 
 /**
  * Installs the plugin.
