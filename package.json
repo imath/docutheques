@@ -31,8 +31,8 @@
   },
   "homepage": "https://github.com/imath/docutheques#readme",
   "devDependencies": {
-    "@babel/core": "^7.11.6",
-    "@wordpress/babel-preset-default": "^5.0.1",
+    "@babel/core": "~7.15.5",
+    "@wordpress/babel-preset-default": "^6.3.2",
     "parcel-bundler": "^1.12.5"
   },
   "dependencies": {
